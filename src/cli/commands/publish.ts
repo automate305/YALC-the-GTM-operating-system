@@ -67,12 +67,22 @@ export async function runPublish() {
     process.exit(1)
   }
 
+  // ── resolve github repo slug (owner/repo) ─────────────────────────────────
+  let repoSlug: string
+  try {
+    const remoteUrl = run('git remote get-url origin')
+    repoSlug = parseGithubSlug(remoteUrl)
+  } catch {
+    console.error('[publish] Could not determine GitHub repo from origin remote.')
+    process.exit(1)
+  }
+
   // ── gh pr create ───────────────────────────────────────────────────────────
   console.log('[publish] Creating pull request into main...')
 
   let prExists = false
   try {
-    const json = run(`gh pr view ${branch!} --json url,state`)
+    const json = run(`gh pr view ${branch!} --repo ${repoSlug!} --json url,state`)
     const { url, state } = JSON.parse(json) as { url: string; state: string }
     if (state === 'OPEN') {
       prExists = true
@@ -86,7 +96,7 @@ export async function runPublish() {
   if (!prExists) {
     const pr = spawnSync(
       'gh',
-      ['pr', 'create', '--base', 'main', '--head', branch!, '--title', commitMsg, '--fill'],
+      ['pr', 'create', '--repo', repoSlug!, '--base', 'main', '--head', branch!, '--title', commitMsg, '--fill'],
       { stdio: 'inherit', shell: IS_WIN },
     )
     if (pr.status !== 0) {
@@ -196,6 +206,14 @@ function ensureGhAuth() {
       process.exit(1)
     }
   }
+}
+
+function parseGithubSlug(remoteUrl: string): string {
+  // https://github.com/owner/repo.git  or  git@github.com:owner/repo.git
+  const match =
+    remoteUrl.match(/github\.com[:/](.+?)(?:\.git)?$/)
+  if (!match) throw new Error(`Cannot parse GitHub slug from: ${remoteUrl}`)
+  return match[1]
 }
 
 function installFailed(): never {
