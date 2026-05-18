@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "lemlist": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://app.lemlist.com/mcp",
+        "--header",
+        "X-API-Key: ${LEMLIST_API_KEY}"
+      ]
+    }
+  }
+}

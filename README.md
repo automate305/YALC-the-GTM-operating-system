@@ -247,6 +247,19 @@ Conversational entry points. Activate from a Claude Code session with the trigge
 
 **16 more skills shipping in 0.13.0** — see [CHANGELOG.md](CHANGELOG.md) and [docs/skills-architecture.md](docs/skills-architecture.md).
 
+### Lemlist Claude Code skills (`.claude/skills/lemlist/`)
+
+A curated subset of [lemlist's 38 open-source Claude Code skills](https://www.lemlist.com/claude-skills), bundled so YALC can run an end-to-end outbound loop inside Claude Code using lemlist as the underlying platform. Paired with the lemlist MCP server declared in `.mcp.json`, this lets you source leads, run agentic enrichment, draft seniority-aware sequences, push campaigns into lemlist, and handle replies — all from a single Claude Code prompt.
+
+| Layer | Skills |
+|-------|--------|
+| Source | `people-finder`, `list-builder`, `company-finder` |
+| Reason | `icp-definer`, `persona-definer`, `linkedin-outbound-angle` |
+| Write | `copywriting-first-touch`, `copywriting-follow-up`, `copywriting-vp-sequence`, `copywriting-manager-sequence`, `copywriting-ic-sequence`, `cta-designer`, `outbound-campaign-architect` |
+| Loop | `reply-handler` |
+
+Setup is one environment variable (`LEMLIST_API_KEY`) or one OAuth command — see [CLAUDE.md](CLAUDE.md#lemlist-integration). Full walkthrough at [yalc.ai/tools/lemlist/](https://yalc.ai/tools/lemlist/).
+
 ### Legacy TypeScript skill registry (`src/lib/skills/builtin/`)
 
 Loaded at runtime by `orchestrate` and surfaced via `skills:list`.

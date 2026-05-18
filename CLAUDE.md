@@ -46,6 +46,35 @@ npx tsx src/cli/index.ts <command> [options]
 ```
 Env loaded from `.env.local`. Use `--tenant <slug>` or `GTM_OS_TENANT` env var for multi-tenant (default: `default`).
 
+## Lemlist integration
+
+YALC ships with 14 curated [lemlist Claude Code skills](https://www.lemlist.com/claude-skills) under `.claude/skills/lemlist/` and a lemlist MCP server pre-declared in `.mcp.json`. Together they cover the full outbound loop inside Claude Code: source → enrich → reason → write → send → loop.
+
+| Layer | Lemlist skills | Used in |
+|---|---|---|
+| Source | `people-finder`, `list-builder`, `company-finder` | Building targeted lists against lemlist's People Database |
+| Reason | `icp-definer`, `persona-definer`, `linkedin-outbound-angle` | Qualifying and routing by seniority |
+| Write | `copywriting-first-touch`, `copywriting-follow-up`, `copywriting-vp-sequence`, `copywriting-manager-sequence`, `copywriting-ic-sequence`, `cta-designer`, `outbound-campaign-architect` | Seniority-routed sequencing |
+| Loop | `reply-handler` | Drafting responses to incoming replies |
+
+**MCP setup (one time, per machine):**
+
+Option A — API key (recommended for CI / scripted use):
+```
+export LEMLIST_API_KEY=...   # generate in lemlist → Settings → Integrations
+```
+`.mcp.json` at the repo root reads `LEMLIST_API_KEY` from your environment. Restart Claude Code to pick it up.
+
+Option B — OAuth (recommended for interactive use):
+```
+claude mcp add --transport http lemlist https://app.lemlist.com/mcp
+```
+Tokens refresh automatically for 30 days.
+
+Verify with `/mcp` inside Claude Code — you should see the lemlist server connected and operations like `create_campaign`, `lemleads_search`, campaign stats, etc.
+
+Affiliate signup if you don't have a lemlist account yet: <https://get.lemlist.com/skrtwnkxw60i>
+
 ## Security
 - **NEVER display API keys, tokens, or secrets from `.env.local` in chat output.** Mask all credentials.
 
