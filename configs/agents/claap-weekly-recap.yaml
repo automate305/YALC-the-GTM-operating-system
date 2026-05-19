@@ -1,5 +1,5 @@
 # Claap Weekly Recap — Background Agent Template
-# Runs the claap-weekly-recap skill on a Saturday-morning schedule via the
+# Runs the claap-weekly-recap skill on a Sunday-morning schedule via the
 # Yalc agent system.
 #
 # Install:
@@ -19,7 +19,7 @@
 id: claap-weekly-recap
 name: Claap Weekly Recap
 description: >
-  Every Saturday at 08:00 local time, pulls the last 7 days of Claap recordings,
+  Every Sunday at 08:00 local time, pulls the last 7 days of Claap recordings,
   extracts per-deal action items with verbatim quotes and Claap timestamps,
   synthesizes 2-4 weekly focus blocks, writes them to a Notion Kanban DB,
   and delivers a Slack summary.
@@ -39,7 +39,7 @@ steps:
 
 schedule:
   type: weekly
-  weekday: saturday
+  weekday: sunday
   hour: 8
   minute: 0
 

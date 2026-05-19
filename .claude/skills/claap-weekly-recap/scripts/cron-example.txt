@@ -9,11 +9,11 @@
 # Logs: tailing the LOG_FILE inside run.sh — cron itself sends mail on stderr
 # if your system has MTA configured; otherwise check the LOG_FILE.
 
-# Every Saturday at 08:00 local
-0 8 * * 6 /absolute/path/to/run.sh
+# Every Sunday at 08:00 local
+0 8 * * 0 /absolute/path/to/run.sh
 
-# Every Saturday at 08:00 UTC (use if your machine timezone shifts seasonally)
-# 0 8 * * 6 TZ=UTC /absolute/path/to/run.sh
+# Every Sunday at 08:00 UTC (use if your machine timezone shifts seasonally)
+# 0 8 * * 0 TZ=UTC /absolute/path/to/run.sh
 
 # Every weekday at 18:00 (daily end-of-day recap instead of weekly)
 # 0 18 * * 1-5 /absolute/path/to/run.sh

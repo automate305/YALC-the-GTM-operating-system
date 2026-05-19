@@ -18,11 +18,11 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 [Unit]
-Description=Run Claap Weekly Recap every Saturday at 08:00
+Description=Run Claap Weekly Recap every Sunday at 08:00
 
 [Timer]
-# OnCalendar accepts cron-like syntax. "Sat *-*-* 08:00:00" = every Saturday at 8am.
-OnCalendar=Sat *-*-* 08:00:00
+# OnCalendar accepts cron-like syntax. "Sun *-*-* 08:00:00" = every Sunday at 8am.
+OnCalendar=Sun *-*-* 08:00:00
 Persistent=true
 Unit=claap-weekly-recap.service
 

@@ -8,8 +8,8 @@
     3. launchctl load ~/Library/LaunchAgents/com.yalc.claap-weekly-recap.plist
     4. launchctl start com.yalc.claap-weekly-recap  (one-off manual fire to test)
 
-  Schedule: every Saturday at 08:00 local time (Weekday=6 in launchd convention
-  where Sunday=0). Change the Hour/Minute/Weekday values to your taste.
+  Schedule: every Sunday at 08:00 local time (Weekday=0 in launchd convention
+  where Sunday=0, Saturday=6). Change the Hour/Minute/Weekday values to taste.
 
   Uninstall: launchctl unload ~/Library/LaunchAgents/com.yalc.claap-weekly-recap.plist
 -->
@@ -31,7 +31,7 @@
         <key>Minute</key>
         <integer>0</integer>
         <key>Weekday</key>
-        <integer>6</integer>
+        <integer>0</integer>
     </dict>
 
     <key>StandardOutPath</key>

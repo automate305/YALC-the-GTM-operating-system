@@ -1,12 +1,12 @@
 ---
 name: claap-weekly-recap
-description: "Turns a week of Claap-recorded sales calls into action items and focus blocks on a Notion Kanban, delivered with a Slack summary. Use when the user says 'weekly call recap', 'turn my calls into action items', 'Saturday recap from Claap', 'what should I focus on next week based on my calls', 'pull this week's deal next steps from Claap', or schedules a recurring digest of recorded conversations. Side-effecting — reads Claap via MCP, writes Notion cards, sends a Slack DM."
+description: "Turns a week of Claap-recorded sales calls into action items and focus blocks on a Notion Kanban, delivered with a Slack summary. Use when the user says 'weekly call recap', 'turn my calls into action items', 'Sunday recap from Claap', 'what should I focus on next week based on my calls', 'pull this week's deal next steps from Claap', or schedules a recurring digest of recorded conversations. Side-effecting — reads Claap via MCP, writes Notion cards, sends a Slack DM."
 version: 1.0.0
 ---
 
 # Claap Weekly Recap
 
-Reads every Claap recording from the last N days, extracts per-deal action items with verbatim quotes and Claap timestamp links, synthesizes weekly focus blocks, writes them to a Notion Kanban DB, and delivers a Slack summary. Designed to run unattended on a Saturday morning schedule.
+Reads every Claap recording from the last N days, extracts per-deal action items with verbatim quotes and Claap timestamp links, synthesizes weekly focus blocks, writes them to a Notion Kanban DB, and delivers a Slack summary. Designed to run unattended on a Sunday morning schedule.
 
 **You produce action items and focus blocks. You do NOT modify the underlying call recordings, edit existing Notion cards, or write to any database other than the GTM Action Items DB passed as input.**
 
@@ -15,7 +15,7 @@ Reads every Claap recording from the last N days, extracts per-deal action items
 - "give me the week in calls"
 - "what did prospects ask for this week"
 - "draft action items from my Claap calls this week"
-- "Saturday recap from sales calls"
+- "Sunday recap from sales calls"
 - "set up a weekly recap from Claap into Notion + Slack"
 
 **NOT this skill:**
@@ -67,7 +67,28 @@ Use the Notion MCP (Claude Code's built-in connector or `mcp.notion.com`):
 
 ### Slack (notify)
 
-Use `slack_send_message` with `channel_id = slack_recipient`. One plain-text message per run. If Slack MCP isn't available, fall back to a webhook URL configured in env (`SLACK_WEBHOOK_URL`) via Bash + curl — your agent runner decides which path.
+**Primary path** — Slack MCP:
+- `slack_send_message` with `channel_id = slack_recipient`. One plain-text message per run.
+
+**Fallback path** — incoming webhook (use when Slack MCP isn't loaded in headless mode):
+- Detect: if `SLACK_WEBHOOK_URL` is set in env, prefer the webhook over MCP.
+- Execute via the `Bash` tool with a heredoc-safe curl. Example:
+
+  ```bash
+  curl -X POST -H 'Content-Type: application/json' \
+    "$SLACK_WEBHOOK_URL" \
+    --data @<(jq -n --arg text "$RECAP_TEXT" '{text: $text}')
+  ```
+
+  Or, simpler — write the message to a temp file and `curl --data-binary @file`:
+
+  ```bash
+  printf '{"text": %s}' "$(jq -Rs . <<< "$RECAP_TEXT")" > /tmp/recap.json
+  curl -X POST -H 'Content-Type: application/json' \
+    --data-binary @/tmp/recap.json "$SLACK_WEBHOOK_URL"
+  ```
+
+If both MCP and webhook are absent, stop with a hard error — do not silently skip the notification.
 
 ## Process — 8 Steps
 
@@ -158,7 +179,7 @@ If a select value isn't allowed, use `notion-update-data-source` with DDL to see
 Plain text, no markdown beyond `*bold*`. Pattern:
 
 ```
-🪑 Saturday recap — Week of <Mon DD>
+🪑 Sunday recap — Week of <Mon DD>
 
 <N> action items across <M> deals → <Notion Kanban URL>
 <K> focus blocks for next week:
@@ -217,7 +238,7 @@ Two options, depending on your stack:
 id: claap-weekly-recap
 schedule:
   type: weekly
-  weekday: saturday
+  weekday: sunday
   hour: 8
   minute: 0
 steps:

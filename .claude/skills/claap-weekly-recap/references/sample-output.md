@@ -1,6 +1,6 @@
 # Sample Output — A Real Run
 
-Anonymized snapshot of one Saturday-morning run. Use this to sanity-check what
+Anonymized snapshot of one Sunday-morning run. Use this to sanity-check what
 your first run should look like.
 
 ## Inputs
@@ -89,7 +89,7 @@ Week:            2026-W21
 ## Step 7 — Slack DM delivered
 
 ```
-🪑 Saturday recap — Week of May 18
+🪑 Sunday recap — Week of May 19
 
 8 action items across 3 deals → https://www.notion.so/<your-kanban>
 4 focus blocks for next week:

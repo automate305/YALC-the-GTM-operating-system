@@ -1,10 +1,10 @@
 # claap-weekly-recap
 
-A Claude Code skill that turns a week of Claap-recorded sales calls into a Notion Kanban of action items + focus blocks, delivered with a Slack summary every Saturday morning.
+A Claude Code skill that turns a week of Claap-recorded sales calls into a Notion Kanban of action items + focus blocks, delivered with a Slack summary every Sunday morning.
 
 ## What it does
 
-Every time it runs (default: Saturday 08:00 local), the skill:
+Every time it runs (default: Sunday 08:00 local), the skill:
 
 1. Pulls the last 7 days of Claap recordings via Claap MCP
 2. Extracts per-deal action items with the prospect's verbatim wording + a timestamped Claap link to the moment in the call
@@ -15,7 +15,7 @@ Every time it runs (default: Saturday 08:00 local), the skill:
 
 ## Why it exists
 
-Most "AI meeting notes" tools stop at one-meeting summaries. The actual GTM problem is: 11 calls happened this week, the signal is scattered across 11 recordings, and on Saturday morning you can't remember which prospect said what or what to focus on next week. This skill turns the week into a week's worth of decisions.
+Most "AI meeting notes" tools stop at one-meeting summaries. The actual GTM problem is: 11 calls happened this week, the signal is scattered across 11 recordings, and on Sunday morning you can't remember which prospect said what or what to focus on next week. This skill turns the week into a week's worth of decisions.
 
 ## Quickstart (5 minutes)
 
