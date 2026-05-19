@@ -8,25 +8,54 @@ Landing page with the video, the lemlist credit, and the full breakdown: <https:
 
 ## Install
 
-The skill is bundled with YALC. If you cloned the YALC repo, it's already at `.claude/skills/lemlist-campaign-from-icp/`. To grab just this skill into another project:
+### Prerequisites
+
+- **Node.js 18+** (the lemlist MCP runs via `npx mcp-remote`)
+- **Claude Code** installed
+- **A lemlist account** ([trial via partner link](https://get.lemlist.com/skrtwnkxw60i))
+- **`LEMLIST_API_KEY` exported in your shell BEFORE starting Claude Code** (generate in lemlist → Settings → Integrations). The env var is consumed when the MCP process boots, not on each request. Restart Claude Code after exporting.
+
+### Copy the skill into your project
 
 ```sh
-gh repo clone Othmane-Khadri/YALC-the-GTM-operating-system
-cp -r YALC-the-GTM-operating-system/.claude/skills/lemlist-campaign-from-icp ./.claude/skills/
-cp -r YALC-the-GTM-operating-system/.claude/skills/lemlist ./.claude/skills/
-cp YALC-the-GTM-operating-system/.mcp.json .
+gh repo clone Othmane-Khadri/YALC-the-GTM-operating-system /tmp/yalc-src
+cp -r /tmp/yalc-src/.claude/skills/lemlist-campaign-from-icp ./.claude/skills/
+cp -r /tmp/yalc-src/.claude/skills/lemlist ./.claude/skills/
 ```
 
-You need the `lemlist/` substrate (24 atomic skills) and the `.mcp.json` (declares the lemlist MCP) alongside the orchestration skill.
+You need BOTH directories: the orchestrator (`lemlist-campaign-from-icp/`) and the 24-skill substrate (`lemlist/`). The orchestrator fails fast if the substrate is missing.
 
-## Prerequisites
+### Wire the lemlist MCP server
 
-1. **A lemlist account.** New trial via [our partner link](https://get.lemlist.com/skrtwnkxw60i).
-2. **Lemlist MCP connected to Claude Code.** Two options:
-   - API key: set `LEMLIST_API_KEY` in your shell environment (generate in lemlist → Settings → Integrations).
-   - OAuth: `claude mcp add --transport http lemlist https://app.lemlist.com/mcp`.
-   Verify with `/mcp` in Claude Code — you should see lemlist's tools (`create_campaign`, `lemleads_search`, campaign stats, etc.).
-3. **Claude Code** installed (the skill is invoked via Claude Code).
+If your project does NOT already have a `.mcp.json`:
+
+```sh
+cp /tmp/yalc-src/.mcp.json .
+```
+
+If your project ALREADY has a `.mcp.json`, MERGE the lemlist entry into your existing `mcpServers` object (do not overwrite):
+
+```json
+{
+  "mcpServers": {
+    "lemlist": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://app.lemlist.com/mcp",
+        "--header",
+        "X-API-Key: ${LEMLIST_API_KEY}"
+      ]
+    }
+  }
+}
+```
+
+Restart Claude Code. Verify with `/mcp` — you should see lemlist tools including `get_lemleads_filters`, `lemleads_search`, `create_campaign_with_sequence`, `add_sequence_step`, `add_lead_to_campaign`, `validate_campaign_readiness`, `set_campaign_state`.
+
+### Alternative: interactive OAuth
+
+If you prefer not to manage an API key, you can connect via OAuth: `claude mcp add --transport http lemlist https://app.lemlist.com/mcp`. This works for interactive sessions but does not survive in headless/CI contexts. Tool surface is otherwise identical.
 
 ## Usage
 
