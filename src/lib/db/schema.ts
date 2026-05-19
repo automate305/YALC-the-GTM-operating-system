@@ -652,3 +652,57 @@ export const companySignalsRelations = relations(companySignals, () => ({}))
 export const companySignalFetchesRelations = relations(companySignalFetches, () => ({}))
 export const dataQualityLogRelations = relations(dataQualityLog, () => ({}))
 export const leadBlocklistRelations = relations(leadBlocklist, () => ({}))
+
+// ─── Call Recordings ───────────────────────────────────────────────────────
+// Source-of-truth row per recorded sales call ingested from a call intelligence
+// provider (Claap today; pluggable). Orchestrator skills join against this
+// table when they need a prospect's actual words on the last call.
+export const callRecordings = sqliteTable('call_recordings', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  tenantId: text('tenant_id').notNull().default('default'),
+  provider: text('provider').notNull().default('claap'),
+  providerCallId: text('provider_call_id').notNull(),
+  leadId: text('lead_id'),
+  campaignId: text('campaign_id'),
+  recordingUrl: text('recording_url'),
+  callTime: integer('call_time', { mode: 'timestamp' }).notNull(),
+  durationSec: integer('duration_sec').notNull().default(0),
+  participantCount: integer('participant_count').notNull().default(0),
+  participants: text('participants', { mode: 'json' }),
+  firstSeenAt: integer('first_seen_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+}, (t) => ({
+  uniqByProviderCall: uniqueIndex('call_recordings_provider_call_idx').on(t.provider, t.providerCallId),
+  byLead: index('call_recordings_lead_idx').on(t.leadId),
+  byCallTime: index('call_recordings_call_time_idx').on(t.callTime),
+}))
+
+// ─── Call Transcripts ──────────────────────────────────────────────────────
+// Full transcript + Claap-detected moments (objections, competitor mentions,
+// feature requests, action items, next-step promises). One row per recording.
+export const callTranscripts = sqliteTable('call_transcripts', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  callRecordingId: text('call_recording_id')
+    .notNull()
+    .references(() => callRecordings.id, { onDelete: 'cascade' }),
+  text: text('text').notNull(),
+  summary: text('summary'),
+  moments: text('moments', { mode: 'json' }),
+  language: text('language').notNull().default('en'),
+  ingestedAt: integer('ingested_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+}, (t) => ({
+  byRecording: uniqueIndex('call_transcripts_recording_idx').on(t.callRecordingId),
+}))
+
+export const callRecordingsRelations = relations(callRecordings, ({ one }) => ({
+  transcript: one(callTranscripts, {
+    fields: [callRecordings.id],
+    references: [callTranscripts.callRecordingId],
+  }),
+}))
+
+export const callTranscriptsRelations = relations(callTranscripts, ({ one }) => ({
+  recording: one(callRecordings, {
+    fields: [callTranscripts.callRecordingId],
+    references: [callRecordings.id],
+  }),
+}))
