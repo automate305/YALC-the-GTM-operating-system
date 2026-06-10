@@ -1,5 +1,14 @@
 {
   "mcpServers": {
+    "oxygen-agent": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://oxygen-agent.com/mcp",
+        "--header",
+        "Authorization: Bearer ${OXYGEN_API_KEY}"
+      ]
+    },
     "lemlist": {
       "command": "npx",
       "args": [
