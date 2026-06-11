@@ -1,22 +1,23 @@
-export default function CTASection({ heading = "Ready to stop leaving revenue on the table?" }: { heading?: string }) {
+export default function CTASection() {
   return (
-    <section className="bg-brand-dark py-24 px-4 text-center">
-      <div className="max-w-3xl mx-auto">
-        <h2 className="text-white text-4xl md:text-5xl font-black mb-6 leading-tight">
-          {heading}
+    <section className="bg-[#0C0812] py-24">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 className="text-4xl sm:text-5xl font-black text-white mb-6">
+          Ready to Stop Losing Revenue<br />to Slow Follow-Up?
         </h2>
-        <p className="text-gray-400 text-lg mb-10">
-          Book a free 30-minute audit. We&apos;ll map your highest-ROI automation opportunity and show you exactly how it works.
+        <p className="text-gray-400 text-lg mb-10 max-w-2xl mx-auto">
+          Book a free 30-minute revenue audit. We&apos;ll map your biggest automation opportunity and show you exactly what a system would look like for your business.
         </p>
         <a
           href="https://cal.com/automate305"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block bg-brand-purple text-white font-bold text-lg px-10 py-4 rounded-full hover:bg-purple-700 transition-colors"
+          className="inline-block bg-[#7B3FF2] text-white font-semibold text-lg px-10 py-4 rounded-full hover:opacity-90 transition-opacity"
         >
-          Book a Free Audit
+          Book a Free Audit →
         </a>
+        <p className="text-gray-600 text-sm mt-4">No commitment. 30 minutes. Miami-based team.</p>
       </div>
     </section>
-  );
+  )
 }
