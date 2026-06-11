@@ -1,134 +1,117 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CTASection from "@/components/CTASection";
+import { Zap, Target, Users, MapPin } from "lucide-react";
+import type { Metadata } from "next";
 
-const team = [
-  {
-    initials: "OA",
-    name: "Othmane Khadri",
-    title: "Founder & CEO",
-    bio: "Miami-based operator and AI systems architect. Built revenue automation systems for home service companies, financial services firms, and B2B sales organizations.",
-  },
-  {
-    initials: "AA",
-    name: "Alex A.",
-    title: "Head of Automation",
-    bio: "Automation engineer specializing in CRM integrations, workflow orchestration, and AI-native business systems built for speed and reliability.",
-  },
-  {
-    initials: "MR",
-    name: "Maria R.",
-    title: "Client Success Lead",
-    bio: "Former operations manager who bridges the gap between business goals and technical systems — ensuring every automation stack actually drives revenue.",
-  },
-];
+export const metadata: Metadata = {
+  title: "About Automate305 | Miami AI Automation Agency",
+  description: "Automate305 is a Miami-based AI automation agency helping home service, professional service, and hospitality businesses run leaner with AI.",
+};
 
 const values = [
   {
-    emoji: "⚡",
-    title: "Speed is the product",
-    desc: "The businesses that win respond faster. Everything we build is optimized for speed-to-lead, speed-to-response, and speed-to-close.",
+    icon: Zap,
+    title: "Speed is Revenue",
+    desc: "The first business to respond wins. We build systems that make your response time a competitive weapon.",
   },
   {
-    emoji: "🎯",
-    title: "Revenue, not features",
-    desc: "We don't sell dashboards. We sell revenue systems. Every automation we build is tied to a measurable outcome — leads, bookings, or dollars.",
+    icon: Target,
+    title: "No Bloat, Just Revenue",
+    desc: "We don't sell dashboards you won't look at. Every system we build traces directly to revenue in or revenue protected.",
   },
   {
-    emoji: "🔒",
-    title: "Your data stays yours",
-    desc: "We never hold your data hostage. Everything we build lives in systems you own and control. No lock-in, no black boxes.",
+    icon: Users,
+    title: "Built for Operators",
+    desc: "We work with founders and operators who run lean. Our systems replace headcount, not add to it.",
   },
   {
-    emoji: "🤝",
-    title: "Operators first",
-    desc: "We work with founders and operators, not enterprise procurement. We move fast, communicate directly, and ship systems that work.",
+    icon: MapPin,
+    title: "Miami-First Mindset",
+    desc: "We're local. We know Miami-Dade's trades, its hospitality scene, its SMB lending ecosystem. Context matters.",
   },
 ];
 
 export default function AboutPage() {
   return (
-    <main className="bg-brand-cream">
+    <main className="bg-brand-cream min-h-screen">
       <Navbar />
 
-      {/* Hero */}
-      <section className="bg-brand-dark pt-28 pb-20 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">
-            Miami-Built.<br />
-            <span className="text-brand-purple">Revenue-Focused.</span>
+      <section className="bg-brand-dark py-20 px-4 text-center">
+        <div className="max-w-3xl mx-auto">
+          <span className="text-brand-purple text-sm font-semibold uppercase tracking-wider">Our Story</span>
+          <h1 className="text-5xl font-black text-white mt-3 mb-4">
+            We Build the Revenue Systems<br />
+            <span className="text-brand-purple">Miami Businesses Actually Need</span>
           </h1>
-          <p className="text-gray-400 text-xl max-w-2xl mx-auto">
-            Automate305 is a Miami-Dade AI automation agency. We build revenue systems for the businesses that power South Florida — the contractors, lenders, restaurants, and professional firms that keep this city running.
+          <p className="text-gray-300 text-lg">
+            Miami AI automation agency. Local team. Real results.
           </p>
         </div>
       </section>
 
-      {/* Mission */}
-      <section className="py-24 px-4 bg-white">
+      <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="text-brand-purple text-sm font-bold uppercase tracking-wider mb-4">Our Mission</div>
-              <h2 className="text-3xl font-black text-brand-dark mb-6 leading-tight">
-                Give Miami businesses the revenue infrastructure that enterprise companies take for granted.
-              </h2>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                The average HVAC company loses 30% of its inbound leads to slow response times. The average law firm follows up once, maybe twice, then lets prospects go cold. The average restaurant never asks a happy guest to come back.
+              <h2 className="text-3xl font-black mb-4">Our Mission</h2>
+              <p className="text-gray-700 leading-relaxed mb-4">
+                Automate305 exists to help home service businesses, professional service firms,
+                and hospitality brands in Miami-Dade compete and win — without adding headcount.
               </p>
-              <p className="text-gray-600 leading-relaxed">
-                We fix that. One automation system at a time. Built for operators who run lean, move fast, and want their data on systems they control.
+              <p className="text-gray-700 leading-relaxed mb-4">
+                The businesses we work with are already good at what they do. They fix AC units,
+                close loans, fill tables, and keep clients happy. What they don't have time for is
+                manually following up on every lead, texting every client a status update, and
+                chasing reviews after every job.
+              </p>
+              <p className="text-gray-700 leading-relaxed">
+                That's where we come in. We build AI-powered revenue systems that handle all of
+                it — so our clients can focus on the work that actually needs a human.
               </p>
             </div>
-            <div className="bg-brand-cream rounded-2xl p-10 text-center">
-              <div className="text-brand-purple font-black text-6xl mb-2">305</div>
-              <p className="text-gray-500 text-sm font-medium">Miami-Dade area code</p>
-              <div className="border-t border-gray-200 mt-6 pt-6">
-                <p className="text-gray-700 text-sm leading-relaxed">
-                  We are proud to be a Miami company. Our clients are our neighbors. Their success is our success.
-                </p>
+            <div className="bg-brand-dark rounded-2xl p-8 text-white">
+              <div className="flex items-center gap-2 mb-6">
+                <Zap className="w-6 h-6 text-brand-purple fill-brand-purple" />
+                <span className="font-black text-xl">AUTOMATE<span className="text-brand-purple">305</span></span>
               </div>
+              <p className="text-gray-300 leading-relaxed italic">
+                &quot;Most businesses in Miami are leaving revenue on the table every single day — not
+                because they're bad at their job, but because their follow-up is slow, their lead
+                capture is leaky, and their post-job loop is nonexistent. AI fixes all three.&quot;
+              </p>
+              <p className="text-brand-purple font-semibold mt-4 text-sm">— Automate305 Team</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Team */}
-      <section className="py-24 px-4">
+      <section className="bg-white py-20 px-4">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-black text-brand-dark text-center mb-4">The Team</h2>
-          <p className="text-center text-gray-500 mb-16 max-w-xl mx-auto">
-            Small team. Deep expertise. We have been building revenue systems for Miami businesses since 2023.
-          </p>
-          <div className="grid md:grid-cols-3 gap-8">
-            {team.map((member) => (
-              <div key={member.name} className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm text-center">
-                <div className="w-20 h-20 rounded-full bg-brand-purple/10 flex items-center justify-center mx-auto mb-5">
-                  <span className="text-brand-purple font-black text-xl">{member.initials}</span>
-                </div>
-                <h3 className="font-bold text-brand-dark text-lg">{member.name}</h3>
-                <p className="text-brand-purple text-sm font-semibold mb-3">{member.title}</p>
-                <p className="text-gray-500 text-sm leading-relaxed">{member.bio}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Values */}
-      <section className="py-24 px-4 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-black text-brand-dark text-center mb-16">How we work</h2>
-          <div className="grid md:grid-cols-2 gap-8">
+          <h2 className="text-3xl font-black text-center mb-12">What We Stand For</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {values.map((v) => (
-              <div key={v.title} className="flex gap-5 items-start">
-                <div className="text-3xl mt-1">{v.emoji}</div>
-                <div>
-                  <h3 className="font-bold text-brand-dark text-lg mb-2">{v.title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">{v.desc}</p>
-                </div>
+              <div key={v.title} className="bg-brand-cream rounded-2xl p-6 border border-gray-100">
+                <v.icon className="w-8 h-8 text-brand-purple mb-3" />
+                <h3 className="font-bold text-lg mb-2">{v.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{v.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-4">
+        <div className="max-w-5xl mx-auto text-center">
+          <h2 className="text-3xl font-black mb-4">Based in Miami. Built for Miami.</h2>
+          <p className="text-gray-600 max-w-xl mx-auto mb-8">
+            We operate in Miami-Dade County — zip 33128. We work with local businesses, understand
+            local markets, and show up when needed. This isn't a remote SaaS tool. It's a local
+            AI implementation partner.
+          </p>
+          <div className="inline-flex items-center gap-2 bg-brand-purple/10 border border-brand-purple/20 rounded-full px-5 py-2">
+            <MapPin className="w-4 h-4 text-brand-purple" />
+            <span className="text-brand-purple text-sm font-semibold">Miami, FL 33128 · Serving all of Miami-Dade</span>
           </div>
         </div>
       </section>

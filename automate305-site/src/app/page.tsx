@@ -17,8 +17,8 @@ import Link from "next/link";
 
 const caseStudies = [
   {
-    name: "Carlos Z.",
-    company: "Pure Air Pros",
+    client: "Carlos Z.",
+    business: "Pure Air Pros",
     industry: "HVAC · Miami-Dade",
     description:
       "Speed-to-lead capture, after-hours dispatcher, automated review-request loop, calendar handoff for booked jobs.",
@@ -27,8 +27,8 @@ const caseStudies = [
       "Every inbound inquiry replied to before it shops the next contractor.",
   },
   {
-    name: "Independent Aesthetics Rep",
-    company: "",
+    client: "Independent Aesthetics Rep",
+    business: "Aesthetics Sales",
     industry: "Aesthetics · National",
     description:
       "A lead-gen engine, end-to-end — sender infrastructure, two parallel cold campaigns, anti-cannibalization across a shared ICP, booking handoff to her calendar.",
@@ -36,8 +36,8 @@ const caseStudies = [
     quote: "Cold outbound across two campaigns, one rep, zero SDRs.",
   },
   {
-    name: "Felipe C.",
-    company: "Mint Financial",
+    client: "Felipe C.",
+    business: "Mint Financial",
     industry: "Financial Services · S. FL",
     description:
       "Client intake automation, deal-status comms, pipeline visibility across the loan lifecycle — intake to close, on one rail.",

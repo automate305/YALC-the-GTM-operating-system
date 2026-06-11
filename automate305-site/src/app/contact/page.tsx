@@ -1,157 +1,184 @@
-"use client"
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-import { useState } from 'react'
-import { MapPin, Calendar } from 'lucide-react'
+"use client";
+import { useState } from "react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { MapPin, Mail, Calendar, ArrowRight } from "lucide-react";
 
 export default function ContactPage() {
-  const [submitted, setSubmitted] = useState(false)
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    businessType: "",
+    message: "",
+  });
+  const [submitted, setSubmitted] = useState(false);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setSubmitted(true)
-  }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
 
   return (
-    <main>
+    <main className="bg-brand-cream min-h-screen">
       <Navbar />
 
-      <section className="bg-[#0C0812] pt-32 pb-24 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3">Contact</p>
-          <h1 className="text-5xl md:text-6xl font-black text-white mb-6">
-            Let&apos;s Build Your<br />
-            <span className="text-[#7B3FF2]">Revenue System.</span>
-          </h1>
-          <p className="text-gray-400 text-xl">
-            Book a free 30-minute audit or fill out the form below. No commitment, no sales pitch — just a clear picture of your revenue gaps.
-          </p>
+      <section className="bg-brand-dark py-20 px-4 text-center">
+        <div className="max-w-3xl mx-auto">
+          <span className="text-brand-purple text-sm font-semibold uppercase tracking-wider">Get in Touch</span>
+          <h1 className="text-5xl font-black text-white mt-3 mb-4">Let's Talk Revenue</h1>
+          <p className="text-gray-300 text-lg">Book a free audit and find out exactly where you're leaving money on the table.</p>
         </div>
       </section>
 
-      <section className="bg-[#FAF7F2] py-24 px-4">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
-
-          {/* Form */}
+      <section className="py-20 px-4">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div>
-            <h2 className="text-2xl font-black text-gray-900 mb-8">Request a Free Audit</h2>
-            {submitted ? (
-              <div className="bg-[#7B3FF2]/10 border border-[#7B3FF2]/30 rounded-2xl p-10 text-center">
-                <div className="text-4xl mb-4">✅</div>
-                <h3 className="font-black text-xl text-gray-900 mb-2">Got it!</h3>
-                <p className="text-gray-600">We&apos;ll be in touch within 1 business day to schedule your audit.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 block mb-1.5">First Name</label>
-                    <input required type="text" placeholder="Carlos" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7B3FF2] bg-white" />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 block mb-1.5">Last Name</label>
-                    <input required type="text" placeholder="Zapata" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7B3FF2] bg-white" />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 block mb-1.5">Email</label>
-                  <input required type="email" placeholder="carlos@pureairpros.com" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7B3FF2] bg-white" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 block mb-1.5">Phone</label>
-                  <input type="tel" placeholder="(305) 555-0100" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7B3FF2] bg-white" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 block mb-1.5">Business Type</label>
-                  <select required className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7B3FF2] bg-white text-gray-700">
-                    <option value="">Select your industry</option>
-                    <optgroup label="Home Services">
-                      <option>HVAC</option>
-                      <option>Roofing</option>
-                      <option>Plumbing</option>
-                      <option>Electrical</option>
-                      <option>Restoration</option>
-                    </optgroup>
-                    <optgroup label="Professional Services">
-                      <option>SMB Lending</option>
-                      <option>Law Firm</option>
-                      <option>Consulting</option>
-                      <option>Insurance</option>
-                    </optgroup>
-                    <optgroup label="Hospitality">
-                      <option>Restaurant</option>
-                      <option>Bar / Lounge</option>
-                      <option>Hotel</option>
-                    </optgroup>
-                    <option>Other</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 block mb-1.5">What&apos;s your biggest revenue challenge right now?</label>
-                  <textarea rows={4} placeholder="Tell us what's slipping through the cracks..." className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#7B3FF2] bg-white resize-none" />
-                </div>
-                <button type="submit" className="w-full bg-[#7B3FF2] text-white font-bold py-4 rounded-xl hover:bg-[#6930d4] transition-colors text-lg">
-                  Request My Free Audit →
-                </button>
-              </form>
-            )}
-          </div>
+            <h2 className="text-3xl font-black mb-6">Book a Free Audit</h2>
+            <p className="text-gray-600 mb-8 leading-relaxed">
+              No commitment, no sales pitch. A 30-minute call where we map your current lead capture,
+              follow-up, and retention gaps — and tell you exactly what AI can fix.
+            </p>
 
-          {/* Cal.com + info */}
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-2xl font-black text-gray-900 mb-4">Or book directly</h2>
-              <p className="text-gray-500 text-sm mb-6">Skip the form and grab a time on our calendar. 30 minutes, no commitment.</p>
+            <div className="space-y-4 mb-10">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-brand-purple/10 flex items-center justify-center flex-shrink-0">
+                  <Calendar className="w-5 h-5 text-brand-purple" />
+                </div>
+                <div>
+                  <p className="font-semibold">Schedule Online</p>
+                  <a href="https://cal.com/automate305" target="_blank" rel="noopener noreferrer" className="text-brand-purple text-sm hover:underline flex items-center gap-1">
+                    cal.com/automate305 <ArrowRight className="w-3 h-3" />
+                  </a>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-brand-purple/10 flex items-center justify-center flex-shrink-0">
+                  <Mail className="w-5 h-5 text-brand-purple" />
+                </div>
+                <div>
+                  <p className="font-semibold">Email Us</p>
+                  <p className="text-gray-500 text-sm">hello@automate305.com</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-brand-purple/10 flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-5 h-5 text-brand-purple" />
+                </div>
+                <div>
+                  <p className="font-semibold">Location</p>
+                  <p className="text-gray-500 text-sm">Miami, FL 33128 · Miami-Dade County</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl p-6 border border-gray-100">
+              <p className="font-semibold mb-2">Prefer to schedule directly?</p>
+              <p className="text-gray-500 text-sm mb-4">Use our calendar link to pick a time that works for you.</p>
               <a
                 href="https://cal.com/automate305"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl p-5 hover:border-[#7B3FF2] transition-colors group"
+                className="inline-flex items-center gap-2 bg-brand-purple text-white font-semibold px-6 py-3 rounded-full hover:bg-purple-700 transition-colors text-sm"
               >
-                <div className="w-12 h-12 bg-[#7B3FF2]/10 rounded-xl flex items-center justify-center">
-                  <Calendar className="w-6 h-6 text-[#7B3FF2]" />
-                </div>
-                <div>
-                  <p className="font-bold text-gray-900 group-hover:text-[#7B3FF2] transition-colors">Book a Free 30-min Audit</p>
-                  <p className="text-gray-500 text-sm">cal.com/automate305</p>
-                </div>
+                Open Calendar <ArrowRight className="w-4 h-4" />
               </a>
             </div>
+          </div>
 
-            <div className="bg-white rounded-2xl p-8 border border-gray-100">
-              <div className="flex items-start gap-3 mb-4">
-                <MapPin className="w-5 h-5 text-[#7B3FF2] mt-0.5" />
-                <div>
-                  <p className="font-bold text-gray-900">Miami, FL 33128</p>
-                  <p className="text-gray-500 text-sm">Serving Miami-Dade, Coral Gables, and surrounding metro area</p>
+          <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+            {submitted ? (
+              <div className="text-center py-10">
+                <div className="w-16 h-16 rounded-full bg-brand-purple/10 flex items-center justify-center mx-auto mb-4">
+                  <ArrowRight className="w-8 h-8 text-brand-purple" />
                 </div>
+                <h3 className="text-2xl font-black mb-2">We got it!</h3>
+                <p className="text-gray-600">We'll reach out within one business day. Or skip the wait — book directly at cal.com/automate305.</p>
               </div>
-              <div className="border-t border-gray-100 pt-4 mt-4">
-                <p className="text-gray-500 text-sm">Response time: within 1 business day</p>
-              </div>
-            </div>
-
-            <div className="bg-[#0C0812] rounded-2xl p-8 text-white">
-              <p className="font-black text-lg mb-2">What happens in the audit?</p>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                {[
-                  'We map your current lead flow end-to-end',
-                  'We identify your top 3 revenue leaks',
-                  'We show you what automation fixes each one',
-                  'You leave with a clear action plan — use it with us or on your own',
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2">
-                    <span className="text-[#7B3FF2] mt-0.5">→</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            ) : (
+              <>
+                <h3 className="text-xl font-black mb-6">Send Us a Message</h3>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-purple"
+                      placeholder="Carlos Rodriguez"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                    <input
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-purple"
+                      placeholder="carlos@yourcompany.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                    <input
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-purple"
+                      placeholder="(305) 555-0100"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Business Type *</label>
+                    <select
+                      required
+                      value={formData.businessType}
+                      onChange={(e) => setFormData({ ...formData, businessType: e.target.value })}
+                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-purple bg-white"
+                    >
+                      <option value="">Select your industry</option>
+                      <option value="hvac">HVAC</option>
+                      <option value="roofing">Roofing</option>
+                      <option value="plumbing">Plumbing</option>
+                      <option value="electrical">Electrical</option>
+                      <option value="restoration">Restoration</option>
+                      <option value="lending">SMB Lending</option>
+                      <option value="law">Law Firm</option>
+                      <option value="consulting">Consulting</option>
+                      <option value="insurance">Insurance</option>
+                      <option value="restaurant">Restaurant</option>
+                      <option value="bar-lounge">Bar / Lounge</option>
+                      <option value="hotel">Hotel / Short-Term Rental</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">What's your biggest revenue gap?</label>
+                    <textarea
+                      rows={3}
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-purple resize-none"
+                      placeholder="E.g. We lose leads after hours, our follow-up is inconsistent..."
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full bg-brand-purple text-white font-bold py-3 rounded-full hover:bg-purple-700 transition-colors"
+                  >
+                    Send Message
+                  </button>
+                </form>
+              </>
+            )}
           </div>
         </div>
       </section>
 
       <Footer />
     </main>
-  )
+  );
 }
