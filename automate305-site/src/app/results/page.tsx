@@ -13,27 +13,32 @@ export const metadata: Metadata = {
 
 const caseStudies = [
   {
-    client: "Carlos Z.",
-    business: "Pure Air Pros",
+    tag: "HVAC",
+    name: "Carlos Z.",
+    company: "Pure Air Pros",
     industry: "HVAC · Miami-Dade",
     description: "Speed-to-lead capture, after-hours dispatcher, automated review-request loop, calendar handoff for booked jobs.",
-    stat: "<5 min response",
+    stat: "<5 min",
+    statLabel: "avg. response time",
     quote: "Every inbound inquiry replied to before it shops the next contractor.",
   },
   {
-    client: "Independent Aesthetics Rep",
-    business: "Aesthetics Sales",
+    tag: "Outbound",
+    name: "Independent Aesthetics Rep",
     industry: "Aesthetics · National",
     description: "A lead-gen engine, end-to-end — sender infrastructure, two parallel cold campaigns, anti-cannibalization across a shared ICP, booking handoff to her calendar.",
-    stat: "3,000+ contacts/mo",
+    stat: "3,000+",
+    statLabel: "contacts sourced/mo",
     quote: "Cold outbound across two campaigns, one rep, zero SDRs.",
   },
   {
-    client: "Felipe C.",
-    business: "Mint Financial",
+    tag: "Finance",
+    name: "Felipe C.",
+    company: "Mint Financial",
     industry: "Financial Services · S. FL",
     description: "Client intake automation, deal-status comms, pipeline visibility across the loan lifecycle — intake to close, on one rail.",
-    stat: "100% touchpoints automated",
+    stat: "100%",
+    statLabel: "touchpoints automated",
     quote: "Built for an SMB lender who can't afford to lose another deal to a delayed status email.",
   },
 ];
@@ -100,7 +105,7 @@ export default function ResultsPage() {
           <h2 className="text-3xl font-black text-white text-center mb-12">Client Case Studies</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {caseStudies.map((cs) => (
-              <CaseStudyCard key={cs.client} {...cs} />
+              <CaseStudyCard key={cs.name} {...cs} />
             ))}
           </div>
         </div>
