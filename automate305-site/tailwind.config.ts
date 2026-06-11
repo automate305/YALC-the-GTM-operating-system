@@ -9,9 +9,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        cream: '#FAF7F2',
-        dark: '#0C0812',
-        purple: '#7B3FF2',
+        brand: {
+          purple: '#7B3FF2',
+          cream: '#FAF7F2',
+          dark: '#0C0812',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
