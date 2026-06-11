@@ -1,82 +1,67 @@
-"use client";
-import { useState } from "react";
-import Link from "next/link";
-import { Menu, X, Zap } from "lucide-react";
+'use client'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false)
 
-  const links = [
-    { href: "/industries/home-services", label: "Industries" },
-    { href: "/#solutions", label: "Solutions" },
-    { href: "/results", label: "Results" },
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
-  ];
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
-    <nav className="sticky top-0 z-50 bg-brand-cream/95 backdrop-blur border-b border-gray-100">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#0C0812] shadow-lg' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2">
-            <Zap className="w-6 h-6 text-brand-purple fill-brand-purple" />
-            <span className="font-black text-xl tracking-tight">
-              AUTOMATE<span className="text-brand-purple">305</span>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13 2L4.5 13.5H12L11 22L19.5 10.5H12L13 2Z" fill="#7B3FF2" stroke="#7B3FF2" strokeWidth="1" strokeLinejoin="round"/>
+            </svg>
+            <span className="text-lg font-black tracking-tight">
+              <span className={scrolled ? 'text-white' : 'text-[#0C0812]'}>AUTOMATE</span>
+              <span className="text-[#7B3FF2]">305</span>
             </span>
           </Link>
-
           <div className="hidden md:flex items-center gap-8">
-            {links.map((l) => (
+            {[
+              { label: 'Industries', href: '/industries/home-services' },
+              { label: 'Solutions', href: '#solutions' },
+              { label: 'Results', href: '/results' },
+              { label: 'About', href: '/about' },
+              { label: 'Contact', href: '/contact' },
+            ].map(({ label, href }) => (
               <Link
-                key={l.href}
-                href={l.href}
-                className="text-sm font-medium text-gray-700 hover:text-brand-purple transition-colors"
+                key={label}
+                href={href}
+                className={`text-sm font-medium transition-colors hover:text-[#7B3FF2] ${scrolled ? 'text-white' : 'text-[#0C0812]'}`}
               >
-                {l.label}
+                {label}
               </Link>
             ))}
             <a
               href="https://cal.com/automate305"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-brand-purple text-white text-sm font-semibold px-5 py-2 rounded-full hover:bg-purple-700 transition-colors"
+              className="bg-[#7B3FF2] text-white text-sm font-semibold px-5 py-2 rounded-full hover:opacity-90 transition-opacity"
             >
               Book a Free Audit
             </a>
           </div>
-
-          <button
-            className="md:hidden p-2"
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle menu"
-          >
-            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          {/* Mobile: just the CTA */}
+          <div className="md:hidden">
+            <a
+              href="https://cal.com/automate305"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#7B3FF2] text-white text-sm font-semibold px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
+            >
+              Book Audit
+            </a>
+          </div>
         </div>
       </div>
-
-      {open && (
-        <div className="md:hidden bg-brand-cream border-t border-gray-100 px-4 py-4 flex flex-col gap-4">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="text-sm font-medium text-gray-700"
-              onClick={() => setOpen(false)}
-            >
-              {l.label}
-            </Link>
-          ))}
-          <a
-            href="https://cal.com/automate305"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-brand-purple text-white text-sm font-semibold px-5 py-2 rounded-full text-center"
-          >
-            Book a Free Audit
-          </a>
-        </div>
-      )}
     </nav>
-  );
+  )
 }

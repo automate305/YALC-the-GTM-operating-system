@@ -13,24 +13,24 @@ export const metadata: Metadata = {
 
 const caseStudies = [
   {
-    name: "Carlos Z.",
-    company: "Pure Air Pros",
+    client: "Carlos Z.",
+    business: "Pure Air Pros",
     industry: "HVAC · Miami-Dade",
     description: "Speed-to-lead capture, after-hours dispatcher, automated review-request loop, calendar handoff for booked jobs.",
     stat: "<5 min response",
     quote: "Every inbound inquiry replied to before it shops the next contractor.",
   },
   {
-    name: "Independent Aesthetics Rep",
-    company: "",
+    client: "Independent Aesthetics Rep",
+    business: "Aesthetics Sales",
     industry: "Aesthetics · National",
     description: "A lead-gen engine, end-to-end — sender infrastructure, two parallel cold campaigns, anti-cannibalization across a shared ICP, booking handoff to her calendar.",
     stat: "3,000+ contacts/mo",
     quote: "Cold outbound across two campaigns, one rep, zero SDRs.",
   },
   {
-    name: "Felipe C.",
-    company: "Mint Financial",
+    client: "Felipe C.",
+    business: "Mint Financial",
     industry: "Financial Services · S. FL",
     description: "Client intake automation, deal-status comms, pipeline visibility across the loan lifecycle — intake to close, on one rail.",
     stat: "100% touchpoints automated",
@@ -100,7 +100,7 @@ export default function ResultsPage() {
           <h2 className="text-3xl font-black text-white text-center mb-12">Client Case Studies</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {caseStudies.map((cs) => (
-              <CaseStudyCard key={cs.name} {...cs} />
+              <CaseStudyCard key={cs.client} {...cs} />
             ))}
           </div>
         </div>

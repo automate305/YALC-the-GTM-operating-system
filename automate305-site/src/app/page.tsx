@@ -199,7 +199,7 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {caseStudies.map((cs) => (
-              <CaseStudyCard key={cs.name} {...cs} />
+              <CaseStudyCard key={cs.client} {...cs} />
             ))}
           </div>
           <div className="text-center mt-12">

@@ -1,21 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 :root {
-  --brand-purple: #7B3FF2;
-  --brand-cream: #FAF7F2;
-  --brand-dark: #0C0812;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: #FAF7F2;
-  color: #0C0812;
+  --cream: #FAF7F2;
+  --dark: #0C0812;
+  --purple: #7B3FF2;
 }
 
 html {
-  scroll-behavior: smooth;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--cream);
+  color: var(--dark);
+}
+
+body {
+  background-color: var(--cream);
 }
