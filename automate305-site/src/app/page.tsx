@@ -8,6 +8,13 @@ import LogoMarquee from '@/components/LogoMarquee'
 import ResultsChart from '@/components/ResultsChart'
 import Link from 'next/link'
 import { Wrench, Briefcase, UtensilsCrossed, Zap } from 'lucide-react'
+import TypewriterSwap from '@/components/TypewriterSwap'
+import CountUpStat from '@/components/CountUpStat'
+import ROICalculator from '@/components/ROICalculator'
+import StickyBar from '@/components/StickyBar'
+import FadeIn from '@/components/FadeIn'
+import IndustryTabs from '@/components/IndustryTabs'
+import CursorGlow from '@/components/CursorGlow'
 
 const caseStudies = [
   {
@@ -100,6 +107,7 @@ export default function HomePage() {
         id="hero"
         className="bg-[#0C0812] min-h-screen flex items-center justify-center px-4 pt-16 relative overflow-hidden"
       >
+        <CursorGlow />
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: 'linear-gradient(#7B3FF2 1px, transparent 1px), linear-gradient(90deg, #7B3FF2 1px, transparent 1px)',
           backgroundSize: '60px 60px',
@@ -112,7 +120,7 @@ export default function HomePage() {
           <h1 className="text-5xl md:text-7xl font-black text-white leading-tight mb-6">
             More Leads.<br />
             Faster Follow-Up.<br />
-            <span className="text-[#7B3FF2]">More Revenue.</span>
+            <TypewriterSwap className="text-[#7B3FF2]" />
           </h1>
           <p className="text-gray-400 text-xl md:text-2xl mb-10 max-w-2xl mx-auto leading-relaxed">
             The AI-powered revenue system for home service businesses, professional service firms, and hospitality brands.
@@ -144,79 +152,60 @@ export default function HomePage() {
       {/* ─── 2. HOW IT WORKS ────────────────────────────────── */}
       <section id="how-it-works" className="bg-[#0C0812] py-24 px-4">
         <div className="max-w-5xl mx-auto">
-          <p className="text-[#7B3FF2] text-xs font-semibold uppercase tracking-[0.15em] mb-3 text-center">
-            HOW YOUR LEADS GET HANDLED
-          </p>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4 text-center">
-            From first contact to booked appointment —<br />
-            <span className="text-[#7B3FF2]">zero manual steps.</span>
-          </h2>
-          <p className="text-gray-400 text-lg text-center mb-14 max-w-2xl mx-auto">
-            Watch the flow. Every node is a real system component running 24/7. Hover each to see what it does.
-          </p>
-          <OrchestrationFlow />
+          <FadeIn>
+            <p className="text-[#7B3FF2] text-xs font-semibold uppercase tracking-[0.15em] mb-3 text-center">
+              HOW YOUR LEADS GET HANDLED
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-4 text-center">
+              From first contact to booked appointment —<br />
+              <span className="text-[#7B3FF2]">zero manual steps.</span>
+            </h2>
+          </FadeIn>
+          <FadeIn delay={0.2}>
+            <p className="text-gray-400 text-lg text-center mb-14 max-w-2xl mx-auto">
+              Watch the flow. Every node is a real system component running 24/7. Hover each to see what it does.
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <OrchestrationFlow />
           <div className="mt-10 text-center">
             <CalButton className="inline-block bg-[#7B3FF2] text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-[#6930d4] transition-colors">
               Build this for my business →
             </CalButton>
           </div>
+          </FadeIn>
         </div>
       </section>
 
+      {/* ─── ROI CALCULATOR ─────────────────────────────────── */}
+      <ROICalculator />
+
       {/* ─── 3. INDUSTRIES ──────────────────────────────────── */}
       <section id="industries" className="py-24 px-4 bg-[#FAF7F2]">
-        <div className="max-w-6xl mx-auto">
-          <p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3 text-center">Industries</p>
-          <h2 className="text-4xl font-black text-gray-900 mb-4 text-center">Built for your business type</h2>
-          <p className="text-gray-500 text-center mb-12">Hover a card to see a preview of what we deploy.</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {industryCards.map(({ icon: Icon, title, desc, href, preview }) => (
-              <Link
-                key={title}
-                href={href}
-                className="group relative bg-[#0C0812] rounded-2xl border border-gray-800 hover:border-[#7B3FF2]/60 overflow-hidden transition-all duration-300 min-h-[280px] flex flex-col"
-              >
-                {/* Base content */}
-                <div className="p-8 flex flex-col flex-1 relative z-10 transition-opacity duration-300 group-hover:opacity-0">
-                  <Icon className="w-10 h-10 text-[#7B3FF2] mb-4 shrink-0" />
-                  <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
-                  <span className="text-[#7B3FF2] text-sm font-semibold mt-auto pt-4 inline-block">
-                    Explore →
-                  </span>
-                </div>
-
-                {/* Hover preview — cross-fades in */}
-                <div className="absolute inset-0 p-8 flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 bg-[#0C0812]">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Icon className="w-6 h-6 text-[#7B3FF2] shrink-0" />
-                    <h3 className="text-lg font-bold text-white">{title}</h3>
-                  </div>
-                  <p className="text-xs font-semibold text-[#7B3FF2] uppercase tracking-widest mb-3">What we deploy:</p>
-                  <ul className="space-y-3 flex-1">
-                    {preview.map(item => (
-                      <li key={item} className="flex items-start gap-2 text-sm text-gray-300">
-                        <Zap className="w-3.5 h-3.5 text-[#7B3FF2] shrink-0 mt-0.5" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <span className="text-[#7B3FF2] text-sm font-semibold mt-4 inline-block border border-[#7B3FF2]/30 rounded-lg px-4 py-2 text-center hover:bg-[#7B3FF2] hover:text-white transition-colors">
-                    See full playbook →
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
+        <div className="max-w-4xl mx-auto">
+          <FadeIn>
+            <p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3 text-center">Industries</p>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <h2 className="text-4xl font-black text-gray-900 mb-4 text-center">Built for your business type</h2>
+          </FadeIn>
+          <FadeIn delay={0.2}>
+            <p className="text-gray-500 text-center mb-12">Select your industry to see what we deploy.</p>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <IndustryTabs />
+          </FadeIn>
         </div>
       </section>
 
       {/* ─── 4. RESULTS ─────────────────────────────────────── */}
       <section id="results" className="bg-[#0C0812] py-24 px-4">
         <div className="max-w-5xl mx-auto">
-          <p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3 text-center">Results</p>
-          <h2 className="text-4xl font-black text-white mb-4 text-center">The numbers don&apos;t lie.</h2>
-          <p className="text-gray-400 text-center mb-14 text-lg">Real outcomes from real Automate305 deployments across Miami-Dade and beyond.</p>
+          <FadeIn><p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3 text-center">Results</p></FadeIn>
+          <FadeIn delay={0.1}><h2 className="text-4xl font-black text-white mb-4 text-center">The numbers don&apos;t lie.</h2></FadeIn>
+          <FadeIn delay={0.2}><p className="text-gray-400 text-center mb-14 text-lg">Real outcomes from real Automate305 deployments across Miami-Dade and beyond.</p></FadeIn>
 
           {/* RevOps Dashboard */}
           <div id="revops-dashboard" className="mb-20 scroll-mt-20">
@@ -226,18 +215,10 @@ export default function HomePage() {
               <ResultsChart />
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-              {[
-                { label: 'Avg. Response Time', value: '<5 min', sub: 'vs. 47 min industry avg' },
-                { label: 'Leads Captured/Mo', value: '127', sub: '6-month high, HVAC client' },
-                { label: 'Contacts Sourced/Mo', value: '3,000+', sub: 'Aesthetics cold outbound' },
-                { label: 'Touchpoints Automated', value: '100%', sub: 'SMB lender, intake to close' },
-              ].map(stat => (
-                <div key={stat.label} className="bg-[#FAF7F2] rounded-xl p-5 text-center">
-                  <p className="text-3xl font-black text-[#7B3FF2]">{stat.value}</p>
-                  <p className="font-semibold text-gray-900 text-sm mt-1">{stat.label}</p>
-                  <p className="text-gray-500 text-xs mt-1">{stat.sub}</p>
-                </div>
-              ))}
+              <CountUpStat value="<5 min" label="Avg. Response Time" sub="vs. 47 min industry avg" />
+              <CountUpStat value="127" label="Leads Captured/Mo" sub="6-month high, HVAC client" />
+              <CountUpStat value="3,000+" label="Contacts Sourced/Mo" sub="Aesthetics cold outbound" />
+              <CountUpStat value="100%" label="Touchpoints Automated" sub="SMB lender, intake to close" />
             </div>
           </div>
 
@@ -256,11 +237,11 @@ export default function HomePage() {
       {/* ─── 5. ABOUT ───────────────────────────────────────── */}
       <section id="about" className="py-24 px-4 bg-[#FAF7F2]">
         <div className="max-w-5xl mx-auto">
-          <p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3 text-center">About</p>
-          <h2 className="text-4xl font-black text-gray-900 mb-4 text-center">Miami-built. Revenue-first. AI-native.</h2>
-          <p className="text-gray-500 text-center mb-14 text-lg max-w-2xl mx-auto">
+          <FadeIn><p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3 text-center">About</p></FadeIn>
+          <FadeIn delay={0.1}><h2 className="text-4xl font-black text-gray-900 mb-4 text-center">Miami-built. Revenue-first. AI-native.</h2></FadeIn>
+          <FadeIn delay={0.2}><p className="text-gray-500 text-center mb-14 text-lg max-w-2xl mx-auto">
             We&apos;re not a software agency that bolted on AI. We build AI-native revenue systems from scratch — for businesses that compete on speed.
-          </p>
+          </p></FadeIn>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             {aboutValues.map(v => (
               <div key={v.title} className="bg-white rounded-2xl p-8 border border-gray-100">
@@ -303,6 +284,7 @@ export default function HomePage() {
       </section>
 
       <Footer />
+      <StickyBar />
     </main>
   )
 }

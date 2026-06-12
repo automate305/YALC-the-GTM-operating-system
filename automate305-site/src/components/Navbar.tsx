@@ -76,6 +76,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [activeSection, setActiveSection] = useState<string>('hero')
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const navRef = useRef<HTMLDivElement>(null)
 
@@ -83,6 +84,24 @@ export default function Navbar() {
     const onScroll = () => setScrolled(window.scrollY > 30)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    const sectionIds = ['hero', 'how-it-works', 'industries', 'results', 'about', 'contact']
+    const observers: IntersectionObserver[] = []
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id)
+      if (!el) return
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveSection(id)
+        },
+        { threshold: 0, rootMargin: '-40% 0px -55% 0px' }
+      )
+      obs.observe(el)
+      observers.push(obs)
+    })
+    return () => observers.forEach(o => o.disconnect())
   }, [])
 
   useEffect(() => {
@@ -148,7 +167,7 @@ export default function Navbar() {
                       if (!hasDropdown && !hasMega) scrollTo(item.id)
                       else setOpenDropdown(isOpen ? null : item.id)
                     }}
-                    className={`flex items-center gap-0.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${linkBase}`}
+                    className={`flex items-center gap-0.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors relative ${activeSection === item.id ? 'text-[#7B3FF2] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[#7B3FF2] after:rounded-full' : linkBase}`}
                   >
                     {item.label}
                     {(hasDropdown || hasMega) && (

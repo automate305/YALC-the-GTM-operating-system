@@ -1,6 +1,19 @@
 'use client'
 
 import { useState, useRef, useCallback } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { X, Play } from 'lucide-react'
+
+const MODAL_CONTENT: Record<string, { title: string; desc: string }> = {
+  lead:      { title: 'New Lead Captured', desc: 'Every inbound touchpoint — web form, missed call, DM, or SMS — is instantly captured and fed into the automation pipeline. No lead slips through.' },
+  agent:     { title: 'A305 AI Agent', desc: 'The central AI brain reads every inbound message, determines intent and urgency, and routes the lead through the correct sequence — all in under a second.' },
+  email:     { title: 'Email Alert', desc: 'An immediate, structured email notification is sent to the business owner with lead details, source, and recommended next action.' },
+  sms:       { title: 'SMS Alert', desc: 'An urgent SMS fires in parallel with the email alert. Some situations need 30-second awareness — this ensures critical leads never wait.' },
+  qualify:   { title: 'Lead Qualification', desc: 'The AI engages the lead with 2–3 targeted questions to gauge fit, budget, and urgency. Only qualified leads advance to booking.' },
+  check:     { title: 'Calendar Check', desc: 'Real-time availability is pulled from your connected calendar. The system finds the next open slot that matches the lead\'s stated availability.' },
+  book:      { title: 'Book Appointment', desc: 'A personalized booking link or auto-confirmed calendar invite is sent to the lead. The slot is held and synced instantly.' },
+  confirmed: { title: 'Appointment Confirmed', desc: 'A calendar invite lands in both inboxes. The lead is now a booked appointment — with automated reminders queued to prevent no-shows.' },
+}
 
 const TOOLTIPS: Record<string, string> = {
   lead: 'Web form, missed call, DM, or SMS triggers the flow',
@@ -135,6 +148,7 @@ function NodeGlow({ id, x, y, w, h, isAgent }: {
 export default function OrchestrationFlow() {
   const [hovered, setHovered] = useState<string | null>(null)
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
+  const [modal, setModal] = useState<string | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const handleEnter = useCallback((id: string, e: React.MouseEvent<SVGGElement>) => {
@@ -239,7 +253,8 @@ export default function OrchestrationFlow() {
                 onMouseEnter={(e) => handleEnter(id as string, e)}
                 onMouseLeave={() => setHovered(null)}
                 onMouseMove={handleMove}
-                style={{ cursor: 'default' }}
+                onClick={() => setModal(id as string)}
+                style={{ cursor: 'pointer' }}
               >
                 {isAgent && (
                   <rect x={(x as number) - 4} y={(y as number) - 4} width={(w as number) + 8} height={(h as number) + 8} rx={12}
@@ -260,6 +275,16 @@ export default function OrchestrationFlow() {
                   fontSize={isAgent ? 11 : 10} fill="#D4D4D8" letterSpacing="0.6" fontWeight="600">
                   {label as string}
                 </text>
+
+                {(id as string) === 'lead' && (
+                  <>
+                    <circle cx={(x as number) + (w as number) - 8} cy={(y as number) + 8} r="5" fill="#4ADE80" />
+                    <circle cx={(x as number) + (w as number) - 8} cy={(y as number) + 8} r="5" fill="#4ADE80" opacity="0.6">
+                      <animate attributeName="r" values="5;11;5" dur="1.5s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.6;0;0.6" dur="1.5s" repeatCount="indefinite" />
+                    </circle>
+                  </>
+                )}
               </g>
             )
           })}
@@ -302,6 +327,52 @@ export default function OrchestrationFlow() {
         )}
       </div>
 
+
+      {/* Modal */}
+      <AnimatePresence>
+        {modal && MODAL_CONTENT[modal] && (
+          <>
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 z-40"
+              onClick={() => setModal(null)}
+            />
+            <motion.div
+              key="panel"
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.92 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              onClick={() => setModal(null)}
+            >
+              <div
+                className="bg-[#0C0812] border border-[#7B3FF2]/30 rounded-2xl p-8 max-w-lg w-full relative"
+                onClick={e => e.stopPropagation()}
+              >
+                <button
+                  onClick={() => setModal(null)}
+                  className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+                  aria-label="Close"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <h3 className="text-xl font-black text-white mb-2">{MODAL_CONTENT[modal].title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed mb-6">{MODAL_CONTENT[modal].desc}</p>
+                <div className="bg-gray-800/50 rounded-xl aspect-video flex flex-col items-center justify-center gap-3 border border-white/10">
+                  <div className="w-12 h-12 rounded-full bg-[#7B3FF2]/20 border border-[#7B3FF2]/40 flex items-center justify-center">
+                    <Play className="w-5 h-5 text-[#7B3FF2] ml-0.5" />
+                  </div>
+                  <p className="text-gray-500 text-sm">Demo video coming soon</p>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Mobile SVG — vertical, sequential */}
       <div className="md:hidden w-full">
