@@ -131,14 +131,6 @@ function NodeGlow({ id, x, y, w, h, isAgent }: {
   )
 }
 
-const INTEGRATION_LOGOS = [
-  { name: 'Google Workspace', slug: 'google', color: '4285F4' },
-  { name: 'OpenAI',           slug: 'openai',  color: '412991' },
-  { name: 'Slack',            slug: 'slack',   color: '4A154B' },
-  { name: 'Twilio',           slug: 'twilio',  color: 'F22F46' },
-  { name: 'HubSpot',          slug: 'hubspot', color: 'FF7A59' },
-  { name: 'Make',             slug: 'make',    color: '6D00CC' },
-]
 
 export default function OrchestrationFlow() {
   const [hovered, setHovered] = useState<string | null>(null)
@@ -310,36 +302,6 @@ export default function OrchestrationFlow() {
         )}
       </div>
 
-      {/* Integrations strip */}
-      <div className="hidden md:flex items-center justify-center gap-6 mt-8 flex-wrap">
-        <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest mr-2">Connects with</span>
-        {INTEGRATION_LOGOS.map(({ name, slug, color }) => (
-          <div key={slug} className="flex items-center gap-1.5 opacity-60 hover:opacity-90 transition-opacity">
-            <img
-              src={`https://cdn.simpleicons.org/${slug}/${color}`}
-              alt={name}
-              width={18}
-              height={18}
-              className="w-4 h-4 object-contain"
-            />
-            <span className="text-xs text-gray-400 font-medium">{name}</span>
-          </div>
-        ))}
-        <div className="flex items-center gap-1.5 opacity-60 hover:opacity-90 transition-opacity">
-          <span className="text-gray-400 text-xs">🔧</span>
-          <span className="text-xs text-gray-400 font-medium">ServiceTitan</span>
-        </div>
-        <div className="flex items-center gap-1.5 opacity-60 hover:opacity-90 transition-opacity">
-          <img
-            src="https://cdn.simpleicons.org/twilio/F22F46"
-            alt="Twilio"
-            width={18}
-            height={18}
-            className="w-4 h-4 object-contain"
-          />
-          <span className="text-xs text-gray-400 font-medium">Twilio</span>
-        </div>
-      </div>
 
       {/* Mobile SVG — vertical, sequential */}
       <div className="md:hidden w-full">
