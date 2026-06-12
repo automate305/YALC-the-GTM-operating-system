@@ -80,9 +80,9 @@ export default function Navbar() {
             <Image
               src={scrolled ? '/logo-master-dark-bg.png' : '/logo-master-light-bg.png'}
               alt="Automate305"
-              width={160}
-              height={32}
-              className="h-8 w-auto object-contain"
+              width={220}
+              height={44}
+              className="h-11 w-auto object-contain"
               priority
             />
           </button>
