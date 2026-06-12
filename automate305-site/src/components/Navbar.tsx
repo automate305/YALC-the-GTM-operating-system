@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
 import { Menu, X, ChevronDown } from 'lucide-react'
 
@@ -75,16 +76,15 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <button onClick={() => scrollTo('hero')} className="flex items-center gap-2 group">
-            {/* Lightning bolt matching brand mark */}
-            <svg width="18" height="26" viewBox="0 0 22 32" fill="none">
-              <path d="M14 0L2 17H9.5L8 32L20 15H12.5Z" fill="#9B50F5"/>
-            </svg>
-            <span className={`font-black text-[22px] tracking-[-0.03em] transition-colors duration-300 leading-none`}
-              style={{ fontFamily: "'Big Shoulders Display', 'Arial Black', sans-serif" }}>
-              <span className={logoWord}>AUTOMATE</span>
-              <span style={{ color: '#9B50F5' }}>305</span>
-            </span>
+          <button onClick={() => scrollTo('hero')} className="flex items-center">
+            <Image
+              src={scrolled ? '/logo-master-dark-bg.png' : '/logo-master-light-bg.png'}
+              alt="Automate305"
+              width={160}
+              height={32}
+              className="h-8 w-auto object-contain"
+              priority
+            />
           </button>
 
           {/* Desktop nav */}
