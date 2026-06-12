@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 
 const TOOLTIPS: Record<string, string> = {
   lead: 'Web form, missed call, DM, or SMS triggers the flow',
@@ -13,14 +13,23 @@ const TOOLTIPS: Record<string, string> = {
   confirmed: 'Calendar invite lands — lead is now an appointment',
 }
 
-// Dot animation helpers: each dot travels its path segment in a 5s cycle.
-// keyPoints/keyTimes control when within the 5s the dot is in motion.
-// Opacity shows the dot only while it's actively moving.
+// Unique neon border colors per node
+const NODE_COLORS: Record<string, string> = {
+  lead:      '#4ADE80',
+  agent:     '#A78BFA',
+  email:     '#22D3EE',
+  sms:       '#FB923C',
+  qualify:   '#F472B6',
+  check:     '#FACC15',
+  book:      '#34D399',
+  confirmed: '#38BDF8',
+}
+
 type DotDef = {
   id: string
   path: string
-  startPct: number // 0-1 fraction of 5s when dot starts moving
-  endPct: number   // 0-1 fraction of 5s when dot finishes
+  startPct: number
+  endPct: number
   urgent?: boolean
 }
 
@@ -35,9 +44,7 @@ const DOTS: DotDef[] = [
   { id: 'd8', path: 'M 830,147 L 865,147', startPct: 0.38, endPct: 0.48 },
 ]
 
-// Node highlight timings: each node activates at a certain time
-// Node is "active" from its activation time until 90% of the 5s cycle
-type NodeTimings = { [key: string]: number } // node id → activation pct
+type NodeTimings = { [key: string]: number }
 const NODE_ACTIVATION: NodeTimings = {
   lead: 0,
   agent: 0.10,
@@ -54,21 +61,15 @@ function fmt(n: number) { return n.toFixed(4) }
 function DotAnimation({ dot }: { dot: DotDef }) {
   const { id, path, startPct, endPct, urgent } = dot
   const dur = 5
-  const fill = urgent ? '#FF6B35' : '#A5D6A7'
+  const fill = urgent ? '#FB923C' : '#A5D6A7'
 
-  // keyPoints: 0 before start, travels 0→1 between start and end, stays at 1 after
-  const kp = startPct === 0
-    ? `0;1;1`
-    : `0;0;1;1`
+  const kp = startPct === 0 ? `0;1;1` : `0;0;1;1`
   const kt = startPct === 0
     ? `0;${fmt(endPct)};1`
     : `0;${fmt(startPct)};${fmt(endPct)};1`
 
-  // Opacity: visible only during [startPct, endPct]
   const eps = 0.002
-  const opacityValues = startPct === 0
-    ? `1;1;0;0`
-    : `0;0;1;1;0;0`
+  const opacityValues = startPct === 0 ? `1;1;0;0` : `0;0;1;1;0;0`
   const opacityTimes = startPct === 0
     ? `0;${fmt(endPct)};${fmt(endPct + eps)};1`
     : `0;${fmt(startPct - eps)};${fmt(startPct)};${fmt(endPct)};${fmt(endPct + eps)};1`
@@ -95,20 +96,20 @@ function DotAnimation({ dot }: { dot: DotDef }) {
   )
 }
 
-function NodeGlow({ id, x, y, w, h, isUrgent, isAgent }: {
-  id: string; x: number; y: number; w: number; h: number; isUrgent?: boolean; isAgent?: boolean
+function NodeGlow({ id, x, y, w, h, isAgent }: {
+  id: string; x: number; y: number; w: number; h: number; isAgent?: boolean
 }) {
   const activePct = NODE_ACTIVATION[id]
   const resetPct = 0.90
   const eps = 0.002
   const dur = '5s'
+  const neonColor = NODE_COLORS[id] ?? '#4ADE80'
 
-  const inactiveFill = '#0D1A0F'
-  const activeFill = isUrgent ? '#2D1500' : '#1A3D1F'
-  const inactiveStroke = '#1E3D22'
-  const activeStroke = isUrgent ? '#FF6B35' : (isAgent ? '#A5D6A7' : '#2E7D32')
+  const inactiveFill = '#0F0F1A'
+  const activeFill = '#1A1A2E'
+  const inactiveStroke = '#2A2A3E'
+  const activeStroke = neonColor
 
-  // fill animation
   const fillValues = activePct === 0
     ? `${activeFill};${activeFill};${inactiveFill};${inactiveFill}`
     : `${inactiveFill};${inactiveFill};${activeFill};${activeFill};${inactiveFill};${inactiveFill}`
@@ -121,22 +122,44 @@ function NodeGlow({ id, x, y, w, h, isUrgent, isAgent }: {
     : `${inactiveStroke};${inactiveStroke};${activeStroke};${activeStroke};${inactiveStroke};${inactiveStroke}`
 
   return (
-    <>
-      <rect x={x} y={y} width={w} height={h} rx={8} stroke={inactiveStroke} strokeWidth={isAgent ? 2 : 1.5}>
-        <animate attributeName="fill" dur={dur} repeatCount="indefinite" calcMode="discrete"
-          values={fillValues} keyTimes={fillTimes} />
-        <animate attributeName="stroke" dur={dur} repeatCount="indefinite" calcMode="discrete"
-          values={strokeValues} keyTimes={fillTimes} />
-      </rect>
-    </>
+    <rect x={x} y={y} width={w} height={h} rx={8} stroke={inactiveStroke} strokeWidth={isAgent ? 2 : 1.5}>
+      <animate attributeName="fill" dur={dur} repeatCount="indefinite" calcMode="discrete"
+        values={fillValues} keyTimes={fillTimes} />
+      <animate attributeName="stroke" dur={dur} repeatCount="indefinite" calcMode="discrete"
+        values={strokeValues} keyTimes={fillTimes} />
+    </rect>
   )
 }
 
+const INTEGRATION_LOGOS = [
+  { name: 'Google Workspace', slug: 'google', color: '4285F4' },
+  { name: 'OpenAI',           slug: 'openai',  color: '412991' },
+  { name: 'Slack',            slug: 'slack',   color: '4A154B' },
+  { name: 'Twilio',           slug: 'twilio',  color: 'F22F46' },
+  { name: 'HubSpot',          slug: 'hubspot', color: 'FF7A59' },
+  { name: 'Make',             slug: 'make',    color: '6D00CC' },
+]
+
 export default function OrchestrationFlow() {
   const [hovered, setHovered] = useState<string | null>(null)
+  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
+  const containerRef = useRef<HTMLDivElement>(null)
 
-  // Desktop layout: viewBox 960x310
-  // Node: [id, x, y, w, h, icon, label, isAgent?, isUrgent?]
+  const handleEnter = useCallback((id: string, e: React.MouseEvent<SVGGElement>) => {
+    setHovered(id)
+    const rect = containerRef.current?.getBoundingClientRect()
+    if (rect) {
+      setTooltipPos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+    }
+  }, [])
+
+  const handleMove = useCallback((e: React.MouseEvent<SVGGElement>) => {
+    const rect = containerRef.current?.getBoundingClientRect()
+    if (rect) {
+      setTooltipPos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+    }
+  }, [])
+
   type NodeDef = [string, number, number, number, number, string, string, boolean?, boolean?]
   const nodes: NodeDef[] = [
     ['lead',      15,  115, 140, 65, '⬇',  'NEW LEAD'],
@@ -149,22 +172,21 @@ export default function OrchestrationFlow() {
     ['confirmed',865,  115, 95,  65, '✓',  'CONFIRMED'],
   ]
 
-  // Path definitions for the connecting lines
   const linePaths = [
-    { d: 'M 155,147 L 185,147', active: false },      // lead → agent
-    { d: 'M 350,135 C 378,135 378,67 398,67', active: false }, // agent → email
-    { d: 'M 350,160 C 378,160 378,242 398,242', active: false }, // agent → qualify
-    { d: 'M 523,67 L 543,67', active: false },        // email → sms
-    { d: 'M 523,242 L 543,242', active: false },      // qualify → check
-    { d: 'M 658,67 C 688,67 688,140 710,140', active: false }, // sms → book
-    { d: 'M 673,242 C 698,242 698,158 710,158', active: false }, // check → book
-    { d: 'M 845,147 L 865,147', active: false },      // book → confirmed
+    { d: 'M 155,147 L 185,147' },
+    { d: 'M 350,135 C 378,135 378,67 398,67' },
+    { d: 'M 350,160 C 378,160 378,242 398,242' },
+    { d: 'M 523,67 L 543,67' },
+    { d: 'M 523,242 L 543,242' },
+    { d: 'M 658,67 C 688,67 688,140 710,140' },
+    { d: 'M 673,242 C 698,242 698,158 710,158' },
+    { d: 'M 845,147 L 865,147' },
   ]
 
   return (
     <div className="w-full">
       {/* Desktop SVG */}
-      <div className="hidden md:block w-full overflow-x-auto">
+      <div ref={containerRef} className="hidden md:block w-full overflow-x-auto relative">
         <svg
           viewBox="0 0 1010 310"
           width="100%"
@@ -172,28 +194,18 @@ export default function OrchestrationFlow() {
           style={{ fontFamily: '"JetBrains Mono", "Courier New", monospace' }}
         >
           <defs>
-            <filter id="glow-green" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <filter id="glow-orange" x="-20%" y="-20%" width="140%" height="140%">
+            <filter id="glow-neon" x="-30%" y="-30%" width="160%" height="160%">
               <feGaussianBlur stdDeviation="4" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <filter id="glow-bright" x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="6" result="blur"/>
               <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
 
-          {/* Background connecting lines (always visible, dim) */}
+          {/* Background connecting lines */}
           {linePaths.map((lp, i) => (
-            <path key={i} d={lp.d} fill="none" stroke="#1E3D22" strokeWidth="1.5"
-              strokeDasharray="4 4" />
+            <path key={i} d={lp.d} fill="none" stroke="#2A2A3E" strokeWidth="1.5" strokeDasharray="4 4" />
           ))}
 
-          {/* Active line overlays — animated with same keyTimes as dots */}
-          {/* These use SVG animate to draw the line as the dot travels */}
+          {/* Animated active line overlays */}
           {linePaths.map((lp, i) => {
             const dot = DOTS[i]
             if (!dot) return null
@@ -201,11 +213,11 @@ export default function OrchestrationFlow() {
             const dur = '5s'
             const sp = dot.startPct
             const ep = dot.endPct
-            const urgentStroke = dot.urgent ? '#FF6B35' : '#2E7D32'
-            const inactiveStroke = '#1E3D22'
+            const neonColor = dot.urgent ? '#FB923C' : '#4ADE80'
+            const inactiveStroke = '#2A2A3E'
             const strokeValues = sp === 0
-              ? `${urgentStroke};${urgentStroke};${inactiveStroke};${inactiveStroke}`
-              : `${inactiveStroke};${inactiveStroke};${urgentStroke};${urgentStroke};${inactiveStroke};${inactiveStroke}`
+              ? `${neonColor};${neonColor};${inactiveStroke};${inactiveStroke}`
+              : `${inactiveStroke};${inactiveStroke};${neonColor};${neonColor};${inactiveStroke};${inactiveStroke}`
             const strokeTimes = sp === 0
               ? `0;${fmt(ep + 0.05)};${fmt(ep + 0.05 + eps)};1`
               : `0;${fmt(sp - eps)};${fmt(sp)};${fmt(ep + 0.05)};${fmt(ep + 0.05 + eps)};1`
@@ -218,69 +230,44 @@ export default function OrchestrationFlow() {
           })}
 
           {/* Stage labels */}
-          <text x="85" y="195" textAnchor="middle" fontSize="8" fill="#2E5E32" letterSpacing="1">INBOUND</text>
-          <text x="275" y="205" textAnchor="middle" fontSize="8" fill="#2E5E32" letterSpacing="1">AI BRAIN</text>
-          <text x="588" y="14" textAnchor="middle" fontSize="8" fill="#2E5E32" letterSpacing="1">NOTIFY</text>
-          <text x="588" y="283" textAnchor="middle" fontSize="8" fill="#2E5E32" letterSpacing="1">ENGAGE</text>
-          <text x="777" y="194" textAnchor="middle" fontSize="8" fill="#2E5E32" letterSpacing="1">BOOK</text>
+          <text x="85" y="195" textAnchor="middle" fontSize="8" fill="#E5E5E5" letterSpacing="1" opacity="0.7">INBOUND</text>
+          <text x="275" y="205" textAnchor="middle" fontSize="8" fill="#E5E5E5" letterSpacing="1" opacity="0.7">AI BRAIN</text>
+          <text x="588" y="14" textAnchor="middle" fontSize="8" fill="#E5E5E5" letterSpacing="1" opacity="0.7">NOTIFY</text>
+          <text x="588" y="283" textAnchor="middle" fontSize="8" fill="#E5E5E5" letterSpacing="1" opacity="0.7">ENGAGE</text>
+          <text x="777" y="194" textAnchor="middle" fontSize="8" fill="#E5E5E5" letterSpacing="1" opacity="0.7">BOOK</text>
 
           {/* Nodes */}
-          {nodes.map(([id, x, y, w, h, icon, label, isAgent, isUrgent]) => {
-            const cx = x + w / 2
-            const cy = y + h / 2
-            const isHov = hovered === id
-            const tip = TOOLTIPS[id as string]
+          {nodes.map(([id, x, y, w, h, icon, label, isAgent]) => {
+            const cx = (x as number) + (w as number) / 2
+            const cy = (y as number) + (h as number) / 2
+            const neonColor = NODE_COLORS[id as string] ?? '#4ADE80'
 
             return (
               <g key={id as string}
-                onMouseEnter={() => setHovered(id as string)}
+                onMouseEnter={(e) => handleEnter(id as string, e)}
                 onMouseLeave={() => setHovered(null)}
+                onMouseMove={handleMove}
                 style={{ cursor: 'default' }}
               >
-                {/* Outer glow ring (pulsing for agent) */}
                 {isAgent && (
-                  <rect x={x - 4} y={y - 4} width={w + 8} height={h + 8} rx={12}
-                    fill="none" stroke="#A5D6A7" strokeWidth="1" strokeOpacity="0.3">
+                  <rect x={(x as number) - 4} y={(y as number) - 4} width={(w as number) + 8} height={(h as number) + 8} rx={12}
+                    fill="none" stroke={neonColor} strokeWidth="1" strokeOpacity="0.25">
                     <animate attributeName="strokeOpacity" values="0.1;0.4;0.1" dur="2s" repeatCount="indefinite"/>
                     <animate attributeName="strokeWidth" values="1;2;1" dur="2s" repeatCount="indefinite"/>
                   </rect>
                 )}
 
-                {/* Hover highlight */}
-                {isHov && (
-                  <rect x={x - 2} y={y - 2} width={w + 4} height={h + 4} rx={10}
-                    fill="none" stroke={isUrgent ? '#FF6B35' : '#A5D6A7'} strokeWidth="1.5" strokeOpacity="0.6"/>
-                )}
+                <NodeGlow id={id as string} x={x as number} y={y as number} w={w as number} h={h as number} isAgent={isAgent} />
 
-                {/* Node rect with animated fill/stroke */}
-                <NodeGlow id={id as string} x={x} y={y} w={w} h={h} isUrgent={isUrgent} isAgent={isAgent} />
-
-                {/* Icon */}
-                <text x={cx} y={cy - 9} textAnchor="middle" dominantBaseline="central"
-                  fontSize={isAgent ? 16 : 14} fill="#A5D6A7">
+                <text x={cx} y={cy - 10} textAnchor="middle" dominantBaseline="central"
+                  fontSize={isAgent ? 18 : 16} fill={neonColor}>
                   {icon as string}
                 </text>
 
-                {/* Label */}
-                <text x={cx} y={cy + 9} textAnchor="middle" dominantBaseline="central"
-                  fontSize={isAgent ? 8.5 : 7.5} fill="#6ABD76" letterSpacing="0.8">
+                <text x={cx} y={cy + 12} textAnchor="middle" dominantBaseline="central"
+                  fontSize={isAgent ? 11 : 10} fill="#D4D4D8" letterSpacing="0.6" fontWeight="600">
                   {label as string}
                 </text>
-
-                {/* Tooltip */}
-                {isHov && tip && (
-                  <g>
-                    <rect
-                      x={cx - 90} y={y + h + 5}
-                      width={180} height={22} rx={4}
-                      fill="#0a140b" stroke="#2E7D32" strokeWidth="0.75"
-                    />
-                    <text x={cx} y={y + h + 16} textAnchor="middle" dominantBaseline="central"
-                      fontSize={7.5} fill="#8BC38A" letterSpacing="0.3">
-                      {tip}
-                    </text>
-                  </g>
-                )}
               </g>
             )
           })}
@@ -290,6 +277,68 @@ export default function OrchestrationFlow() {
             <DotAnimation key={dot.id} dot={dot} />
           ))}
         </svg>
+
+        {/* HTML Tooltip overlay */}
+        {hovered && TOOLTIPS[hovered] && (
+          <div
+            style={{
+              position: 'absolute',
+              left: tooltipPos.x,
+              top: tooltipPos.y - 70,
+              transform: 'translateX(-50%)',
+              pointerEvents: 'none',
+              zIndex: 50,
+            }}
+          >
+            <div style={{
+              background: '#6366F1',
+              color: '#ffffff',
+              fontWeight: 600,
+              fontSize: '14px',
+              padding: '14px 18px',
+              borderRadius: '10px',
+              minWidth: '200px',
+              maxWidth: '280px',
+              whiteSpace: 'normal',
+              lineHeight: 1.4,
+              boxShadow: '0 8px 32px rgba(99,102,241,0.4)',
+              textAlign: 'center',
+            }}>
+              {TOOLTIPS[hovered]}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Integrations strip */}
+      <div className="hidden md:flex items-center justify-center gap-6 mt-8 flex-wrap">
+        <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest mr-2">Connects with</span>
+        {INTEGRATION_LOGOS.map(({ name, slug, color }) => (
+          <div key={slug} className="flex items-center gap-1.5 opacity-60 hover:opacity-90 transition-opacity">
+            <img
+              src={`https://cdn.simpleicons.org/${slug}/${color}`}
+              alt={name}
+              width={18}
+              height={18}
+              className="w-4 h-4 object-contain"
+            />
+            <span className="text-xs text-gray-400 font-medium">{name}</span>
+          </div>
+        ))}
+        <div className="flex items-center gap-1.5 opacity-60 hover:opacity-90 transition-opacity">
+          <span className="text-gray-400 text-xs">🔧</span>
+          <span className="text-xs text-gray-400 font-medium">ServiceTitan</span>
+        </div>
+        <div className="flex items-center gap-1.5 opacity-60 hover:opacity-90 transition-opacity">
+          <img
+            src="https://cdn.simpleicons.org/twilio/F22F46"
+            alt="Twilio"
+            width={18}
+            height={18}
+            className="w-4 h-4 object-contain"
+          />
+          <span className="text-xs text-gray-400 font-medium">Twilio</span>
+        </div>
       </div>
 
       {/* Mobile SVG — vertical, sequential */}
@@ -300,7 +349,6 @@ export default function OrchestrationFlow() {
           className="max-w-xs mx-auto"
           style={{ fontFamily: '"JetBrains Mono", "Courier New", monospace' }}
         >
-          {/* Mobile nodes — stacked vertically, center x=140 */}
           {[
             { id: 'lead',      y: 10,  icon: '⬇',  label: 'NEW LEAD' },
             { id: 'agent',     y: 105, icon: '⚡', label: 'A305 AI AGENT', isAgent: true },
@@ -309,31 +357,31 @@ export default function OrchestrationFlow() {
             { id: 'qualify',   y: 400, icon: '🔍', label: 'QUALIFY LEAD' },
             { id: 'check',     y: 485, icon: '📅', label: 'CHECK CALENDAR' },
             { id: 'book',      y: 580, icon: '📋', label: 'BOOK APPT' },
-            { id: 'confirmed', y: 670, icon: '✓',  label: 'CONFIRMED', isConfirmed: true },
-          ].map(({ id, y, icon, label, isAgent, isUrgent, isConfirmed }) => {
+            { id: 'confirmed', y: 670, icon: '✓',  label: 'CONFIRMED' },
+          ].map(({ id, y, icon, label, isAgent }) => {
             const w = isAgent ? 200 : 170
             const h = isAgent ? 75 : 60
             const x = 140 - w / 2
             const cx = 140
             const cy = y + h / 2
+            const neonColor = NODE_COLORS[id] ?? '#4ADE80'
             return (
               <g key={id}>
-                {/* Connector line down */}
                 {y > 10 && (
                   <line x1="140" y1={y - 15} x2="140" y2={y}
-                    stroke="#1E3D22" strokeWidth="1.5" strokeDasharray="4 3"/>
+                    stroke="#2A2A3E" strokeWidth="1.5" strokeDasharray="4 3"/>
                 )}
-                <NodeGlow id={id} x={x} y={y} w={w} h={h} isUrgent={isUrgent} isAgent={isAgent} />
+                <NodeGlow id={id} x={x} y={y} w={w} h={h} isAgent={isAgent} />
                 {isAgent && (
                   <rect x={x - 3} y={y - 3} width={w + 6} height={h + 6} rx={11}
-                    fill="none" stroke="#A5D6A7" strokeWidth="1" strokeOpacity="0.25">
+                    fill="none" stroke={neonColor} strokeWidth="1" strokeOpacity="0.25">
                     <animate attributeName="strokeOpacity" values="0.1;0.35;0.1" dur="2s" repeatCount="indefinite"/>
                   </rect>
                 )}
-                <text x={cx} y={cy - 8} textAnchor="middle" dominantBaseline="central"
-                  fontSize={isAgent ? 15 : 13} fill="#A5D6A7">{icon}</text>
-                <text x={cx} y={cy + 9} textAnchor="middle" dominantBaseline="central"
-                  fontSize={isAgent ? 8 : 7} fill="#6ABD76" letterSpacing="0.7">{label}</text>
+                <text x={cx} y={cy - 9} textAnchor="middle" dominantBaseline="central"
+                  fontSize={isAgent ? 16 : 14} fill={neonColor}>{icon}</text>
+                <text x={cx} y={cy + 11} textAnchor="middle" dominantBaseline="central"
+                  fontSize={isAgent ? 10 : 9} fill="#D4D4D8" letterSpacing="0.6" fontWeight="600">{label}</text>
               </g>
             )
           })}
