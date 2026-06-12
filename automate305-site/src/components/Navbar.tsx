@@ -2,19 +2,52 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
-import { Menu, X, ChevronDown } from 'lucide-react'
+import { Menu, X, ChevronDown, Wrench, Briefcase, UtensilsCrossed } from 'lucide-react'
 import CalButton from '@/components/CalButton'
 
-const NAV_ITEMS = [
+type DropdownItem =
+  | { label: string; href: string }
+  | { label: string; anchor: string }
+
+type MegaColumn = {
+  icon: React.ElementType
+  title: string
+  href: string
+  items: string[]
+}
+
+type NavItem = {
+  label: string
+  id: string
+  dropdown?: DropdownItem[]
+  mega?: MegaColumn[]
+}
+
+const NAV_ITEMS: NavItem[] = [
   { label: 'Home', id: 'hero' },
   { label: 'How it works', id: 'how-it-works' },
   {
     label: 'Industries',
     id: 'industries',
-    dropdown: [
-      { label: 'Home Services', href: '/industries/home-services' },
-      { label: 'Professional Services', href: '/industries/professional-services' },
-      { label: 'Hospitality', href: '/industries/hospitality' },
+    mega: [
+      {
+        icon: Wrench,
+        title: 'Home Services',
+        href: '/industries/home-services',
+        items: ['HVAC', 'Roofing', 'Plumbing', 'Electrical', 'Restoration'],
+      },
+      {
+        icon: Briefcase,
+        title: 'Professional Services',
+        href: '/industries/professional-services',
+        items: ['SMB Lenders', 'Law Firms', 'Consultants', 'Insurance Brokers'],
+      },
+      {
+        icon: UtensilsCrossed,
+        title: 'Hospitality',
+        href: '/industries/hospitality',
+        items: ['Restaurants', 'Bars & Lounges', 'Hotels'],
+      },
     ],
   },
   {
@@ -43,6 +76,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const navRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -61,6 +95,15 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
+  // Delayed close prevents flicker when mouse moves from button into dropdown panel
+  const openMenu = (id: string) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current)
+    setOpenDropdown(id)
+  }
+  const scheduleClose = () => {
+    closeTimer.current = setTimeout(() => setOpenDropdown(null), 120)
+  }
+
   const navBg = scrolled
     ? 'bg-[#0C0812]/95 backdrop-blur-md border-b border-white/10'
     : 'bg-[#FAF7F2]/95 backdrop-blur-md border-b border-gray-200'
@@ -68,8 +111,6 @@ export default function Navbar() {
   const linkBase = scrolled
     ? 'text-gray-300 hover:text-white'
     : 'text-gray-700 hover:text-[#7B3FF2]'
-
-  const logoWord = scrolled ? 'text-white' : 'text-[#0C0812]'
 
   return (
     <nav ref={navRef} className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}>
@@ -92,29 +133,76 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-1">
             {NAV_ITEMS.map(item => {
               const hasDropdown = !!item.dropdown
+              const hasMega = !!item.mega
               const isOpen = openDropdown === item.id
+
               return (
                 <div
                   key={item.id}
                   className="relative"
-                  onMouseEnter={() => hasDropdown && setOpenDropdown(item.id)}
-                  onMouseLeave={() => setOpenDropdown(null)}
+                  onMouseEnter={() => (hasDropdown || hasMega) ? openMenu(item.id) : undefined}
+                  onMouseLeave={scheduleClose}
                 >
                   <button
                     onClick={() => {
-                      if (!hasDropdown) scrollTo(item.id)
+                      if (!hasDropdown && !hasMega) scrollTo(item.id)
                       else setOpenDropdown(isOpen ? null : item.id)
                     }}
                     className={`flex items-center gap-0.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${linkBase}`}
                   >
                     {item.label}
-                    {hasDropdown && (
+                    {(hasDropdown || hasMega) && (
                       <ChevronDown className={`w-3 h-3 ml-0.5 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} />
                     )}
                   </button>
 
+                  {/* Mega menu — Industries */}
+                  {hasMega && isOpen && (
+                    <div
+                      className={`absolute top-full left-1/2 -translate-x-1/2 mt-0 w-[560px] rounded-xl shadow-2xl border z-50 ${scrolled ? 'bg-[#0C0812] border-white/10' : 'bg-white border-gray-100'}`}
+                      onMouseEnter={() => openMenu(item.id)}
+                      onMouseLeave={scheduleClose}
+                    >
+                      <div className="grid grid-cols-3 gap-0 p-2">
+                        {item.mega!.map((col) => {
+                          const Icon = col.icon
+                          return (
+                            <div key={col.title} className="p-3">
+                              <Link
+                                href={col.href}
+                                onClick={() => setOpenDropdown(null)}
+                                className={`flex items-center gap-2 font-semibold text-sm mb-2 pb-2 border-b ${scrolled ? 'text-white border-white/10 hover:text-[#7B3FF2]' : 'text-gray-900 border-gray-100 hover:text-[#7B3FF2]'}`}
+                              >
+                                <Icon className="w-4 h-4 text-[#7B3FF2] shrink-0" />
+                                {col.title}
+                              </Link>
+                              <ul className="space-y-1">
+                                {col.items.map(sub => (
+                                  <li key={sub}>
+                                    <Link
+                                      href={col.href}
+                                      onClick={() => setOpenDropdown(null)}
+                                      className={`block text-xs py-0.5 transition-colors ${scrolled ? 'text-gray-400 hover:text-[#7B3FF2]' : 'text-gray-500 hover:text-[#7B3FF2]'}`}
+                                    >
+                                      {sub}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Regular dropdown — Results */}
                   {hasDropdown && isOpen && (
-                    <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-1 min-w-[180px] rounded-xl shadow-xl border overflow-hidden z-50 ${scrolled ? 'bg-[#0C0812] border-white/10' : 'bg-white border-gray-100'}`}>
+                    <div
+                      className={`absolute top-full left-1/2 -translate-x-1/2 mt-0 min-w-[180px] rounded-xl shadow-xl border overflow-hidden z-50 ${scrolled ? 'bg-[#0C0812] border-white/10' : 'bg-white border-gray-100'}`}
+                      onMouseEnter={() => openMenu(item.id)}
+                      onMouseLeave={scheduleClose}
+                    >
                       {item.dropdown!.map(sub => {
                         const isAnchor = 'anchor' in sub
                         return isAnchor ? (
@@ -169,6 +257,31 @@ export default function Navbar() {
               >
                 {item.label}
               </button>
+              {item.mega && (
+                <div className="pl-4 border-l border-white/10 mb-2 space-y-2">
+                  {item.mega.map(col => (
+                    <div key={col.title}>
+                      <Link
+                        href={col.href}
+                        onClick={() => setMobileOpen(false)}
+                        className="block text-gray-300 text-xs font-semibold py-1 hover:text-[#7B3FF2]"
+                      >
+                        {col.title}
+                      </Link>
+                      {col.items.map(sub => (
+                        <Link
+                          key={sub}
+                          href={col.href}
+                          onClick={() => setMobileOpen(false)}
+                          className="block text-gray-500 text-xs py-0.5 pl-2 hover:text-gray-300"
+                        >
+                          {sub}
+                        </Link>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              )}
               {item.dropdown && (
                 <div className="pl-4 border-l border-white/10 mb-1">
                   {item.dropdown.map(sub => {

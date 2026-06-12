@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Zap } from 'lucide-react'
+import Image from 'next/image'
 import CalButton from '@/components/CalButton'
 
 export default function Footer() {
@@ -8,12 +8,14 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           <div>
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <Zap className="w-5 h-5 text-[#7B3FF2] fill-[#7B3FF2]" />
-              <span className="font-black text-lg tracking-tight">
-                <span className="text-white">AUTOMATE</span>
-                <span className="text-[#7B3FF2]">305</span>
-              </span>
+            <Link href="/" className="flex items-center mb-4">
+              <Image
+                src="/logo-master-dark-bg.png"
+                alt="Automate305"
+                width={180}
+                height={36}
+                className="h-9 w-auto object-contain"
+              />
             </Link>
             <p className="text-sm leading-relaxed">AI-powered revenue automation for Miami-Dade businesses.</p>
             <p className="text-sm mt-2">Miami, FL 33128</p>
