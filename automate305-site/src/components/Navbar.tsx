@@ -47,46 +47,40 @@ export default function Navbar() {
     ? 'bg-[#0C0812]/95 backdrop-blur border-b border-white/10'
     : 'bg-[#FAF7F2]/95 backdrop-blur border-b border-gray-200'
 
-  const textColor = scrolled ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-[#7B3FF2]'
-  const logoText = scrolled ? 'text-white' : 'text-[#0C0812]'
+  const linkColor = scrolled
+    ? 'text-gray-300 hover:text-white'
+    : 'text-gray-700 hover:text-[#7B3FF2]'
+
+  const logoWordColor = scrolled ? 'text-white' : 'text-[#0C0812]'
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
 
-          {/* Logo + home icon */}
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              aria-label="Back to home"
-              className={`p-1.5 rounded-lg transition-colors ${scrolled ? 'text-gray-400 hover:text-white hover:bg-white/10' : 'text-gray-400 hover:text-[#7B3FF2] hover:bg-[#7B3FF2]/10'}`}
-            >
-              <Home className="w-4 h-4" />
-            </Link>
-            <Link href="/" className="flex items-center gap-2">
-              {/* SVG lightning bolt matching Automate305 brand */}
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="13,2 4,14 11,14 11,22 20,10 13,10" fill="#7B3FF2" />
-              </svg>
-              <span className="font-black text-xl tracking-tight">
-                <span className={`transition-colors duration-300 ${logoText}`}>AUTOMATE</span>
-                <span className="text-[#7B3FF2]">305</span>
-              </span>
-            </Link>
-          </div>
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-1.5">
+            {/* Lightning bolt matching actual Automate305 brand mark */}
+            <svg width="20" height="26" viewBox="0 0 20 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 0L2 14H9L8 26L18 12H11L12 0Z" fill="#7B3FF2"/>
+            </svg>
+            <span className={`font-black text-xl tracking-tight transition-colors duration-300 ${logoWordColor}`}>
+              AUTOMATE<span className="text-[#7B3FF2]">305</span>
+            </span>
+          </Link>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-7">
 
             {/* Industries dropdown */}
             <div ref={dropdownRef} className="relative">
               <button
-                className={`flex items-center gap-1 text-sm font-medium transition-colors ${textColor}`}
+                className={`flex items-center gap-1 text-sm font-medium transition-colors ${linkColor}`}
                 onMouseEnter={() => setDropdownOpen(true)}
                 onClick={() => setDropdownOpen(v => !v)}
               >
-                Industries <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
+                Industries
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {dropdownOpen && (
@@ -122,9 +116,18 @@ export default function Navbar() {
               )}
             </div>
 
-            <Link href="/results" className={`text-sm font-medium transition-colors ${textColor}`}>Results</Link>
-            <Link href="/about" className={`text-sm font-medium transition-colors ${textColor}`}>About</Link>
-            <Link href="/contact" className={`text-sm font-medium transition-colors ${textColor}`}>Contact</Link>
+            {/* Home icon — lives here in the nav, not next to the logo */}
+            <Link
+              href="/"
+              aria-label="Home"
+              className={`transition-colors ${linkColor}`}
+            >
+              <Home className="w-4 h-4" />
+            </Link>
+
+            <Link href="/results" className={`text-sm font-medium transition-colors ${linkColor}`}>Results</Link>
+            <Link href="/about" className={`text-sm font-medium transition-colors ${linkColor}`}>About</Link>
+            <Link href="/contact" className={`text-sm font-medium transition-colors ${linkColor}`}>Contact</Link>
 
             <a
               href="https://cal.com/automate305/30min"
@@ -132,7 +135,7 @@ export default function Navbar() {
               rel="noopener noreferrer"
               className="bg-[#7B3FF2] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#6930d4] transition-colors whitespace-nowrap"
             >
-              📅 Strategy Call w/ Camilo
+              Book a Free Audit
             </a>
           </div>
 
@@ -190,7 +193,7 @@ export default function Navbar() {
             rel="noopener noreferrer"
             className="block w-full text-center bg-[#7B3FF2] text-white px-4 py-3 rounded-lg text-sm font-bold hover:bg-[#6930d4] transition-colors mt-4"
           >
-            📅 Strategy Call w/ Camilo
+            Book a Free Audit
           </a>
         </div>
       )}

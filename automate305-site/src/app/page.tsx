@@ -67,7 +67,7 @@ export default function HomePage() {
             rel="noopener noreferrer"
             className="inline-block bg-[#7B3FF2] text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#6930d4] transition-colors"
           >
-            📅 Strategy Call w/ Camilo →
+            Book a Free Audit →
           </a>
         </div>
       </section>

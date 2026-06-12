@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 24" fill="white">
+  <circle cx="12" cy="12" r="9" fill="none" stroke="white" stroke-width="2"/>
+  <circle cx="9" cy="9" r="2" fill="white"/>
+  <circle cx="15" cy="9" r="2" fill="white"/>
+  <circle cx="9" cy="15" r="2" fill="white"/>
+  <circle cx="15" cy="15" r="2" fill="white"/>
+  <text x="26" y="17" font-family="sans-serif" font-size="13" font-weight="700" fill="white">Twilio</text>
+</svg>
