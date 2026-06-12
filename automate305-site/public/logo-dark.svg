@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 80" fill="none">
+  <!-- Big Shoulders Display approximated with font-weight 700 in SVG text -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700&amp;display=swap');
+    .wordmark { font-family: 'Big Shoulders Display', 'Arial Black', sans-serif; font-weight: 700; }
+  </style>
+  <!-- Lightning bolt: sized to cap height ~56px, positioned left -->
+  <path d="M34 6 L12 42 L26 42 L24 74 L46 38 L32 38 Z" fill="#9B50F5"/>
+  <!-- AUTOMATE in white (dark background variant) -->
+  <text x="56" y="62" class="wordmark" font-size="58" fill="#FFFFFF" letter-spacing="-1">AUTOMATE</text>
+  <!-- 305 in purple -->
+  <text x="363" y="62" class="wordmark" font-size="58" fill="#9B50F5" letter-spacing="-1">305</text>
+</svg>

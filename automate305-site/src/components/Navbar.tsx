@@ -1,31 +1,47 @@
 'use client'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
-import { Menu, X, Home, ChevronDown } from 'lucide-react'
+import { Menu, X, ChevronDown } from 'lucide-react'
 
-const industries = [
+const NAV_ITEMS = [
+  { label: 'Home', id: 'hero' },
+  { label: 'How it works', id: 'how-it-works' },
   {
-    label: 'Home Services',
-    href: '/industries/home-services',
-    items: ['HVAC', 'Roofing', 'Plumbing'],
+    label: 'Industries',
+    id: 'industries',
+    dropdown: [
+      { label: 'Home Services', href: '/industries/home-services' },
+      { label: 'Professional Services', href: '/industries/professional-services' },
+      { label: 'Hospitality', href: '/industries/hospitality' },
+    ],
   },
   {
-    label: 'Professional Services',
-    href: '/industries/professional-services',
-    items: ['SMB Lending', 'Law Firms', 'Consultants'],
+    label: 'Results',
+    id: 'results',
+    dropdown: [
+      { label: 'RevOps Dashboard', anchor: 'revops-dashboard' },
+      { label: 'Case Studies', anchor: 'case-studies' },
+    ],
   },
-  {
-    label: 'Hospitality',
-    href: '/industries/hospitality',
-    items: ['Restaurants', 'Bars & Lounges', 'Hotels'],
-  },
+  { label: 'About', id: 'about' },
+  { label: 'Contact', id: 'contact' },
 ]
+
+function scrollTo(id: string) {
+  if (typeof window === 'undefined') return
+  const el = document.getElementById(id)
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  } else {
+    window.location.href = `/#${id}`
+  }
+}
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const navRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30)
@@ -34,106 +50,102 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setDropdownOpen(false)
+    const handleClick = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setOpenDropdown(null)
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
   const navBg = scrolled
-    ? 'bg-[#0C0812]/95 backdrop-blur border-b border-white/10'
-    : 'bg-[#FAF7F2]/95 backdrop-blur border-b border-gray-200'
+    ? 'bg-[#0C0812]/95 backdrop-blur-md border-b border-white/10'
+    : 'bg-[#FAF7F2]/95 backdrop-blur-md border-b border-gray-200'
 
-  const linkColor = scrolled
+  const linkBase = scrolled
     ? 'text-gray-300 hover:text-white'
     : 'text-gray-700 hover:text-[#7B3FF2]'
 
-  const logoWordColor = scrolled ? 'text-white' : 'text-[#0C0812]'
+  const logoWord = scrolled ? 'text-white' : 'text-[#0C0812]'
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}>
+    <nav ref={navRef} className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-1.5">
-            {/* Lightning bolt matching actual Automate305 brand mark */}
-            <svg width="20" height="26" viewBox="0 0 20 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 0L2 14H9L8 26L18 12H11L12 0Z" fill="#7B3FF2"/>
+          <button onClick={() => scrollTo('hero')} className="flex items-center gap-2 group">
+            {/* Lightning bolt matching brand mark */}
+            <svg width="18" height="26" viewBox="0 0 22 32" fill="none">
+              <path d="M14 0L2 17H9.5L8 32L20 15H12.5Z" fill="#9B50F5"/>
             </svg>
-            <span className={`font-black text-xl tracking-tight transition-colors duration-300 ${logoWordColor}`}>
-              AUTOMATE<span className="text-[#7B3FF2]">305</span>
+            <span className={`font-black text-[22px] tracking-[-0.03em] transition-colors duration-300 leading-none`}
+              style={{ fontFamily: "'Big Shoulders Display', 'Arial Black', sans-serif" }}>
+              <span className={logoWord}>AUTOMATE</span>
+              <span style={{ color: '#9B50F5' }}>305</span>
             </span>
-          </Link>
+          </button>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-7">
-
-            {/* Industries dropdown */}
-            <div ref={dropdownRef} className="relative">
-              <button
-                className={`flex items-center gap-1 text-sm font-medium transition-colors ${linkColor}`}
-                onMouseEnter={() => setDropdownOpen(true)}
-                onClick={() => setDropdownOpen(v => !v)}
-              >
-                Industries
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              {dropdownOpen && (
+          <div className="hidden md:flex items-center gap-1">
+            {NAV_ITEMS.map(item => {
+              const hasDropdown = !!item.dropdown
+              const isOpen = openDropdown === item.id
+              return (
                 <div
-                  className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[520px] bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 grid grid-cols-3 gap-6"
-                  onMouseLeave={() => setDropdownOpen(false)}
+                  key={item.id}
+                  className="relative"
+                  onMouseEnter={() => hasDropdown && setOpenDropdown(item.id)}
+                  onMouseLeave={() => setOpenDropdown(null)}
                 >
-                  {industries.map(ind => (
-                    <div key={ind.label}>
-                      <Link
-                        href={ind.href}
-                        className="block text-sm font-bold text-[#0C0812] hover:text-[#7B3FF2] mb-2 transition-colors"
-                        onClick={() => setDropdownOpen(false)}
-                      >
-                        {ind.label}
-                      </Link>
-                      <ul className="space-y-1">
-                        {ind.items.map(item => (
-                          <li key={item}>
-                            <Link
-                              href={ind.href}
-                              className="text-xs text-gray-500 hover:text-[#7B3FF2] transition-colors block py-0.5"
-                              onClick={() => setDropdownOpen(false)}
-                            >
-                              {item}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
+                  <button
+                    onClick={() => {
+                      if (!hasDropdown) scrollTo(item.id)
+                      else setOpenDropdown(isOpen ? null : item.id)
+                    }}
+                    className={`flex items-center gap-0.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${linkBase}`}
+                  >
+                    {item.label}
+                    {hasDropdown && (
+                      <ChevronDown className={`w-3 h-3 ml-0.5 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} />
+                    )}
+                  </button>
+
+                  {hasDropdown && isOpen && (
+                    <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-1 min-w-[180px] rounded-xl shadow-xl border overflow-hidden z-50 ${scrolled ? 'bg-[#0C0812] border-white/10' : 'bg-white border-gray-100'}`}>
+                      {item.dropdown!.map(sub => {
+                        const isAnchor = 'anchor' in sub
+                        return isAnchor ? (
+                          <button
+                            key={sub.label}
+                            onClick={() => { scrollTo((sub as { label: string; anchor: string }).anchor); setOpenDropdown(null) }}
+                            className={`w-full text-left block px-4 py-2.5 text-sm transition-colors ${scrolled ? 'text-gray-300 hover:bg-white/10 hover:text-white' : 'text-gray-700 hover:bg-[#7B3FF2]/5 hover:text-[#7B3FF2]'}`}
+                          >
+                            {sub.label}
+                          </button>
+                        ) : (
+                          <Link
+                            key={sub.label}
+                            href={(sub as { label: string; href: string }).href}
+                            onClick={() => setOpenDropdown(null)}
+                            className={`block px-4 py-2.5 text-sm transition-colors ${scrolled ? 'text-gray-300 hover:bg-white/10 hover:text-white' : 'text-gray-700 hover:bg-[#7B3FF2]/5 hover:text-[#7B3FF2]'}`}
+                          >
+                            {sub.label}
+                          </Link>
+                        )
+                      })}
                     </div>
-                  ))}
+                  )}
                 </div>
-              )}
-            </div>
-
-            {/* Home icon — lives here in the nav, not next to the logo */}
-            <Link
-              href="/"
-              aria-label="Home"
-              className={`transition-colors ${linkColor}`}
-            >
-              <Home className="w-4 h-4" />
-            </Link>
-
-            <Link href="/results" className={`text-sm font-medium transition-colors ${linkColor}`}>Results</Link>
-            <Link href="/about" className={`text-sm font-medium transition-colors ${linkColor}`}>About</Link>
-            <Link href="/contact" className={`text-sm font-medium transition-colors ${linkColor}`}>Contact</Link>
+              )
+            })}
 
             <a
               href="https://cal.com/automate305/30min"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#7B3FF2] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#6930d4] transition-colors whitespace-nowrap"
+              className="ml-3 bg-[#7B3FF2] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#6930d4] transition-colors whitespace-nowrap"
             >
               Book a Free Audit
             </a>
@@ -152,46 +164,43 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-[#0C0812] border-t border-white/10 px-4 py-6 space-y-4">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Industries</p>
-          {industries.map(ind => (
-            <div key={ind.label} className="mb-3">
-              <Link
-                href={ind.href}
-                className="block text-white font-semibold text-sm mb-1"
-                onClick={() => setMobileOpen(false)}
+        <div className="md:hidden bg-[#0C0812] border-t border-white/10 px-4 py-5 space-y-1">
+          {NAV_ITEMS.map(item => (
+            <div key={item.id}>
+              <button
+                onClick={() => { scrollTo(item.id); setMobileOpen(false) }}
+                className="w-full text-left text-gray-300 text-sm font-medium py-2.5 hover:text-white transition-colors"
               >
-                {ind.label}
-              </Link>
-              {ind.items.map(item => (
-                <Link
-                  key={item}
-                  href={ind.href}
-                  className="block text-gray-400 text-xs py-0.5 pl-3 hover:text-[#7B3FF2]"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {item}
-                </Link>
-              ))}
+                {item.label}
+              </button>
+              {item.dropdown && (
+                <div className="pl-4 border-l border-white/10 mb-1">
+                  {item.dropdown.map(sub => {
+                    const isAnchor = 'anchor' in sub
+                    return isAnchor ? (
+                      <button key={sub.label}
+                        onClick={() => { scrollTo((sub as { label: string; anchor: string }).anchor); setMobileOpen(false) }}
+                        className="block w-full text-left text-gray-500 text-xs py-1.5 hover:text-gray-300">
+                        {sub.label}
+                      </button>
+                    ) : (
+                      <Link key={sub.label}
+                        href={(sub as { label: string; href: string }).href}
+                        className="block text-gray-500 text-xs py-1.5 hover:text-gray-300"
+                        onClick={() => setMobileOpen(false)}>
+                        {sub.label}
+                      </Link>
+                    )
+                  })}
+                </div>
+              )}
             </div>
           ))}
-          <div className="pt-2 border-t border-white/10 space-y-3">
-            {[['Results', '/results'], ['About', '/about'], ['Contact', '/contact']].map(([label, href]) => (
-              <Link
-                key={label}
-                href={href}
-                className="block text-gray-300 text-sm font-medium hover:text-white"
-                onClick={() => setMobileOpen(false)}
-              >
-                {label}
-              </Link>
-            ))}
-          </div>
           <a
             href="https://cal.com/automate305/30min"
             target="_blank"
             rel="noopener noreferrer"
-            className="block w-full text-center bg-[#7B3FF2] text-white px-4 py-3 rounded-lg text-sm font-bold hover:bg-[#6930d4] transition-colors mt-4"
+            className="block w-full text-center bg-[#7B3FF2] text-white px-4 py-3 rounded-lg text-sm font-bold hover:bg-[#6930d4] transition-colors mt-3"
           >
             Book a Free Audit
           </a>
