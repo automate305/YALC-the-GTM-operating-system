@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
 import { Menu, X, ChevronDown } from 'lucide-react'
+import CalButton from '@/components/CalButton'
 
 const NAV_ITEMS = [
   { label: 'Home', id: 'hero' },
@@ -141,14 +142,9 @@ export default function Navbar() {
               )
             })}
 
-            <a
-              href="https://cal.com/automate305/30min"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ml-3 bg-[#7B3FF2] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#6930d4] transition-colors whitespace-nowrap"
-            >
+            <CalButton className="ml-3 bg-[#7B3FF2] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#6930d4] transition-colors whitespace-nowrap cursor-pointer">
               Book a Free Audit
-            </a>
+            </CalButton>
           </div>
 
           {/* Mobile hamburger */}
@@ -196,14 +192,9 @@ export default function Navbar() {
               )}
             </div>
           ))}
-          <a
-            href="https://cal.com/automate305/30min"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full text-center bg-[#7B3FF2] text-white px-4 py-3 rounded-lg text-sm font-bold hover:bg-[#6930d4] transition-colors mt-3"
-          >
+          <CalButton className="block w-full text-center bg-[#7B3FF2] text-white px-4 py-3 rounded-lg text-sm font-bold hover:bg-[#6930d4] transition-colors mt-3 cursor-pointer">
             Book a Free Audit
-          </a>
+          </CalButton>
         </div>
       )}
     </nav>

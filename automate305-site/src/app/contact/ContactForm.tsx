@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import CalButton from '@/components/CalButton'
 
 type FormState = {
   name: string
@@ -43,14 +44,9 @@ export default function ContactForm() {
         <p className="text-gray-500 text-base mb-6">
           We&apos;ll reach out within 24 hours to schedule your revenue audit.
         </p>
-        <a
-          href="https://cal.com/automate305/30min"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block bg-[#7B3FF2] text-white font-semibold px-8 py-3 rounded-full hover:opacity-90 transition-opacity"
-        >
-          Or Book Directly on Cal.com →
-        </a>
+        <CalButton className="inline-block bg-[#7B3FF2] text-white font-semibold px-8 py-3 rounded-full hover:opacity-90 transition-opacity">
+              Or Book Directly on Cal.com →
+            </CalButton>
       </div>
     )
   }

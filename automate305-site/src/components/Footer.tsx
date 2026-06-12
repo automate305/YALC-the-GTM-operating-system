@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Zap } from 'lucide-react'
+import CalButton from '@/components/CalButton'
 
 export default function Footer() {
   return (
@@ -35,14 +36,9 @@ export default function Footer() {
           </div>
           <div>
             <h4 className="text-white font-semibold mb-4">Get Started</h4>
-            <a
-              href="https://cal.com/automate305/30min"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block bg-[#7B3FF2] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#6930d4] transition-colors"
-            >
+            <CalButton className="inline-block bg-[#7B3FF2] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#6930d4] transition-colors cursor-pointer">
               Book a Free Audit
-            </a>
+            </CalButton>
           </div>
         </div>
         <div className="border-t border-gray-800 pt-8 text-sm text-center">

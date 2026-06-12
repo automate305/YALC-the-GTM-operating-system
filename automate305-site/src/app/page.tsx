@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar'
+import CalButton from '@/components/CalButton'
 import Footer from '@/components/Footer'
 import CaseStudyCard from '@/components/CaseStudyCard'
 import dynamic from 'next/dynamic'
@@ -116,14 +117,9 @@ export default function HomePage() {
           <p className="text-gray-400 text-xl md:text-2xl mb-10 max-w-2xl mx-auto leading-relaxed">
             The AI-powered revenue system for home service businesses, professional service firms, and hospitality brands.
           </p>
-          <a
-            href="https://cal.com/automate305/30min"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-[#7B3FF2] text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#6930d4] transition-colors"
-          >
-            Book a Free Audit →
-          </a>
+          <CalButton className="inline-block bg-[#7B3FF2] text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#6930d4] transition-colors">
+              Book a Free Audit →
+            </CalButton>
         </div>
       </section>
 
@@ -160,14 +156,9 @@ export default function HomePage() {
           </p>
           <OrchestrationFlow />
           <div className="mt-10 text-center">
-            <a
-              href="https://cal.com/automate305/30min"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block bg-[#7B3FF2] text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-[#6930d4] transition-colors"
-            >
+            <CalButton className="inline-block bg-[#7B3FF2] text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-[#6930d4] transition-colors">
               Build this for my business →
-            </a>
+            </CalButton>
           </div>
         </div>
       </section>
@@ -299,14 +290,9 @@ export default function HomePage() {
           <p className="text-gray-400 text-lg mb-10">
             Book a free 30-minute audit. We&apos;ll map your revenue leaks and show you exactly where AI automation adds ROI — no pitch deck, no fluff.
           </p>
-          <a
-            href="https://cal.com/automate305/30min"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-[#7B3FF2] text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#6930d4] transition-colors mb-6"
-          >
-            Book a Free Audit →
-          </a>
+          <CalButton className="inline-block bg-[#7B3FF2] text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#6930d4] transition-colors mb-6">
+              Book a Free Audit →
+            </CalButton>
           <p className="text-gray-500 text-sm">
             Or{' '}
             <Link href="/contact" className="text-gray-400 hover:text-white underline">

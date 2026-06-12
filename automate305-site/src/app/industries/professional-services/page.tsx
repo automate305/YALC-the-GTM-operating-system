@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar'
+import CalButton from '@/components/CalButton'
 import Footer from '@/components/Footer'
 import CTASection from '@/components/CTASection'
 import { Zap } from 'lucide-react'
@@ -51,7 +52,9 @@ export default function ProfessionalServicesPage() {
           <p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3">Professional Services</p>
           <h1 className="text-5xl md:text-6xl font-black text-white mb-6">Close More.<br /><span className="text-[#7B3FF2]">Follow Up Faster.</span></h1>
           <p className="text-gray-400 text-xl mb-10">Your competitors are still doing intake manually and losing deals to delayed follow-up. We automate the entire client journey — from first inquiry to signed engagement.</p>
-          <a href="https://cal.com/automate305/30min" target="_blank" rel="noopener noreferrer" className="inline-block bg-[#7B3FF2] text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#6930d4] transition-colors">Book a Free Audit →</a>
+          <CalButton className="inline-block bg-[#7B3FF2] text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#6930d4] transition-colors">
+              Book a Free Audit →
+            </CalButton>
         </div>
       </section>
 

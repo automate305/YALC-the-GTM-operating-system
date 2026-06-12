@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import CalButton from '@/components/CalButton'
 import { Wrench, Briefcase, UtensilsCrossed, Zap, Mail, Calendar, Star, ArrowRight } from 'lucide-react'
 
 const workflows: Record<string, {
@@ -130,14 +131,9 @@ export default function AutomationDemo() {
 
       <div className="bg-[#FAF7F2] border-t border-gray-100 px-6 py-3 flex items-center justify-between">
         <p className="text-xs text-gray-500">This runs 24/7 — without a human on standby.</p>
-        <a
-          href="https://cal.com/automate305/30min"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs font-semibold text-[#7B3FF2] hover:underline flex items-center gap-1"
-        >
-          Activate for your business <ArrowRight className="w-3 h-3" />
-        </a>
+        <CalButton className="text-xs font-semibold text-[#7B3FF2] hover:underline flex items-center gap-1">
+              Activate for your business <ArrowRight className="w-3 h-3" />
+            </CalButton>
       </div>
     </div>
   )

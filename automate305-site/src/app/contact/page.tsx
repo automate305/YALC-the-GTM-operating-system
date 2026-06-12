@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar'
+import CalButton from '@/components/CalButton'
 import Footer from '@/components/Footer'
 import { MapPin, Mail, Calendar } from 'lucide-react'
 
@@ -73,7 +74,9 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1">30-Minute Free Audit</h3>
                   <p className="text-gray-600 text-sm mb-3">We'll map your current revenue leaks and show you exactly where AI automation can add ROI.</p>
-                  <a href="https://cal.com/automate305/30min" target="_blank" rel="noopener noreferrer" className="inline-block bg-[#7B3FF2] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#6930d4] transition-colors">Book a Free Audit →</a>
+                  <CalButton className="inline-block bg-[#7B3FF2] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#6930d4] transition-colors">
+              Book a Free Audit →
+            </CalButton>
                 </div>
               </div>
             </div>
