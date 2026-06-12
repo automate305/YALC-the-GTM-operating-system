@@ -36,7 +36,7 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4">Get Started</h4>
             <a
-              href="https://cal.com/automate305"
+              href="https://cal.com/automate305/30min"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-[#7B3FF2] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#6930d4] transition-colors"

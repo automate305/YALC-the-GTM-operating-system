@@ -44,7 +44,7 @@ export default function ContactForm() {
           We&apos;ll reach out within 24 hours to schedule your revenue audit.
         </p>
         <a
-          href="https://cal.com/automate305"
+          href="https://cal.com/automate305/30min"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block bg-[#7B3FF2] text-white font-semibold px-8 py-3 rounded-full hover:opacity-90 transition-opacity"

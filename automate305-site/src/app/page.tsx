@@ -1,7 +1,8 @@
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import CaseStudyCard from '@/components/CaseStudyCard'
-import ChatDemo from '@/components/ChatDemo'
+import AutomationDemo from '@/components/AutomationDemo'
+import LogoMarquee from '@/components/LogoMarquee'
 import CTASection from '@/components/CTASection'
 import Link from 'next/link'
 import { Wrench, Briefcase, UtensilsCrossed, Zap } from 'lucide-react'
@@ -32,7 +33,7 @@ const caseStudies = [
     location: 'S. FL',
     description: 'Client intake automation, deal-status comms, pipeline visibility across the loan lifecycle — intake to close, on one rail.',
     stat: '100%',
-    quote: 'Built for an SMB lender who can\'t afford to lose another deal to a delayed status email.',
+    quote: "Built for an SMB lender who can't afford to lose another deal to a delayed status email.",
   },
 ]
 
@@ -61,49 +62,46 @@ export default function HomePage() {
             The AI-powered revenue system for home service businesses, professional service firms, and hospitality brands.
           </p>
           <a
-            href="https://cal.com/automate305"
+            href="https://cal.com/automate305/30min"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-[#7B3FF2] text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#6930d4] transition-colors"
           >
-            Book a Free Audit →
+            📅 Strategy Call w/ Camilo →
           </a>
         </div>
       </section>
 
-      {/* Social proof bar */}
-      <section className="bg-white border-y border-gray-200 py-8 px-4">
-        <div className="max-w-5xl mx-auto">
-          <p className="text-center text-sm text-gray-500 font-medium mb-6">Serving Miami-Dade contractors, lenders &amp; hospitality brands</p>
-          <div className="flex justify-center gap-12 flex-wrap">
-            <div className="flex items-center gap-2 text-gray-600">
-              <Wrench className="w-5 h-5 text-[#7B3FF2]" />
-              <span className="text-sm font-medium">Home Services</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <Briefcase className="w-5 h-5 text-[#7B3FF2]" />
-              <span className="text-sm font-medium">Professional Services</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <UtensilsCrossed className="w-5 h-5 text-[#7B3FF2]" />
-              <span className="text-sm font-medium">Hospitality</span>
-            </div>
-          </div>
+      {/* Logo marquee */}
+      <LogoMarquee />
+
+      {/* Quote / stat section */}
+      <section className="bg-[#0C0812] py-20 px-4">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="w-12 h-0.5 bg-[#7B3FF2] mx-auto mb-8" />
+          <blockquote className="text-2xl md:text-3xl font-bold text-white italic leading-snug mb-6">
+            &ldquo;76% of small business owners are actively using or exploring AI — yet only 1 in 4 have any formal system running. Less than 5% have hired a professional to put one in place.&rdquo;
+          </blockquote>
+          <p className="text-gray-500 text-sm mb-8">
+            Reimagine Main Street / NSBA Small Business AI Survey · PayPal Research, 2025
+          </p>
+          <div className="w-12 h-0.5 bg-[#7B3FF2] mx-auto mb-8" />
+          <p className="text-2xl font-black text-[#7B3FF2]">That 5% is pulling ahead. Fast.</p>
         </div>
       </section>
 
-      {/* Live Demo */}
+      {/* Interactive demo */}
       <section className="py-24 px-4 bg-[#FAF7F2]">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div>
-              <p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3">Live Demo</p>
+              <p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3">How It Works</p>
               <h2 className="text-4xl font-black text-gray-900 mb-6">Your AI agent — working while you sleep.</h2>
               <p className="text-gray-600 text-lg mb-6">
-                This is what it looks like when an HVAC contractor deploys an AI dispatcher. Every inbound inquiry gets captured, qualified, and booked — in under 5 minutes, 24/7, without a human on standby.
+                Pick your industry and hit play. This is what a deployed automation looks like — lead in, revenue out, no humans required at every step.
               </p>
               <ul className="space-y-3">
-                {['Instant response to every inbound inquiry', 'Qualifies leads and captures contact info', 'Books appointments directly to your calendar', 'Sends review requests after job completion'].map(item => (
+                {['Responds to every inbound lead in under 60 seconds', 'Qualifies, books, and tracks without manual steps', 'Sends review requests and reactivation campaigns', 'Works across HVAC, lending, restaurants, and more'].map(item => (
                   <li key={item} className="flex items-center gap-2 text-gray-700">
                     <Zap className="w-4 h-4 text-[#7B3FF2] shrink-0" />
                     {item}
@@ -111,8 +109,8 @@ export default function HomePage() {
                 ))}
               </ul>
             </div>
-            <div className="flex justify-center">
-              <ChatDemo />
+            <div>
+              <AutomationDemo />
             </div>
           </div>
         </div>

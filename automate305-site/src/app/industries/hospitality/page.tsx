@@ -42,7 +42,7 @@ export default function HospitalityPage() {
           <p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3">Hospitality</p>
           <h1 className="text-5xl md:text-6xl font-black text-white mb-6">Fill More Tables.<br /><span className="text-[#7B3FF2]">Automate the Rest.</span></h1>
           <p className="text-gray-400 text-xl mb-10">Every empty seat is lost revenue. AI automation fills your calendar, handles guest communications, and turns satisfied guests into repeat customers — without adding headcount.</p>
-          <a href="https://cal.com/automate305" target="_blank" rel="noopener noreferrer" className="inline-block bg-[#7B3FF2] text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#6930d4] transition-colors">Book a Free Audit →</a>
+          <a href="https://cal.com/automate305/30min" target="_blank" rel="noopener noreferrer" className="inline-block bg-[#7B3FF2] text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#6930d4] transition-colors">Book a Free Audit →</a>
         </div>
       </section>
 

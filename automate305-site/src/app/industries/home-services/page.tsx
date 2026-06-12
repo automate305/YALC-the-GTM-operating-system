@@ -60,7 +60,7 @@ export default function HomeServicesPage() {
           <p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3">Home Services</p>
           <h1 className="text-5xl md:text-6xl font-black text-white mb-6">Built for the Trades.<br /><span className="text-[#7B3FF2]">Powered by AI.</span></h1>
           <p className="text-gray-400 text-xl mb-10">Stop losing jobs to faster competitors. AI automation handles your speed-to-lead, after-hours coverage, and follow-up — so you show up first, every time.</p>
-          <a href="https://cal.com/automate305" target="_blank" rel="noopener noreferrer" className="inline-block bg-[#7B3FF2] text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#6930d4] transition-colors">Book a Free Audit →</a>
+          <a href="https://cal.com/automate305/30min" target="_blank" rel="noopener noreferrer" className="inline-block bg-[#7B3FF2] text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#6930d4] transition-colors">Book a Free Audit →</a>
         </div>
       </section>
 
