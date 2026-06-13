@@ -69,9 +69,9 @@ const NAV_ITEMS: NavItem[] = [
     label: 'About',
     id: 'about',
     dropdown: [
-      { label: 'Our Story',        anchor: 'our-story' },
-      { label: 'Our Mission',      anchor: 'our-mission' },
-      { label: 'Meet the Founder', anchor: 'meet-the-founder' },
+      { label: 'Our Story',        href: '/about#our-story' },
+      { label: 'Our Mission',      href: '/about#our-mission' },
+      { label: 'Meet the Founder', href: '/about#meet-the-founder' },
     ],
   },
   { label: 'Contact', id: 'contact' },
