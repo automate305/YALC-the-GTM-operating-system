@@ -69,7 +69,7 @@ export default function IndustryTabs() {
   return (
     <div>
       {/* Tab bar */}
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-0 mb-8 bg-[#0C0812] rounded-xl p-1 border border-gray-800">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-0 mb-8 bg-[#111318] rounded-xl p-1 border border-gray-800">
         {TABS.map((t, i) => {
           const Icon = t.icon
           const isActive = i === active
@@ -100,7 +100,7 @@ export default function IndustryTabs() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: direction * -40 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="bg-[#0C0812] rounded-2xl border border-gray-800 p-8"
+            className="bg-[#111318] rounded-2xl border border-gray-800 p-8"
           >
             {(() => {
               const Icon = tab.icon

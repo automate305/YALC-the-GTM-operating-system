@@ -44,7 +44,7 @@ export default function ResultsPage() {
   return (
     <main>
       <Navbar />
-      <section className="bg-[#0C0812] pt-32 pb-24 px-4">
+      <section className="bg-[#111318] pt-32 pb-24 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3">Results</p>
           <h1 className="text-5xl font-black text-white mb-6">The numbers don&apos;t lie.</h1>
@@ -74,7 +74,7 @@ export default function ResultsPage() {
         </div>
       </section>
 
-      <section className="bg-[#0C0812] py-24 px-4">
+      <section className="bg-[#111318] py-24 px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl font-black text-white mb-12 text-center">Case Studies</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

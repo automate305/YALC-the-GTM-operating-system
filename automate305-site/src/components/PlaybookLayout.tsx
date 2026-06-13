@@ -55,7 +55,7 @@ export default function PlaybookLayout({ chapters }: PlaybookLayoutProps) {
   let globalStep = 0
 
   return (
-    <div className="flex min-h-screen bg-[#0D0F1A]">
+    <div className="flex min-h-screen bg-[#111318]">
       {/* Sidebar */}
       <aside className="hidden md:flex flex-col w-64 shrink-0 sticky top-16 h-[calc(100vh-4rem)] bg-[#0A0C18] border-r border-[#1E2235] overflow-y-auto">
         <div className="px-4 pt-6 pb-2">

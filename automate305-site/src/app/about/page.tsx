@@ -31,7 +31,7 @@ export default function AboutPage() {
       <Navbar />
 
       {/* ── HERO ── */}
-      <section className="bg-[#0C0812] pt-32 pb-24 px-4">
+      <section id="our-story" className="bg-[#111318] pt-32 pb-24 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3">About</p>
           <h1 className="text-5xl font-black text-white mb-6">Miami-built. Revenue-obsessed.</h1>
@@ -63,7 +63,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── OUR MISSION ── */}
-      <section className="py-24 px-4 bg-[#FAF7F2]">
+      <section id="our-mission" className="py-24 px-4 bg-[#FAF7F2]">
         <div className="max-w-3xl mx-auto">
           <motion.p {...fadeUp(0)} className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-4">
             Our Mission
@@ -71,38 +71,35 @@ export default function AboutPage() {
           <motion.h2 {...fadeUp(0.05)} className="text-4xl font-black text-gray-900 mb-8 leading-tight">
             We put enterprise-grade revenue systems in the hands of the businesses that actually run Miami.
           </motion.h2>
-          <motion.p {...fadeUp(0.1)} className="text-gray-600 text-lg leading-relaxed mb-10">
+          <motion.p {...fadeUp(0.1)} className="text-gray-600 text-lg leading-relaxed">
             The HVAC contractor losing jobs because a competitor replies faster. The SMB lender watching deals go cold over a delayed email. The restaurant owner manually chasing reservations at midnight. These aren&apos;t small problems — they&apos;re revenue walking out the door. Automate305 exists to close that gap. We build AI-native systems that capture leads, follow up instantly, and keep your pipeline moving — without adding headcount or enterprise budgets.
-          </motion.p>
-          <motion.p {...fadeUp(0.2)} className="text-[#7B3FF2] text-xl italic font-semibold">
-            &ldquo;Built in the middle of everything, because waiting wasn&apos;t an option.&rdquo;
           </motion.p>
         </div>
       </section>
 
       {/* ── FOUNDER ── */}
-      <section className="py-24 px-4 bg-[#0D0F1A]">
+      <section id="meet-the-founder" className="py-24 px-4 bg-[#111318]">
         <div className="max-w-5xl mx-auto">
-          <motion.p {...fadeUp(0)} className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-12 text-center md:text-left">
-            Founder
-          </motion.p>
+          <motion.h2 {...fadeUp(0)} className="text-3xl md:text-4xl font-black text-white mb-12 text-center md:text-left">
+            Meet the Founder
+          </motion.h2>
           <div className="flex flex-col md:flex-row items-center md:items-end gap-12">
 
             {/* Photo */}
             <motion.div
               {...fadeUp(0.05)}
-              className="relative flex-shrink-0 w-72 md:w-80"
+              className="relative flex-shrink-0 w-80 md:w-[420px]"
             >
               <div
                 className="absolute inset-0 rounded-2xl"
-                style={{ background: 'radial-gradient(ellipse at center, rgba(124,58,237,0.18) 0%, transparent 70%)' }}
+                style={{ background: 'radial-gradient(ellipse at center, rgba(124,58,237,0.22) 0%, transparent 70%)' }}
               />
               <Image
                 src="/camilo-founder.png"
                 alt="Camilo — Founder, Automate305"
-                width={400}
-                height={520}
-                className="relative w-full max-h-[520px] object-contain object-bottom"
+                width={500}
+                height={650}
+                className="relative w-full max-h-[650px] object-contain object-bottom"
                 priority
               />
             </motion.div>
@@ -145,7 +142,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── HOW ONE PERSON SCALES ── */}
-      <section className="py-24 px-4 bg-[#0D0F1A] border-t border-white/5">
+      <section className="py-24 px-4 bg-[#111318] border-t border-white/5">
         <div className="max-w-4xl mx-auto text-center">
           <motion.p {...fadeUp(0)} className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-4">
             How One Person Scales
@@ -153,7 +150,7 @@ export default function AboutPage() {
           <motion.h2 {...fadeUp(0.05)} className="text-4xl font-black text-white mb-4">
             The stack runs while I sleep.
           </motion.h2>
-          <motion.p {...fadeUp(0.1)} className="text-gray-500 text-base mb-14 max-w-xl mx-auto">
+          <motion.p {...fadeUp(0.1)} className="text-gray-400 text-base mb-14 max-w-xl mx-auto">
             No account managers. No junior devs. Just a purpose-built operating system that runs the work.
           </motion.p>
 
@@ -189,7 +186,7 @@ export default function AboutPage() {
             ))}
           </motion.div>
 
-          <motion.p {...fadeUp(0.3)} className="text-gray-600 text-sm mt-10">
+          <motion.p {...fadeUp(0.3)} className="text-gray-500 text-sm mt-10">
             Same infrastructure. Built for your business.
           </motion.p>
         </div>

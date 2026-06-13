@@ -40,7 +40,7 @@ export default function ContactForm() {
     return (
       <div className="bg-white border border-gray-200 rounded-2xl p-10 text-center">
         <div className="text-5xl mb-4">✅</div>
-        <h3 className="text-[#0C0812] font-black text-2xl mb-3">Message Sent!</h3>
+        <h3 className="text-[#111318] font-black text-2xl mb-3">Message Sent!</h3>
         <p className="text-gray-500 text-base mb-6">
           We&apos;ll reach out within 24 hours to schedule your revenue audit.
         </p>
@@ -53,12 +53,12 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-2xl p-8 space-y-5">
-      <h3 className="text-[#0C0812] font-black text-xl mb-2">Send Us a Message</h3>
+      <h3 className="text-[#111318] font-black text-xl mb-2">Send Us a Message</h3>
       <p className="text-gray-500 text-sm mb-4">We&apos;ll get back to you within 24 hours.</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="name" className="block text-[#0C0812] text-sm font-semibold mb-1">
+          <label htmlFor="name" className="block text-[#111318] text-sm font-semibold mb-1">
             Name <span className="text-[#7B3FF2]">*</span>
           </label>
           <input
@@ -68,12 +68,12 @@ export default function ContactForm() {
             required
             value={form.name}
             onChange={handleChange}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#0C0812] focus:outline-none focus:border-[#7B3FF2] transition-colors"
+            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#111318] focus:outline-none focus:border-[#7B3FF2] transition-colors"
             placeholder="Your name"
           />
         </div>
         <div>
-          <label htmlFor="email" className="block text-[#0C0812] text-sm font-semibold mb-1">
+          <label htmlFor="email" className="block text-[#111318] text-sm font-semibold mb-1">
             Email <span className="text-[#7B3FF2]">*</span>
           </label>
           <input
@@ -83,7 +83,7 @@ export default function ContactForm() {
             required
             value={form.email}
             onChange={handleChange}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#0C0812] focus:outline-none focus:border-[#7B3FF2] transition-colors"
+            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#111318] focus:outline-none focus:border-[#7B3FF2] transition-colors"
             placeholder="you@yourbusiness.com"
           />
         </div>
@@ -91,7 +91,7 @@ export default function ContactForm() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="phone" className="block text-[#0C0812] text-sm font-semibold mb-1">
+          <label htmlFor="phone" className="block text-[#111318] text-sm font-semibold mb-1">
             Phone
           </label>
           <input
@@ -100,12 +100,12 @@ export default function ContactForm() {
             name="phone"
             value={form.phone}
             onChange={handleChange}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#0C0812] focus:outline-none focus:border-[#7B3FF2] transition-colors"
+            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#111318] focus:outline-none focus:border-[#7B3FF2] transition-colors"
             placeholder="305-000-0000"
           />
         </div>
         <div>
-          <label htmlFor="business" className="block text-[#0C0812] text-sm font-semibold mb-1">
+          <label htmlFor="business" className="block text-[#111318] text-sm font-semibold mb-1">
             Business Name
           </label>
           <input
@@ -114,14 +114,14 @@ export default function ContactForm() {
             name="business"
             value={form.business}
             onChange={handleChange}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#0C0812] focus:outline-none focus:border-[#7B3FF2] transition-colors"
+            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#111318] focus:outline-none focus:border-[#7B3FF2] transition-colors"
             placeholder="Your business"
           />
         </div>
       </div>
 
       <div>
-        <label htmlFor="industry" className="block text-[#0C0812] text-sm font-semibold mb-1">
+        <label htmlFor="industry" className="block text-[#111318] text-sm font-semibold mb-1">
           Industry <span className="text-[#7B3FF2]">*</span>
         </label>
         <select
@@ -130,7 +130,7 @@ export default function ContactForm() {
           required
           value={form.industry}
           onChange={handleChange}
-          className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#0C0812] focus:outline-none focus:border-[#7B3FF2] transition-colors bg-white"
+          className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#111318] focus:outline-none focus:border-[#7B3FF2] transition-colors bg-white"
         >
           <option value="">Select your industry</option>
           <option value="hvac">HVAC</option>
@@ -150,7 +150,7 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label htmlFor="message" className="block text-[#0C0812] text-sm font-semibold mb-1">
+        <label htmlFor="message" className="block text-[#111318] text-sm font-semibold mb-1">
           What&apos;s your biggest revenue challenge right now?
         </label>
         <textarea
@@ -159,7 +159,7 @@ export default function ContactForm() {
           rows={4}
           value={form.message}
           onChange={handleChange}
-          className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#0C0812] focus:outline-none focus:border-[#7B3FF2] transition-colors resize-none"
+          className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#111318] focus:outline-none focus:border-[#7B3FF2] transition-colors resize-none"
           placeholder="e.g. We're losing leads after hours. Our quote follow-up is manual and inconsistent..."
         />
       </div>

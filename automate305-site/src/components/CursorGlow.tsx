@@ -16,7 +16,7 @@ export default function CursorGlow() {
     <div
       ref={ref}
       className="pointer-events-none fixed z-0 w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-      style={{ background: 'radial-gradient(circle, rgba(123,63,242,0.08) 0%, transparent 70%)' }}
+      style={{ background: 'radial-gradient(circle, rgba(123,63,242,0.22) 0%, rgba(123,63,242,0.06) 40%, transparent 70%)' }}
     />
   )
 }

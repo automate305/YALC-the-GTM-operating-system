@@ -105,7 +105,7 @@ export default function HomePage() {
       {/* ─── 1. HERO ────────────────────────────────────────── */}
       <section
         id="hero"
-        className="bg-[#0C0812] min-h-screen flex items-center justify-center px-4 pt-16 relative overflow-hidden"
+        className="bg-[#111318] min-h-screen flex items-center justify-center px-4 pt-16 relative overflow-hidden"
       >
         <CursorGlow />
         <div className="absolute inset-0 opacity-10" style={{
@@ -135,7 +135,7 @@ export default function HomePage() {
       <LogoMarquee />
 
       {/* Quote / stat divider */}
-      <section className="bg-[#0C0812] py-10 px-4">
+      <section className="bg-[#111318] py-10 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <div className="w-12 h-0.5 bg-[#7B3FF2] mx-auto mb-8" />
           <blockquote className="text-2xl md:text-3xl font-bold text-white italic leading-snug mb-6">
@@ -150,7 +150,7 @@ export default function HomePage() {
       </section>
 
       {/* ─── 2. HOW IT WORKS ────────────────────────────────── */}
-      <section id="how-it-works" className="bg-[#0C0812] py-24 px-4">
+      <section id="how-it-works" className="bg-[#111318] py-24 px-4">
         <div className="max-w-5xl mx-auto">
           <FadeIn>
             <p className="text-[#7B3FF2] text-xs font-semibold uppercase tracking-[0.15em] mb-3 text-center">
@@ -201,7 +201,7 @@ export default function HomePage() {
       </section>
 
       {/* ─── 4. RESULTS ─────────────────────────────────────── */}
-      <section id="results" className="bg-[#0C0812] py-24 px-4">
+      <section id="results" className="bg-[#111318] py-24 px-4">
         <div className="max-w-5xl mx-auto">
           <FadeIn><p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3 text-center">Results</p></FadeIn>
           <FadeIn delay={0.1}><h2 className="text-4xl font-black text-white mb-4 text-center">The numbers don&apos;t lie.</h2></FadeIn>
@@ -262,7 +262,7 @@ export default function HomePage() {
       </section>
 
       {/* ─── 6. CONTACT ─────────────────────────────────────── */}
-      <section id="contact" className="bg-[#0C0812] py-24 px-4">
+      <section id="contact" className="bg-[#111318] py-24 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3">Contact</p>
           <h2 className="text-4xl md:text-5xl font-black text-white mb-6">

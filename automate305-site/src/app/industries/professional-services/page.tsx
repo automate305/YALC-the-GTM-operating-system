@@ -215,7 +215,7 @@ export default function ProfessionalServicesPage() {
   return (
     <main>
       <Navbar />
-      <section className="bg-[#0C0812] pt-32 pb-24 px-4">
+      <section className="bg-[#111318] pt-32 pb-24 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-[#7B3FF2] text-sm font-semibold uppercase tracking-widest mb-3">Professional Services</p>
           <h1 className="text-5xl md:text-6xl font-black text-white mb-6">Close More.<br /><span className="text-[#7B3FF2]">Follow Up Faster.</span></h1>

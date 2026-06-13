@@ -59,7 +59,15 @@ const NAV_ITEMS: NavItem[] = [
       { label: 'ROI Calculator', anchor: 'roi-calculator' },
     ],
   },
-  { label: 'About', id: 'about' },
+  {
+    label: 'About',
+    id: 'about',
+    dropdown: [
+      { label: 'Our Story',        anchor: 'our-story' },
+      { label: 'Our Mission',      anchor: 'our-mission' },
+      { label: 'Meet the Founder', anchor: 'meet-the-founder' },
+    ],
+  },
   { label: 'Contact', id: 'contact' },
 ]
 
@@ -125,7 +133,7 @@ export default function Navbar() {
   }
 
   const navBg = scrolled
-    ? 'bg-[#0C0812]/95 backdrop-blur-md border-b border-white/10'
+    ? 'bg-[#111318]/95 backdrop-blur-md border-b border-white/10'
     : 'bg-[#FAF7F2]/95 backdrop-blur-md border-b border-gray-200'
 
   const linkBase = scrolled
@@ -179,7 +187,7 @@ export default function Navbar() {
                   {/* Mega menu — Industries */}
                   {hasMega && isOpen && (
                     <div
-                      className={`absolute top-full left-1/2 -translate-x-1/2 mt-0 w-[560px] rounded-xl shadow-2xl border z-50 ${scrolled ? 'bg-[#0C0812] border-white/10' : 'bg-white border-gray-100'}`}
+                      className={`absolute top-full left-1/2 -translate-x-1/2 mt-0 w-[560px] rounded-xl shadow-2xl border z-50 ${scrolled ? 'bg-[#111318] border-white/10' : 'bg-white border-gray-100'}`}
                       onMouseEnter={() => openMenu(item.id)}
                       onMouseLeave={scheduleClose}
                     >
@@ -219,7 +227,7 @@ export default function Navbar() {
                   {/* Regular dropdown — Results */}
                   {hasDropdown && isOpen && (
                     <div
-                      className={`absolute top-full left-1/2 -translate-x-1/2 mt-0 min-w-[180px] rounded-xl shadow-xl border overflow-hidden z-50 ${scrolled ? 'bg-[#0C0812] border-white/10' : 'bg-white border-gray-100'}`}
+                      className={`absolute top-full left-1/2 -translate-x-1/2 mt-0 min-w-[180px] rounded-xl shadow-xl border overflow-hidden z-50 ${scrolled ? 'bg-[#111318] border-white/10' : 'bg-white border-gray-100'}`}
                       onMouseEnter={() => openMenu(item.id)}
                       onMouseLeave={scheduleClose}
                     >
@@ -268,7 +276,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-[#0C0812] border-t border-white/10 px-4 py-5 space-y-1">
+        <div className="md:hidden bg-[#111318] border-t border-white/10 px-4 py-5 space-y-1">
           {NAV_ITEMS.map(item => (
             <div key={item.id}>
               <button

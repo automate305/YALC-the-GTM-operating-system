@@ -350,7 +350,7 @@ export default function OrchestrationFlow() {
               onClick={() => setModal(null)}
             >
               <div
-                className="bg-[#0C0812] border border-[#7B3FF2]/30 rounded-2xl p-8 max-w-lg w-full relative"
+                className="bg-[#111318] border border-[#7B3FF2]/30 rounded-2xl p-8 max-w-lg w-full relative"
                 onClick={e => e.stopPropagation()}
               >
                 <button

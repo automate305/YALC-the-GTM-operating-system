@@ -41,7 +41,7 @@ export default function StickyBar() {
           animate={{ y: 0 }}
           exit={{ y: 80 }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="fixed bottom-0 left-0 right-0 z-50 py-3 px-6 bg-[#0C0812]/95 backdrop-blur-md border-t border-[#7B3FF2]/20 flex items-center justify-between gap-4"
+          className="fixed bottom-0 left-0 right-0 z-50 py-3 px-6 bg-[#111318]/95 backdrop-blur-md border-t border-[#7B3FF2]/20 flex items-center justify-between gap-4"
         >
           <p className="text-white font-semibold text-sm hidden sm:block">
             Ready to automate your revenue?
