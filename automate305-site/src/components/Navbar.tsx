@@ -25,7 +25,14 @@ type NavItem = {
 
 const NAV_ITEMS: NavItem[] = [
   { label: 'Home', id: 'hero' },
-  { label: 'How it works', id: 'how-it-works' },
+  {
+    label: 'How it works',
+    id: 'how-it-works',
+    dropdown: [
+      { label: 'How Your Leads Get Handled', anchor: 'how-it-works' },
+      { label: 'ROI Calculator',             anchor: 'roi-calculator' },
+    ],
+  },
   {
     label: 'Industries',
     id: 'industries',
@@ -55,8 +62,7 @@ const NAV_ITEMS: NavItem[] = [
     id: 'results',
     dropdown: [
       { label: 'RevOps Dashboard', anchor: 'revops-dashboard' },
-      { label: 'Case Studies', anchor: 'case-studies' },
-      { label: 'ROI Calculator', anchor: 'roi-calculator' },
+      { label: 'Case Studies',     anchor: 'case-studies' },
     ],
   },
   {
