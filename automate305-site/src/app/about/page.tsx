@@ -83,12 +83,12 @@ export default function AboutPage() {
           <motion.h2 {...fadeUp(0)} className="text-3xl md:text-4xl font-black text-white mb-12 text-center md:text-left">
             Meet the Founder
           </motion.h2>
-          <div className="flex flex-col md:flex-row items-center md:items-end gap-12">
+          <div className="flex flex-col md:flex-row items-stretch gap-12">
 
             {/* Photo */}
             <motion.div
               {...fadeUp(0.05)}
-              className="relative flex-shrink-0 w-80 md:w-[420px]"
+              className="relative flex-shrink-0 w-80 md:w-[380px] self-stretch"
             >
               <div
                 className="absolute inset-0 rounded-2xl"
@@ -98,8 +98,8 @@ export default function AboutPage() {
                 src="/camilo-founder.png"
                 alt="Camilo — Founder, Automate305"
                 width={500}
-                height={650}
-                className="relative w-full max-h-[650px] object-contain object-bottom"
+                height={800}
+                className="relative w-full h-full object-cover object-top rounded-2xl"
                 priority
               />
             </motion.div>
