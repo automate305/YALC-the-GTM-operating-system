@@ -88,7 +88,7 @@ export default function AboutPage() {
             {/* Photo */}
             <motion.div
               {...fadeUp(0.05)}
-              className="relative flex-shrink-0 w-80 md:w-[380px] self-stretch"
+              className="relative flex-shrink-0 w-80 md:w-[420px] self-stretch min-h-[480px]"
             >
               <div
                 className="absolute inset-0 rounded-2xl"
@@ -97,9 +97,8 @@ export default function AboutPage() {
               <Image
                 src="/camilo-founder.png"
                 alt="Camilo — Founder, Automate305"
-                width={433}
-                height={577}
-                className="relative w-full h-full object-contain object-bottom"
+                fill
+                className="object-contain object-bottom"
                 priority
               />
             </motion.div>
