@@ -83,12 +83,13 @@ export default function AboutPage() {
           <motion.h2 {...fadeUp(0)} className="text-3xl md:text-4xl font-black text-white mb-12 text-center md:text-left">
             Meet the Founder
           </motion.h2>
-          <div className="flex flex-col md:flex-row items-stretch gap-12">
+          <div className="flex flex-col md:flex-row md:items-end gap-12">
 
             {/* Photo */}
             <motion.div
               {...fadeUp(0.05)}
-              className="relative flex-shrink-0 w-80 md:w-[420px] self-stretch min-h-[480px]"
+              className="relative flex-shrink-0 w-full md:w-[440px]"
+              style={{ height: '620px' }}
             >
               <div
                 className="absolute inset-0 rounded-2xl"
