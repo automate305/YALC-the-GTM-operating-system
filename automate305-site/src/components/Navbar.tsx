@@ -56,6 +56,7 @@ const NAV_ITEMS: NavItem[] = [
     dropdown: [
       { label: 'RevOps Dashboard', anchor: 'revops-dashboard' },
       { label: 'Case Studies', anchor: 'case-studies' },
+      { label: 'ROI Calculator', anchor: 'roi-calculator' },
     ],
   },
   { label: 'About', id: 'about' },
@@ -164,8 +165,8 @@ export default function Navbar() {
                 >
                   <button
                     onClick={() => {
-                      if (!hasDropdown && !hasMega) scrollTo(item.id)
-                      else setOpenDropdown(isOpen ? null : item.id)
+                      scrollTo(item.id)
+                      if (hasDropdown || hasMega) setOpenDropdown(isOpen ? null : item.id)
                     }}
                     className={`flex items-center gap-0.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors relative ${activeSection === item.id ? 'text-[#7B3FF2] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[#7B3FF2] after:rounded-full' : linkBase}`}
                   >

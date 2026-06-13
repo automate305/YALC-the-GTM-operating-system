@@ -135,7 +135,7 @@ export default function HomePage() {
       <LogoMarquee />
 
       {/* Quote / stat divider */}
-      <section className="bg-[#0C0812] py-20 px-4">
+      <section className="bg-[#0C0812] py-10 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <div className="w-12 h-0.5 bg-[#7B3FF2] mx-auto mb-8" />
           <blockquote className="text-2xl md:text-3xl font-bold text-white italic leading-snug mb-6">

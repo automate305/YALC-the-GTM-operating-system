@@ -83,7 +83,7 @@ export default function ROICalculator() {
   const isAlreadyFast = speed === 'under5'
 
   return (
-    <section className="bg-[#0C0812] py-24 px-4">
+    <section id="roi-calculator" className="bg-[#0C0812] py-24 px-4">
       <div className="max-w-3xl mx-auto">
         <p className="text-[#7B3FF2] text-xs font-semibold uppercase tracking-[0.15em] mb-3 text-center">
           ROI CALCULATOR
