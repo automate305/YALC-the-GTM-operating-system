@@ -97,9 +97,9 @@ export default function AboutPage() {
               <Image
                 src="/camilo-founder.png"
                 alt="Camilo — Founder, Automate305"
-                width={500}
-                height={800}
-                className="relative w-full h-full object-cover object-top rounded-2xl"
+                width={433}
+                height={577}
+                className="relative w-full h-full object-contain object-bottom"
                 priority
               />
             </motion.div>
