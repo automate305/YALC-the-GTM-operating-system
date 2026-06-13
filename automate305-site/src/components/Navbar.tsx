@@ -29,7 +29,7 @@ const NAV_ITEMS: NavItem[] = [
     label: 'How it works',
     id: 'how-it-works',
     dropdown: [
-      { label: 'How Your Leads Get Handled', anchor: 'how-it-works' },
+      { label: 'Lead Routing', anchor: 'how-it-works' },
       { label: 'ROI Calculator',             anchor: 'roi-calculator' },
     ],
   },
