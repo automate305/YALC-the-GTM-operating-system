@@ -4,7 +4,7 @@
       "command": "npx",
       "args": ["-y", "smartlead-mcp-by-leadmagic"],
       "env": {
-        "SMARTLEAD_API_KEY": "${SMARTLEAD_API_KEY}"
+        "SMARTLEAD_API_KEY": "d8bb933d-ff6b-4afb-b14f-adde413565ca_lucynbd"
       }
     },
     "lemlist": {
