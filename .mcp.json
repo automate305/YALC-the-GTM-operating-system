@@ -1,5 +1,12 @@
 {
   "mcpServers": {
+    "smartlead": {
+      "command": "npx",
+      "args": ["-y", "smartlead-mcp-by-leadmagic"],
+      "env": {
+        "SMARTLEAD_API_KEY": "${SMARTLEAD_API_KEY}"
+      }
+    },
     "lemlist": {
       "command": "npx",
       "args": [
