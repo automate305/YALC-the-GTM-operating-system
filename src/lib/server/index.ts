@@ -145,6 +145,12 @@ export function createApp() {
     return c.html(html)
   })
 
+  // INTI GTM OS dashboard
+  app.get('/inti', (c) => {
+    const html = readFileSync(join(__dirname, 'public', 'INTI_Merged_v4.html'), 'utf-8')
+    return c.html(html)
+  })
+
   // SPA mount — built bundle from web/dist. If the bundle isn't built we
   // fall through to the legacy inline landing page so dev-without-build
   // still has something to look at.

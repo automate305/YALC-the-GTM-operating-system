@@ -80,7 +80,8 @@
     "js-yaml": "^4.1.1",
     "node-cron": "^4.2.1",
     "tsx": "^4.19.0",
-    "unipile-node-sdk": "^1.0.0"
+    "unipile-node-sdk": "^1.0.0",
+    "yalc-gtm-os": "link:"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
