@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INTI — GTM Operating System</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #1C1C2A;
+    --card:     #252535;
+    --card2:    #2E2E42;
+    --fg:       #F0EDE8;
+    --muted:    #8B8FA8;
+    --border:   #2E2E42;
+    --primary:  #FF4D00;
+    --primary-soft: rgba(255,77,0,0.12);
+    --primary-mid:  rgba(255,77,0,0.25);
+    --purple:   #6D28D9;
+    --purple-soft: rgba(109,40,217,0.15);
+    --teal:     #4ECDC4;
+    --teal-soft: rgba(78,205,196,0.12);
+    --gold:     #F2A857;
+    --gold-soft: rgba(242,168,87,0.12);
+    --green:    #3DD68C;
+    --green-soft: rgba(61,214,140,0.12);
+    --red:      #FF4D4D;
+    --red-soft: rgba(255,77,77,0.12);
+    --grad:     linear-gradient(135deg, #FF4D00 0%, #FF8C42 50%, #FFB347 100%);
+    --grad-purple: linear-gradient(135deg, #6D28D9, #FF4D00);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 52px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 0 var(--border);
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-text { line-height: 1.2; }
+  .brand-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight:300; font-size: 20px; letter-spacing: -.7px; word-spacing: 4px;
+    background: var(--grad);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .topbar-right { display: flex; align-items: center; gap: 8px; }
+  .live-pill {
+    display: flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 20px;
+    background: var(--green-soft); color: var(--green);
+    font-size: 10px; font-weight: 600; border: 1px solid rgba(61,214,140,0.2);
+  }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 2s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .date-label { font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .apollo-pill {
+    padding: 4px 10px; border-radius: 20px;
+    background: var(--primary-soft); color: var(--primary);
+    font-size: 10px; font-weight: 600; border: 1px solid rgba(255,77,0,0.2);
+  }
+
+  .tab-nav {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex; gap: 0; justify-content: center;
+  }
+  .tab-btn {
+    padding: 16px 20px; font-size: 16px; font-weight: 500;
+    color: var(--muted); border: none; background: none;
+    cursor: pointer; border-bottom: 2px solid transparent;
+    margin-bottom: -1px; transition: all .15s; display: flex; align-items: center; gap: 8px;
+    font-family: 'Inter', sans-serif;
+  }
+  .tab-btn:hover { color: var(--fg); }
+  .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+  .tab-count {
+    font-size: 12px; padding: 2px 6px; border-radius: 10px;
+    background: var(--primary-soft); color: var(--primary); font-weight: 600;
+  }
+  .tab-count.teal { background: var(--teal-soft); color: var(--teal); }
+
+  .page { display: none; padding: 20px 24px; max-width: 1100px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  .hero {
+    background: linear-gradient(135deg, #1C1C2A 0%, #1A1030 50%, #1C1C2A 100%);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: var(--grad); opacity: 0.6;
+  }
+  .hero-left h3 { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .hero-left p { font-size: 11px; color: var(--muted); }
+  .hero-stats { display: flex; gap: 28px; }
+  .hero-stat .val { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 700; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-stat .lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .btn-primary {
+    padding: 8px 16px; background: var(--primary);
+    border-radius: 8px; font-size: 11px; font-weight: 600;
+    color: #fff; border: none; cursor: pointer; transition: opacity .15s;
+  }
+  .btn-primary:hover { opacity: .85; }
+  .btn-ghost {
+    padding: 7px 13px; background: transparent;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 11px; font-weight: 500; color: var(--muted);
+    cursor: pointer; transition: all .15s;
+  }
+  .btn-ghost:hover { border-color: var(--muted); color: var(--fg); }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px; }
+  .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .kpi-val { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -.5px; }
+  .kpi-label { font-size: 10px; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: .3px; }
+  .kpi-delta { font-size: 10px; margin-top: 6px; display: flex; align-items: center; gap: 3px; }
+  .delta-good { color: var(--green); }
+  .delta-warn { color: var(--gold); }
+  .delta-bad  { color: var(--red); }
+  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 2px; background: var(--primary); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+  }
+  .card-title { font-weight: 600; font-size: 12px; display: flex; align-items: center; gap: 8px; color: var(--fg); }
+  .card-icon { width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; }
+  .ci-orange { background: var(--primary-soft); }
+  .ci-teal   { background: var(--teal-soft); }
+  .ci-purple { background: var(--purple-soft); }
+  .ci-green  { background: var(--green-soft); }
+  .ci-gold   { background: var(--gold-soft); }
+
+  .pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 10px; font-weight: 600; }
+  .pill-done    { background: var(--green-soft); color: var(--green); border: 1px solid rgba(61,214,140,.2); }
+  .pill-warn    { background: var(--gold-soft); color: var(--gold); border: 1px solid rgba(242,168,87,.2); }
+  .pill-alert   { background: var(--red-soft); color: var(--red); border: 1px solid rgba(255,77,77,.2); }
+  .pill-pending { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .pill-live    { background: var(--primary-soft); color: var(--primary); border: 1px solid rgba(255,77,0,.2); animation: pulse-opacity 1.4s ease-in-out infinite; }
+  .pill-teal    { background: var(--teal-soft); color: var(--teal); border: 1px solid rgba(78,205,196,.2); }
+  .pill-purple  { background: var(--purple-soft); color: #A78BFA; border: 1px solid rgba(109,40,217,.3); }
+  @keyframes pulse-opacity { 0%,100%{opacity:1} 50%{opacity:.5} }
+
+  .eyebrow {
+    font-size: 10px; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .5px;
+    margin: 16px 0 10px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .table-header {
+    display: grid; padding: 8px 16px;
+    background: rgba(0,0,0,0.2);
+    border-bottom: 1px solid var(--border);
+    font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; font-weight: 500;
+  }
+  .skill-header { grid-template-columns: 190px 120px 1fr; }
+  .skill-row { display: grid; grid-template-columns: 190px 120px 1fr; padding: 11px 16px; border-bottom: 1px solid var(--border); align-items: center; gap: 10px; }
+  .skill-row:last-child { border-bottom: none; }
+  .skill-row.hot { background: var(--primary-soft); }
+  .skill-name { font-weight: 500; font-size: 12px; }
+  .skill-code { font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+  .skill-code.accent { color: var(--primary); }
+  .output-text { font-size: 11px; color: var(--muted); }
+  .output-text b { font-weight: 600; }
+  .output-text b.g { color: var(--green); }
+  .output-text b.r { color: var(--red); }
+  .output-text b.y { color: var(--gold); }
+  .output-text b.o { color: var(--primary); }
+
+  .deal-header { grid-template-columns: 1fr 120px 80px 80px; }
+  .deal-row { display: grid; grid-template-columns: 1fr 120px 80px 80px; padding: 11px 16px; border-bottom: 1px solid var(--border); align-items: center; gap: 8px; }
+  .deal-row:last-child { border-bottom: none; }
+  .deal-name { font-weight: 500; font-size: 12px; }
+  .deal-sub { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .deal-amount { font-weight: 600; font-size: 12px; font-family: 'JetBrains Mono', monospace; }
+  .deal-close { font-size: 11px; color: var(--muted); }
+  .deal-close.overdue { color: var(--red); font-weight: 500; }
+
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; }
+  .contact-item { display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-bottom: 1px solid var(--border); }
+  .contact-item:nth-child(odd) { border-right: 1px solid var(--border); }
+  .contact-item:nth-last-child(-n+2) { border-bottom: none; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .av-orange  { background: var(--primary-soft); color: var(--primary); }
+  .av-purple  { background: var(--purple-soft); color: #A78BFA; }
+  .av-teal    { background: var(--teal-soft); color: var(--teal); }
+  .av-gold    { background: var(--gold-soft); color: var(--gold); }
+  .av-green   { background: var(--green-soft); color: var(--green); }
+  .av-muted   { background: var(--card2); color: var(--muted); border: 1px solid var(--border); }
+  .contact-name { font-size: 12px; font-weight: 500; }
+  .contact-meta { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .lc-tag { display: inline-block; font-size: 9px; padding: 2px 6px; border-radius: 10px; margin-top: 3px; font-weight: 500; }
+  .lc-opp  { background: var(--primary-soft); color: var(--primary); }
+  .lc-lead { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .lc-new  { background: var(--green-soft); color: var(--green); }
+
+  .checkup-header { grid-template-columns: 1fr 60px 1fr; }
+  .checkup-row { display: grid; grid-template-columns: 1fr 60px 1fr; padding: 11px 16px; border-bottom: 1px solid var(--border); align-items: center; gap: 10px; }
+  .checkup-row:last-child { border-bottom: none; }
+  .check-area { font-weight: 500; font-size: 12px; }
+  .check-sub { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .check-count { font-size: 20px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .check-count.r { color: var(--red); }
+  .check-count.g { color: var(--green); }
+  .check-count.y { color: var(--gold); }
+  .check-finding { font-size: 11px; color: var(--muted); }
+
+  .commission-header { grid-template-columns: 1fr 90px 90px 90px; }
+  .commission-row { display: grid; grid-template-columns: 1fr 90px 90px 90px; padding: 10px 16px; border-bottom: 1px solid var(--border); align-items: center; font-size: 12px; }
+  .commission-row:last-child { border-bottom: none; }
+  .commission-row.hot { background: var(--primary-soft); }
+
+  .campaign-header { grid-template-columns: 1fr 70px 70px 70px 90px; }
+  .campaign-row { display: grid; grid-template-columns: 1fr 70px 70px 70px 90px; padding: 11px 16px; border-bottom: 1px solid var(--border); align-items: center; gap: 8px; font-size: 12px; }
+  .campaign-row:last-child { border-bottom: none; }
+  .camp-name { font-weight: 500; }
+  .camp-sub { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .stat-cell { font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+  .stat-cell.neutral { color: var(--muted); }
+
+  .forecast-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 12px; }
+  .forecast-row:last-child { border-bottom: none; }
+  .forecast-month { font-weight: 500; width: 40px; color: var(--muted); }
+  .forecast-bar-wrap { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 0 12px; }
+  .forecast-bar-fill { height: 100%; border-radius: 3px; background: var(--grad); }
+  .forecast-val { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; width: 55px; text-align: right; }
+
+  .action-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--border); }
+  .action-row:last-child { border-bottom: none; }
+  .action-num { width: 20px; height: 20px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .action-text { font-size: 12px; }
+  .action-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .action-tag { margin-left: auto; font-size: 9px; padding: 2px 7px; border-radius: 10px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
+  .tag-today  { background: var(--red-soft); color: var(--red); }
+  .tag-week   { background: var(--gold-soft); color: var(--gold); }
+
+  .landing-hero { text-align: center; padding: 48px 24px 40px; }
+  .landing-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+  .landing-title { font-family: 'Outfit', sans-serif; font-size: 80px; font-weight: 800; line-height: 1; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; }
+  .landing-tagline { font-size: 15px; color: var(--muted); max-width: 460px; margin: 0 auto 40px; line-height: 1.6; }
+
+  .tile-section-label { font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; text-align: left; }
+  .tile-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 28px; }
+  .tile { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+  .tile:hover { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary), 0 8px 24px rgba(255,77,0,0.1); }
+  .tile-title { font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 14px; margin-bottom: 3px; }
+  .tile-sub { font-size: 12px; color: var(--muted); }
+  .tile-legacy { background: transparent; border-style: dashed; }
+  .tile-legacy:hover { border-color: var(--muted); box-shadow: none; }
+  .legacy-note { font-size: 11px; color: var(--muted); text-align: left; }
+
+  .badge-strip { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 36px; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 9999px; font-size: 12px; font-weight: 500; border: 1px solid; }
+  .badge-orange { color: var(--primary); border-color: rgba(255,77,0,.3); background: var(--primary-soft); }
+  .badge-teal   { color: var(--teal); border-color: rgba(78,205,196,.3); background: var(--teal-soft); }
+  .badge-gold   { color: var(--gold); border-color: rgba(242,168,87,.3); background: var(--gold-soft); }
+  .badge-purple { color: #A78BFA; border-color: rgba(109,40,217,.3); background: var(--purple-soft); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .seq-header { grid-template-columns: 1fr 80px 80px 80px; }
+  .seq-row { display: grid; grid-template-columns: 1fr 80px 80px 80px; padding: 11px 16px; border-bottom: 1px solid var(--border); align-items: center; }
+  .seq-row:last-child { border-bottom: none; }
+  .health-bar-wrap { width: 60px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .health-bar-fill { height: 100%; border-radius: 3px; }
+  .hb-green { background: var(--green); }
+  .hb-yellow { background: var(--gold); }
+
+  .dash-footer { margin: 20px 24px 24px; padding: 12px 18px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; }
+  .footer-brand { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); }
+
+  .chart-card-body { padding: 16px; }
+  .chart-canvas-wrap { position: relative; width: 100%; height: 220px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <img src="favicon-512.png" style="width:32px;height:32px;border-radius:50%;" alt="A305">
+    <div class="brand-text">
+      <div class="brand-name">A305 os</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="date-label" id="live-date"></span>
+    <div class="apollo-pill">⚡ Apollo</div>
+    <div class="live-pill"><div class="live-dot"></div> Live</div>
+  </div>
+</div>
+
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('home',this)">🌞 Home</button>
+  <button class="tab-btn" onclick="switchTab('revops',this)">📊 RevOps <span class="tab-count">5 issues</span></button>
+  <button class="tab-btn" onclick="switchTab('gtm',this)">🚀 GTM <span class="tab-count teal">Live</span></button>
+  <button class="tab-btn" onclick="switchTab('skills',this)">🔧 Skills</button>
+  <button class="tab-btn" onclick="switchTab('brain',this)">🧠 Brain</button>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="landing-hero">
+    <p class="landing-eyebrow">GTM operating system</p>
+    <div class="landing-title">INTI</div>
+    <p class="landing-tagline">Open-source, AI-native GTM engine. Lead finding, enrichment, qualification, and campaign orchestration — all driven from one CLI.</p>
+    <div class="badge-strip">
+      <div class="badge badge-orange"><span class="dot"></span> Apollo connected</div>
+      <div class="badge badge-teal"><span class="dot"></span> 4 qualified leads</div>
+      <div class="badge badge-gold"><span class="dot"></span> 2 gates pending</div>
+      <div class="badge badge-purple"><span class="dot"></span> SmartLead active</div>
+    </div>
+    <div style="max-width:800px;margin:0 auto">
+      <p class="tile-section-label">Daily views</p>
+      <div class="tile-grid">
+        <div class="tile" onclick="switchTabByName('gtm')"><div class="tile-title">Today</div><div class="tile-sub">Latest framework runs and pending gates</div></div>
+        <div class="tile" onclick="switchTabByName('brain')"><div class="tile-title">Brain</div><div class="tile-sub">Live company context, voice, and ICP</div></div>
+        <div class="tile" onclick="switchTabByName('brain')"><div class="tile-title">Keys</div><div class="tile-sub">Provider status and health probes</div></div>
+        <div class="tile" onclick="switchTabByName('skills')"><div class="tile-title">Skills</div><div class="tile-sub">Skill catalog and inline runner</div></div>
+      </div>
+      <p class="tile-section-label">Legacy dashboards</p>
+      <div class="tile-grid">
+        <div class="tile tile-legacy" onclick="switchTabByName('gtm')"><div class="tile-title">Campaigns</div><div class="tile-sub">LinkedIn outreach dashboard</div></div>
+        <div class="tile tile-legacy" onclick="switchTabByName('revops')"><div class="tile-title">Review</div><div class="tile-sub">Lead qualification queue</div></div>
+        <div class="tile tile-legacy" onclick="switchTabByName('revops')"><div class="tile-title">Frameworks</div><div class="tile-sub">Installed framework runs</div></div>
+        <div class="tile tile-legacy" onclick="switchTabByName('revops')"><div class="tile-title">Monthly report</div><div class="tile-sub">Cross-campaign rollup</div></div>
+        <div class="tile tile-legacy" onclick="switchTabByName('brain')"><div class="tile-title">Brand kit</div><div class="tile-sub">Tokens, colors, type</div></div>
+      </div>
+      <p class="legacy-note">Legacy dashboards remain available through 0.9.x and retire in 1.0.0.</p>
+    </div>
+  </div>
+</div>
+
+<!-- REVOPS -->
+<div class="page" id="page-revops">
+  <div class="hero" style="margin-top:16px">
+    <div class="hero-left">
+      <h3>🔥 Tamiko Malatesta — LeadGen Partnership (90-day)</h3>
+      <p>Artemis Distribution · DP4 Microneedling + ClearVIEW · Apollo + SmartLead</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="val">$600</div><div class="lbl">Min/lead</div></div>
+      <div class="hero-stat"><div class="val">50%</div><div class="lbl">Commission</div></div>
+      <div class="hero-stat"><div class="val">90d</div><div class="lbl">Window</div></div>
+    </div>
+    <button class="btn-primary">View Deal ↗</button>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-val">11</div><div class="kpi-label">Companies</div><div class="kpi-delta delta-warn">⚠ 0 HVAC tagged</div><div class="progress-bar"><div class="progress-fill" style="width:22%;background:var(--gold)"></div></div></div>
+    <div class="kpi"><div class="kpi-val">68</div><div class="kpi-label">Contacts</div><div class="kpi-delta delta-good">↑ +50 today</div><div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div></div>
+    <div class="kpi"><div class="kpi-val">$6.75k</div><div class="kpi-label">Pipeline</div><div class="kpi-delta delta-good">↑ Tamiko deal live</div><div class="progress-bar"><div class="progress-fill" style="width:55%;background:var(--green)"></div></div></div>
+    <div class="kpi"><div class="kpi-val">3</div><div class="kpi-label">Active Deals</div><div class="kpi-delta delta-warn">1 overdue</div><div class="progress-bar"><div class="progress-fill" style="width:40%;background:var(--gold)"></div></div></div>
+    <div class="kpi"><div class="kpi-val">47</div><div class="kpi-label">Portal Score</div><div class="kpi-delta delta-bad">⚠ Needs work</div><div class="progress-bar"><div class="progress-fill" style="width:47%;background:var(--red)"></div></div></div>
+  </div>
+
+  <!-- CHARTS ROW 1 -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="card-icon ci-orange">📊</div> Pipeline by Stage</div>
+        <span style="font-size:10px;color:var(--muted)">$USD value</span>
+      </div>
+      <div class="chart-card-body"><div class="chart-canvas-wrap"><canvas id="chartPipelineStage"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="card-icon ci-green">📈</div> Revenue Forecast</div>
+        <span style="font-size:10px;color:var(--muted)">90-day ramp</span>
+      </div>
+      <div class="chart-card-body"><div class="chart-canvas-wrap"><canvas id="chartRevenueForecast"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW 2 -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="card-icon ci-orange">💰</div> Commission Scenarios</div>
+        <span style="font-size:10px;color:var(--muted)">90-day total</span>
+      </div>
+      <div class="chart-card-body"><div class="chart-canvas-wrap"><canvas id="chartCommission"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="card-icon ci-teal">👤</div> Contact Lifecycle</div>
+        <span style="font-size:10px;color:var(--muted)">77 total contacts</span>
+      </div>
+      <div class="chart-card-body"><div class="chart-canvas-wrap"><canvas id="chartContactLifecycle"></canvas></div></div>
+    </div>
+  </div>
+
+  <p class="eyebrow">RevOps Skill Pack</p>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-header">
+      <div class="card-title"><div class="card-icon ci-orange">⚙</div> HubSpot RevOps Pack</div>
+      <div class="live-pill"><div class="live-dot"></div> Running</div>
+    </div>
+    <div class="table-header skill-header"><span>Skill</span><span>Status</span><span>Output</span></div>
+    <div class="skill-row"><div><div class="skill-name">Score the portal</div><div class="skill-code">hubspot-audit</div></div><div><span class="pill pill-done">✓ Done</span></div><div class="output-text"><b class="y">47/100</b> · 8 hygiene checks · missing lifecycle stages, no HVAC segment</div></div>
+    <div class="skill-row"><div><div class="skill-name">Find duplicates</div><div class="skill-code">dedupe-contacts</div></div><div><span class="pill pill-done">✓ Done</span></div><div class="output-text"><b class="y">2 dupes</b> · Tamiko artemis + gmail merged</div></div>
+    <div class="skill-row"><div><div class="skill-name">Repair lifecycle</div><div class="skill-code">repair-lifecycle</div></div><div><span class="pill pill-warn">⚠ Issues</span></div><div class="output-text"><b class="r">14 contacts</b> stuck at Lead · Tamiko → Opportunity ✓ · Lyndon needs upgrade</div></div>
+    <div class="skill-row"><div><div class="skill-name">Build lead scoring</div><div class="skill-code">build-lead-scoring</div></div><div><span class="pill pill-pending">Pending</span></div><div class="output-text">Awaiting HVAC segment · will score on: reviews, location, employees, domain age</div></div>
+    <div class="skill-row hot"><div><div class="skill-name">Weekly checkup</div><div class="skill-code accent">weekly-portal-checkup</div></div><div><span class="pill pill-live">⟳ Thinking…</span></div><div class="output-text">Runs weekly · <b>6 areas</b> monitored</div></div>
+  </div>
+
+  <p class="eyebrow">Pipeline</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="card-icon ci-purple">📊</div> Active Deals</div>
+        <button class="btn-ghost" style="font-size:10px;padding:4px 9px">+ Add deal</button>
+      </div>
+      <div class="table-header deal-header"><span>Deal</span><span>Stage</span><span>Amount</span><span>Close</span></div>
+      <div class="deal-row">
+        <div><div class="deal-name">Tamiko — LeadGen (90d)</div><div class="deal-sub">Artemis Distribution · Commission</div></div>
+        <span class="pill pill-purple">Proposal Sent</span>
+        <div class="deal-amount" style="color:var(--green)">$600<span style="font-size:9px;font-weight:400;color:var(--muted)">/lead</span></div>
+        <div class="deal-close">Jun 30</div>
+      </div>
+      <div class="deal-row">
+        <div><div class="deal-name">Blackbird Ordinary</div><div class="deal-sub">Hospitality · Lyndon Forte</div></div>
+        <span class="pill pill-teal">Contract Sent</span>
+        <div class="deal-amount">$750</div>
+        <div class="deal-close overdue">Overdue</div>
+      </div>
+      <div class="deal-row">
+        <div><div class="deal-name">ABC Test Inc.</div><div class="deal-sub">Test · 80% probability</div></div>
+        <span class="pill pill-warn">Decision</span>
+        <div class="deal-amount">$3,500</div>
+        <div class="deal-close">—</div>
+      </div>
+      <div style="padding:10px 16px;background:rgba(0,0,0,0.15);border-top:1px dashed var(--border);font-size:10px;color:var(--muted)">⚡ 0 HVAC deals · 20 target companies identified, not yet entered</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="card-icon ci-orange">💰</div> Tamiko Commission Tracker</div>
+        <span class="pill pill-teal">90-day window</span>
+      </div>
+      <div class="table-header commission-header"><span>Scenario</span><span>Leads/mo</span><span>$/mo</span><span>90d total</span></div>
+      <div class="commission-row"><div><div style="font-weight:500">Conservative</div><div style="font-size:10px;color:var(--muted)">3 closed/mo</div></div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">3</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">$1,800</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600">$5,400</div></div>
+      <div class="commission-row hot"><div><div style="font-weight:700;color:var(--primary)">Realistic 🎯</div><div style="font-size:10px;color:var(--muted)">5 closed/mo</div></div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--primary)">5</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--primary);font-weight:700">$3,000</div><div style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:800;color:var(--primary)">$9,000</div></div>
+      <div class="commission-row"><div><div style="font-weight:500">Upside 🚀</div><div style="font-size:10px;color:var(--muted)">8 closed/mo</div></div><div style="font-family:'JetBrains Mono',monospace;font-size:11px">8</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);font-weight:600">$4,800</div><div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--green)">$14,400</div></div>
+      <div style="padding:10px 16px;font-size:10px;color:var(--muted);background:rgba(0,0,0,0.15);border-top:1px solid var(--border)">$1,200 deal min × 50% = $600 floor per closed lead to Cam</div>
+    </div>
+  </div>
+
+  <p class="eyebrow">Contacts</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title"><div class="card-icon ci-teal">👤</div> Key Contacts</div><span style="font-size:10px;color:var(--muted)">68 total · showing priority</span></div>
+      <div class="contact-grid">
+        <div class="contact-item"><div class="avatar av-purple">TM</div><div><div class="contact-name">Tamiko Malatesta</div><div class="contact-meta">tamikomalatesta@gmail.com</div><span class="lc-tag lc-opp">Opportunity</span></div></div>
+        <div class="contact-item"><div class="avatar av-green">LF</div><div><div class="contact-name">Lyndon Forte</div><div class="contact-meta">Blackbird Ordinary</div><span class="lc-tag lc-lead">Needs upgrade</span></div></div>
+        <div class="contact-item"><div class="avatar av-teal">M</div><div><div class="contact-name">Mario · Fib0.ai</div><div class="contact-meta">m@fib0.ai · Partnership</div><span class="lc-tag lc-lead">Lead</span></div></div>
+        <div class="contact-item"><div class="avatar av-gold">DC</div><div><div class="contact-name">EJ Mann · Delta Capital</div><div class="contact-meta">ejmann@deltacapitalgroup.com</div><span class="lc-tag lc-lead">Lead</span></div></div>
+        <div class="contact-item"><div class="avatar av-orange">+50</div><div><div class="contact-name">Campaign contacts</div><div class="contact-meta">Added today · awaiting sequence</div><span class="lc-tag lc-new">New</span></div></div>
+        <div class="contact-item"><div class="avatar av-muted">W</div><div><div class="contact-name">Wayne · Juuce</div><div class="contact-meta">juucewjr@gmail.com</div><span class="lc-tag lc-lead">Follow-up pending</span></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><div class="card-icon ci-gold">🔍</div> Weekly Checkup · 6 Areas</div><div class="live-pill"><div class="live-dot"></div> Scanning</div></div>
+      <div class="table-header checkup-header"><span>Area</span><span>Count</span><span>Finding</span></div>
+      <div class="checkup-row"><div><div class="check-area">New contacts</div><div class="check-sub">Last 7 days</div></div><div class="check-count g">53</div><div class="check-finding">50 campaign launch + Wayne, Delta, TRP</div></div>
+      <div class="checkup-row"><div><div class="check-area">Stale deals</div><div class="check-sub">No activity 14d+</div></div><div class="check-count r">2</div><div class="check-finding">Blackbird overdue · Sample deal stale</div></div>
+      <div class="checkup-row"><div><div class="check-area">No-activity contacts</div><div class="check-sub">Never touched</div></div><div class="check-count r">11</div><div class="check-finding">Email-only records · no name/phone/note</div></div>
+      <div class="checkup-row"><div><div class="check-area">Lifecycle mismatches</div><div class="check-sub">Wrong stage</div></div><div class="check-count y">3</div><div class="check-finding">Lyndon · 2 others need Opportunity upgrade</div></div>
+      <div class="checkup-row"><div><div class="check-area">Duplicate contacts</div><div class="check-sub">Email match</div></div><div class="check-count y">2</div><div class="check-finding">Tamiko artemis records · delete when ready</div></div>
+      <div class="checkup-row"><div><div class="check-area">Missing HVAC segment</div><div class="check-sub">Target vertical</div></div><div class="check-count r">0</div><div class="check-finding">20 targets identified · 0 in CRM yet</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- GTM -->
+<div class="page" id="page-gtm">
+  <div class="hero" style="margin-top:16px;background:linear-gradient(135deg,#1C1C2A 0%,#0F1A12 60%,#1C1C2A 100%)">
+    <div class="hero-left">
+      <h3>🚀 Campaign Launch Day — 50 contacts in sequence</h3>
+      <p>DP4 Microneedling + ClearVIEW · SmartLead Pro · Jennifer / Lauren rotating</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="val">50</div><div class="lbl">Sent today</div></div>
+      <div class="hero-stat"><div class="val">6%+</div><div class="lbl">Reply target</div></div>
+      <div class="hero-stat"><div class="val">Day 1</div><div class="lbl">of 30</div></div>
+    </div>
+    <button class="btn-primary">SmartLead ↗</button>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-val">50</div><div class="kpi-label">In sequence</div><div class="kpi-delta delta-good">↑ Launch batch</div><div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--green)"></div></div></div>
+    <div class="kpi"><div class="kpi-val">—%</div><div class="kpi-label">Open rate</div><div class="kpi-delta" style="color:var(--muted)">Target: 40%+</div><div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div></div>
+    <div class="kpi"><div class="kpi-val">—%</div><div class="kpi-label">Reply rate</div><div class="kpi-delta" style="color:var(--muted)">Target: 6%+</div><div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div></div>
+    <div class="kpi"><div class="kpi-val">0</div><div class="kpi-label">Meetings</div><div class="kpi-delta" style="color:var(--muted)">Target: 20/1k</div><div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div></div>
+    <div class="kpi"><div class="kpi-val">$0</div><div class="kpi-label">Pipeline</div><div class="kpi-delta" style="color:var(--muted)">$600 floor/lead</div><div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div></div>
+  </div>
+
+  <p class="eyebrow">Campaign Health</p>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-header"><div class="card-title"><div class="card-icon ci-orange">📧</div> Active Sequences</div><span class="pill pill-live">⟳ Day 1 warming</span></div>
+    <div class="table-header campaign-header"><span>Campaign</span><span>Sent</span><span>Opens</span><span>Replies</span><span>Status</span></div>
+    <div class="campaign-row"><div><div class="camp-name">DP4 · Email 1</div><div class="camp-sub">Jennifer · go.<span style="font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:10px">{domain}</span>.com</div></div><div class="stat-cell neutral">50</div><div class="stat-cell neutral">—</div><div class="stat-cell neutral">—</div><span class="pill pill-live">Live ⟳</span></div>
+    <div class="campaign-row"><div><div class="camp-name">DP4 · Email 2</div><div class="camp-sub">Jennifer · Trade-in + 14-day trial · D+4</div></div><div class="stat-cell neutral">—</div><div class="stat-cell neutral">—</div><div class="stat-cell neutral">—</div><span class="pill pill-pending">Queued D+4</span></div>
+    <div class="campaign-row"><div><div class="camp-name">ClearVIEW · Email 1</div><div class="camp-sub">Lauren · hello.<span style="font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:10px">{domain}</span>.com · 94% retention</div></div><div class="stat-cell neutral">—</div><div class="stat-cell neutral">—</div><div class="stat-cell neutral">—</div><span class="pill pill-pending">Stagger 14d</span></div>
+    <div class="campaign-row"><div><div class="camp-name">ClearVIEW · Email 2</div><div class="camp-sub">Lauren · Dr. Croley anchor · D+4</div></div><div class="stat-cell neutral">—</div><div class="stat-cell neutral">—</div><div class="stat-cell neutral">—</div><span class="pill pill-pending">Stagger 14d</span></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title"><div class="card-icon ci-green">📈</div> Revenue Forecast · 90 days</div><span style="font-size:10px;color:var(--muted)">5 closed leads/mo</span></div>
+      <div class="forecast-row"><div class="forecast-month">Jun</div><div class="forecast-bar-wrap"><div class="forecast-bar-fill" style="width:30%"></div></div><div class="forecast-val" style="color:var(--muted)">$1,800</div></div>
+      <div class="forecast-row"><div class="forecast-month">Jul</div><div class="forecast-bar-wrap"><div class="forecast-bar-fill" style="width:65%"></div></div><div class="forecast-val">$3,900</div></div>
+      <div class="forecast-row"><div class="forecast-month">Aug</div><div class="forecast-bar-wrap"><div class="forecast-bar-fill" style="width:100%"></div></div><div class="forecast-val" style="color:var(--primary);font-weight:700">$6,000</div></div>
+      <div style="padding:10px 16px;background:rgba(0,0,0,0.15);border-top:1px solid var(--border);font-size:10px;color:var(--muted)">Conservative ramp: 3 → 5 → 8 leads · $600 floor · Tamiko closes, Cam generates</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><div class="card-icon ci-orange">⚡</div> Today's Action Items</div><span class="pill pill-alert">4 today</span></div>
+      <div class="action-row"><div class="action-num">1</div><div><div class="action-text">Confirm 50 contacts enrolled in SmartLead</div><div class="action-sub">Check bounce rate hourly · ceiling 2%</div></div><span class="action-tag tag-today">Today</span></div>
+      <div class="action-row"><div class="action-num">2</div><div><div class="action-text">Delete 2 Tamiko dupe records in HubSpot</div><div class="action-sub">artemis + typo gmail · 2 mins</div></div><span class="action-tag tag-today">Today</span></div>
+      <div class="action-row"><div class="action-num">3</div><div><div class="action-text">Upgrade Lyndon Forte → Opportunity</div><div class="action-sub">Blackbird deal overdue · follow up</div></div><span class="action-tag tag-today">Today</span></div>
+      <div class="action-row"><div class="action-num">4</div><div><div class="action-text">Load 20 HVAC companies into HubSpot</div><div class="action-sub">Fort Lauderdale + Miami-Dade · tag HVAC</div></div><span class="action-tag tag-week">This week</span></div>
+    </div>
+  </div>
+
+  <p class="eyebrow">Deliverability Health</p>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title"><div class="card-icon ci-teal">🛡</div> Domain Health · SmartLead Subdomains</div><span style="font-size:10px;color:var(--muted)">Kill threshold: bounce >2% · spam >.1%</span></div>
+    <div class="table-header seq-header"><span>Subdomain / Persona</span><span>Bounce</span><span>Spam</span><span>Health</span></div>
+    <div class="seq-row"><div><div style="font-weight:500;font-size:12px">go.<span style="font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:10px">{domain}</span>.com · Jennifer</div><div style="font-size:10px;color:var(--muted)">DP4 · Email 1+2</div></div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green)">0.0%</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green)">0.0%</div><div><div class="health-bar-wrap"><div class="health-bar-fill hb-green" style="width:100%"></div></div></div></div>
+    <div class="seq-row"><div><div style="font-weight:500;font-size:12px">hello.<span style="font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:10px">{domain}</span>.com · Lauren</div><div style="font-size:10px;color:var(--muted)">ClearVIEW · Stagger 14d</div></div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">—</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">—</div><div><div class="health-bar-wrap"><div class="health-bar-fill hb-yellow" style="width:50%"></div></div></div></div>
+    <div style="padding:10px 16px;background:rgba(0,0,0,0.15);border-top:1px dashed var(--border);font-size:10px;color:var(--muted)">⚠ ClearVIEW subdomain not yet active · 14-day stagger rule in effect</div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<div class="page" id="page-skills">
+  <div style="margin-top:16px;text-align:center;padding:60px 24px;color:var(--muted)">
+    <div style="font-size:40px;margin-bottom:12px">⚙</div>
+    <div style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:600;color:var(--fg);margin-bottom:8px">Skill catalog and inline runner</div>
+    <div style="font-size:13px">Run <code style="background:var(--card2);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px">yalc skills list</code> to see available skills</div>
+  </div>
+</div>
+
+<!-- BRAIN -->
+<div class="page" id="page-brain">
+  <div style="margin-top:16px;text-align:center;padding:60px 24px;color:var(--muted)">
+    <div style="font-size:40px;margin-bottom:12px">🧠</div>
+    <div style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:600;color:var(--fg);margin-bottom:8px">Live company context, voice, and ICP</div>
+    <div style="font-size:13px">Automate305 · Miami-Dade · Healthcare / B2B SaaS / Professional Services</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="dash-footer">
+  <div class="footer-brand">
+    <div style="width:22px;height:22px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-weight:800;font-size:9px;color:#fff;flex-shrink:0;">I</div>
+    INTI · Automate305 × Apollo × HubSpot × SmartLead · Built Jun 2026
+  </div>
+  <div style="display:flex;gap:8px">
+    <button class="btn-ghost" onclick="window.print()">🖨 Print</button>
+    <button class="btn-primary">Deploy live ↗</button>
+  </div>
+</div>
+
+<script>
+  document.getElementById('live-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + tab).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function switchTabByName(tab) {
+    const btn = document.querySelector(`.tab-btn[onclick*="'${tab}'"]`);
+    if (btn) switchTab(tab, btn);
+  }
+
+  Chart.defaults.color = '#8B8FA8';
+  Chart.defaults.font.family = "'Inter', sans-serif";
+  Chart.defaults.font.size = 11;
+
+  const darkGrid = 'rgba(255,255,255,0.05)';
+  const tickColor = '#8B8FA8';
+  const fgColor = '#F0EDE8';
+  const coral = '#FF4D00';
+
+  // Chart 1: Pipeline by Stage (horizontal bar)
+  new Chart(document.getElementById('chartPipelineStage'), {
+    type: 'bar',
+    data: {
+      labels: ['Proposal Sent', 'Contract Sent', 'Decision', 'Closed'],
+      datasets: [{ label: 'Pipeline ($)', data: [600, 750, 3500, 0], backgroundColor: 'rgba(255,77,0,0.75)', borderColor: coral, borderWidth: 1, borderRadius: 4 }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1C1C2A', borderColor: '#2E2E42', borderWidth: 1, titleColor: fgColor, bodyColor: tickColor, callbacks: { label: c => ' $' + c.parsed.x.toLocaleString() } } },
+      scales: { x: { grid: { color: darkGrid }, ticks: { color: tickColor, callback: v => '$' + v.toLocaleString() }, border: { color: darkGrid } }, y: { grid: { color: darkGrid }, ticks: { color: fgColor }, border: { color: darkGrid } } }
+    }
+  });
+
+  // Chart 2: Revenue Forecast (bar with gradient)
+  (function() {
+    const ctx = document.getElementById('chartRevenueForecast').getContext('2d');
+    const grad = ctx.createLinearGradient(0, 0, 0, 220);
+    grad.addColorStop(0, 'rgba(255,77,0,0.90)');
+    grad.addColorStop(1, 'rgba(255,77,0,0.25)');
+    new Chart(ctx, {
+      type: 'bar',
+      data: { labels: ['Jun', 'Jul', 'Aug'], datasets: [{ data: [1800, 3900, 6000], backgroundColor: grad, borderColor: coral, borderWidth: 1, borderRadius: 6 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1C1C2A', borderColor: '#2E2E42', borderWidth: 1, titleColor: fgColor, bodyColor: tickColor, callbacks: { label: c => ' $' + c.parsed.y.toLocaleString() } } },
+        scales: { x: { grid: { color: darkGrid }, ticks: { color: fgColor }, border: { color: darkGrid } }, y: { grid: { color: darkGrid }, ticks: { color: tickColor, callback: v => '$' + v.toLocaleString() }, border: { color: darkGrid } } }
+      }
+    });
+  })();
+
+  // Chart 3: Commission Scenarios (doughnut)
+  new Chart(document.getElementById('chartCommission'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Conservative', 'Realistic', 'Upside'],
+      datasets: [{ data: [5400, 9000, 14400], backgroundColor: ['rgba(139,143,168,0.55)', coral, '#3DD68C'], borderColor: ['rgba(139,143,168,0.3)', 'rgba(255,77,0,0.6)', 'rgba(61,214,140,0.5)'], borderWidth: 1, hoverOffset: 6 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '62%',
+      plugins: { legend: { display: true, position: 'right', labels: { color: fgColor, font: { size: 11 }, boxWidth: 10, padding: 12 } }, tooltip: { backgroundColor: '#1C1C2A', borderColor: '#2E2E42', borderWidth: 1, titleColor: fgColor, bodyColor: tickColor, callbacks: { label: c => ' $' + c.parsed.toLocaleString() } } }
+    }
+  });
+
+  // Chart 4: Contact Lifecycle (pie)
+  new Chart(document.getElementById('chartContactLifecycle'), {
+    type: 'pie',
+    data: {
+      labels: ['New', 'Lead', 'Opportunity', 'No Activity'],
+      datasets: [{ data: [50, 14, 2, 11], backgroundColor: ['rgba(61,214,140,0.80)', 'rgba(78,205,196,0.80)', 'rgba(255,77,0,0.80)', 'rgba(139,143,168,0.55)'], borderColor: ['rgba(61,214,140,0.4)', 'rgba(78,205,196,0.4)', 'rgba(255,77,0,0.4)', 'rgba(139,143,168,0.3)'], borderWidth: 1, hoverOffset: 6 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: true, position: 'right', labels: { color: fgColor, font: { size: 11 }, boxWidth: 10, padding: 12 } }, tooltip: { backgroundColor: '#1C1C2A', borderColor: '#2E2E42', borderWidth: 1, titleColor: fgColor, bodyColor: tickColor, callbacks: { label: c => ' ' + c.label + ': ' + c.parsed } } }
+    }
+  });
+</script>
+</body>
+</html>
