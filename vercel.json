@@ -1,4 +1,6 @@
 {
+  "buildCommand": "",
+  "outputDirectory": "web/public",
   "rewrites": [
     { "source": "/", "destination": "/INTI_Merged_v4.html" }
   ]
