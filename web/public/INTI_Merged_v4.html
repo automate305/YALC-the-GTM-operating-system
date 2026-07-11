@@ -303,6 +303,137 @@
 
   .chart-card-body { padding: 16px; }
   .chart-canvas-wrap { position: relative; width: 100%; height: 220px; }
+
+  /* ── Skills tab ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .skill-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    transition: border-color .15s, box-shadow .15s;
+    cursor: default;
+  }
+  .skill-card:hover {
+    border-color: rgba(255,77,0,.35);
+    box-shadow: 0 4px 20px rgba(255,77,0,.08);
+  }
+  .skill-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .skill-emoji {
+    font-size: 32px;
+    line-height: 1;
+  }
+  .skill-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    flex-shrink: 0;
+  }
+  .badge-running  { background: rgba(74,222,128,.15); color: #4ade80; border: 1px solid rgba(74,222,128,.25); }
+  .badge-active   { background: rgba(74,222,128,.15); color: #4ade80; border: 1px solid rgba(74,222,128,.25); }
+  .badge-connected{ background: rgba(255,107,53,.15); color: #FF6B35; border: 1px solid rgba(255,107,53,.25); }
+  .badge-scheduled{ background: rgba(250,204,21,.12); color: #facc15; border: 1px solid rgba(250,204,21,.2); }
+  .badge-pending  { background: rgba(250,204,21,.12); color: #facc15; border: 1px solid rgba(250,204,21,.2); }
+  .badge-idle     { background: rgba(122,122,122,.12); color: #7A7A7A; border: 1px solid rgba(122,122,122,.2); }
+  .skill-card-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  .skill-card-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* ── Brain tab ── */
+  .brain-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .brain-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #FF6B35;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    margin: 0 0 10px;
+  }
+  .icp-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .icp-row:last-child { border-bottom: none; }
+  .icp-key {
+    width: 120px;
+    flex-shrink: 0;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .icp-val { color: var(--fg); font-weight: 500; }
+
+  .signals-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .signal-pill {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .signal-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-green  { background: #4ade80; box-shadow: 0 0 6px rgba(74,222,128,.5); }
+  .dot-coral  { background: #FF6B35; box-shadow: 0 0 6px rgba(255,107,53,.5); }
+  .dot-yellow { background: #facc15; box-shadow: 0 0 6px rgba(250,204,21,.4); }
+  .dot-muted  { background: #7A7A7A; }
+  .signal-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--fg);
+    line-height: 1.2;
+  }
+  .signal-status {
+    font-size: 10px;
+    margin-top: 2px;
+    font-weight: 500;
+  }
+
+  @media (max-width: 680px) {
+    .skills-grid { grid-template-columns: 1fr; }
+    .brain-grid  { grid-template-columns: 1fr; }
+    .signals-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -572,19 +703,184 @@
 
 <!-- SKILLS -->
 <div class="page" id="page-skills">
-  <div style="margin-top:16px;text-align:center;padding:60px 24px;color:var(--muted)">
-    <div style="font-size:40px;margin-bottom:12px">⚙</div>
-    <div style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:600;color:var(--fg);margin-bottom:8px">Skill catalog and inline runner</div>
-    <div style="font-size:13px">Run <code style="background:var(--card2);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px">yalc skills list</code> to see available skills</div>
+  <div style="margin-top:16px">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px">
+      <div>
+        <h2 style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.4px">Skill Catalog <span style="color:var(--muted);font-weight:400">/</span> Inline Runner</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:3px">8 skills installed · 3 running</p>
+      </div>
+      <button class="btn-primary">+ Add skill</button>
+    </div>
+
+    <div class="skills-grid">
+
+      <div class="skill-card">
+        <div class="skill-card-top">
+          <div class="skill-emoji">🔗</div>
+          <span class="skill-badge badge-running">Running</span>
+        </div>
+        <div class="skill-card-name">HubSpot RevOps Pack</div>
+        <div class="skill-card-desc">Audit, dedupe, and repair your HubSpot portal on a weekly schedule</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-top">
+          <div class="skill-emoji">📧</div>
+          <span class="skill-badge badge-active">Active</span>
+        </div>
+        <div class="skill-card-name">SmartLead Sequencer</div>
+        <div class="skill-card-desc">Manage multi-step email sequences and deliverability across subdomains</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-top">
+          <div class="skill-emoji">⚡</div>
+          <span class="skill-badge badge-connected">Connected</span>
+        </div>
+        <div class="skill-card-name">Apollo Enrichment</div>
+        <div class="skill-card-desc">Pull verified contact data and company signals from Apollo.io</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-top">
+          <div class="skill-emoji">🔍</div>
+          <span class="skill-badge badge-scheduled">Scheduled</span>
+        </div>
+        <div class="skill-card-name">Weekly Portal Checkup</div>
+        <div class="skill-card-desc">Scans 6 HubSpot health areas every Monday and surfaces action items</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-top">
+          <div class="skill-emoji">🧹</div>
+          <span class="skill-badge badge-idle">Idle</span>
+        </div>
+        <div class="skill-card-name">Duplicate Remover</div>
+        <div class="skill-card-desc">Detects and merges duplicate contact records by email and name match</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-top">
+          <div class="skill-emoji">🎯</div>
+          <span class="skill-badge badge-pending">Pending</span>
+        </div>
+        <div class="skill-card-name">Lead Scoring Engine</div>
+        <div class="skill-card-desc">Scores leads on reviews, location, headcount, and domain signals</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-top">
+          <div class="skill-emoji">💰</div>
+          <span class="skill-badge badge-active">Active</span>
+        </div>
+        <div class="skill-card-name">Commission Tracker</div>
+        <div class="skill-card-desc">Models conservative, realistic, and upside commission scenarios</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-top">
+          <div class="skill-emoji">🔌</div>
+          <span class="skill-badge badge-connected">Connected</span>
+        </div>
+        <div class="skill-card-name">Dp4 &amp; ClearVIEW Connector</div>
+        <div class="skill-card-desc">Routes DP4 Microneedling and ClearVIEW leads into the outbound loop</div>
+      </div>
+
+    </div>
   </div>
 </div>
 
 <!-- BRAIN -->
 <div class="page" id="page-brain">
-  <div style="margin-top:16px;text-align:center;padding:60px 24px;color:var(--muted)">
-    <div style="font-size:40px;margin-bottom:12px">🧠</div>
-    <div style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:600;color:var(--fg);margin-bottom:8px">Live company context, voice, and ICP</div>
-    <div style="font-size:13px">Automate305 · Miami-Dade · Healthcare / B2B SaaS / Professional Services</div>
+  <div style="margin-top:16px">
+
+    <div class="brain-grid">
+
+      <!-- LEFT COLUMN -->
+      <div>
+
+        <!-- ICP -->
+        <p class="brain-section-label">Ideal Customer Profile</p>
+        <div class="card" style="margin-bottom:16px">
+          <div class="icp-row"><div class="icp-key">Industry</div><div class="icp-val">HVAC</div></div>
+          <div class="icp-row"><div class="icp-key">Company size</div><div class="icp-val">1–5 · 5–15 employees</div></div>
+          <div class="icp-row"><div class="icp-key">Geography</div><div class="icp-val">Miami-Dade · Broward · Palm Beach</div></div>
+          <div class="icp-row"><div class="icp-key">Domain signals</div><div class="icp-val">Reviews present · Google Business active</div></div>
+          <div class="icp-row"><div class="icp-key">Google Reviews</div>
+            <div class="icp-val"><span class="skill-badge badge-active" style="font-size:9px;padding:2px 8px">Active</span></div>
+          </div>
+          <div class="icp-row" style="border-bottom:none"><div class="icp-key">Has Website?</div>
+            <div class="icp-val"><span class="skill-badge badge-scheduled" style="font-size:9px;padding:2px 8px">Yes or No</span></div>
+          </div>
+        </div>
+
+        <!-- Voice -->
+        <p class="brain-section-label">Voice &amp; Messaging</p>
+        <div class="card" style="margin-bottom:12px">
+          <div class="icp-row"><div class="icp-key">Tone</div><div class="icp-val">Direct, peer-to-peer, no fluff</div></div>
+          <div class="icp-row"><div class="icp-key">POV</div><div class="icp-val">Operator talking to operator</div></div>
+          <div class="icp-row"><div class="icp-key">Avoid</div><div class="icp-val">Corporate jargon, passive voice, long intros</div></div>
+          <div class="icp-row" style="border-bottom:none"><div class="icp-key">CTA style</div><div class="icp-val">One ask, low friction — "Worth a quick call?"</div></div>
+        </div>
+        <div class="card" style="padding:14px 16px;margin-bottom:16px">
+          <div style="font-size:10px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Company Context</div>
+          <p style="font-size:12px;color:var(--muted);line-height:1.65">Automate305 is a Miami-based GTM automation shop helping local service businesses — starting with HVAC — generate qualified leads through AI-native outbound. We run Apollo enrichment, SmartLead sequences, and HubSpot RevOps tooling under one operating system so small teams can punch above their weight without an expensive stack.</p>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div>
+
+        <!-- Live Signals (full-width within right col) -->
+        <p class="brain-section-label">Live Signals</p>
+        <div class="signals-grid">
+          <div class="signal-pill">
+            <div class="signal-dot dot-green"></div>
+            <div>
+              <div class="signal-name">Apollo</div>
+              <div class="signal-status" style="color:#4ade80">Connected</div>
+            </div>
+          </div>
+          <div class="signal-pill">
+            <div class="signal-dot dot-green"></div>
+            <div>
+              <div class="signal-name">HubSpot</div>
+              <div class="signal-status" style="color:#4ade80">Synced</div>
+            </div>
+          </div>
+          <div class="signal-pill">
+            <div class="signal-dot dot-green"></div>
+            <div>
+              <div class="signal-name">SmartLead</div>
+              <div class="signal-status" style="color:#4ade80">Active</div>
+            </div>
+          </div>
+          <div class="signal-pill">
+            <div class="signal-dot dot-coral"></div>
+            <div>
+              <div class="signal-name">Dp4 &amp; ClearVIEW</div>
+              <div class="signal-status" style="color:#FF6B35">Queued</div>
+            </div>
+          </div>
+          <div class="signal-pill">
+            <div class="signal-dot dot-yellow"></div>
+            <div>
+              <div class="signal-name">Gates</div>
+              <div class="signal-status" style="color:#facc15">2 pending</div>
+            </div>
+          </div>
+          <div class="signal-pill">
+            <div class="signal-dot dot-muted"></div>
+            <div>
+              <div class="signal-name">Last enrichment</div>
+              <div class="signal-status" style="color:#7A7A7A">Today · 50 contacts</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 </div>
 
