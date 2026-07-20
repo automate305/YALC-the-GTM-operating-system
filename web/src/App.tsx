@@ -7,6 +7,7 @@ import { Brain } from './pages/Brain'
 import { Keys } from './pages/Keys'
 import { KeysConnect } from './pages/KeysConnect'
 import { Skills } from './pages/Skills'
+import { Council } from './pages/Council'
 import { Visualizations } from './pages/Visualizations'
 import { Dashboard } from './pages/Dashboard'
 import { resolveTodayRedirect } from './lib/dashboard-redirect'
@@ -64,6 +65,7 @@ export function App() {
   if (path.startsWith('/keys/connect')) return <KeysConnect />
   if (path.startsWith('/keys')) return <Keys />
   if (path.startsWith('/skills')) return <Skills />
+  if (path.startsWith('/council')) return <Council />
   if (path.startsWith('/visualizations')) return <Visualizations />
   return <Landing />
 }
