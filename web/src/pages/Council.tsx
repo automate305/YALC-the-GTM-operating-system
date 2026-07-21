@@ -92,6 +92,39 @@ interface SessionSummary {
   split: { a: number; b: number }
 }
 
+/**
+ * Shape guards for API responses. Deployments that serve the SPA without
+ * the Hono backend (e.g. a static Vercel preview) rewrite /api/* to
+ * index.html with a 200 — apiFetch then resolves with an HTML string
+ * instead of JSON, so every response must be validated before use.
+ */
+function isSession(x: unknown): x is CouncilSession {
+  if (!x || typeof x !== 'object') return false
+  const s = x as Partial<CouncilSession>
+  const d = s.deliberation as Partial<Deliberation> | undefined
+  return (
+    typeof s.session_id === 'string' &&
+    typeof s.question === 'string' &&
+    !!d &&
+    typeof d === 'object' &&
+    Array.isArray(d.positions) &&
+    Array.isArray(d.stances) &&
+    Array.isArray(d.tensions) &&
+    !!d.verdict &&
+    typeof d.verdict === 'object'
+  )
+}
+
+function toSummaries(x: unknown): SessionSummary[] {
+  if (!x || typeof x !== 'object') return []
+  const items = (x as { items?: unknown }).items
+  if (!Array.isArray(items)) return []
+  return items.filter(
+    (i): i is SessionSummary =>
+      !!i && typeof i === 'object' && typeof (i as SessionSummary).session_id === 'string',
+  )
+}
+
 // ─── The bundled worked example, expressed in the live session shape ────────
 
 const EXAMPLE: CouncilSession = {
@@ -173,8 +206,8 @@ export function Council() {
 
   const refreshSaved = useCallback(async () => {
     try {
-      const res = await api.get<{ items: SessionSummary[] }>('/api/council/list')
-      setSaved(res.items)
+      const res = await api.get<unknown>('/api/council/list')
+      setSaved(toSummaries(res))
     } catch {
       // Offline / no API — the worked example still renders.
       setSaved([])
@@ -192,7 +225,8 @@ export function Council() {
       return
     }
     try {
-      const full = await api.get<CouncilSession>(`/api/council/${encodeURIComponent(id)}`)
+      const full = await api.get<unknown>(`/api/council/${encodeURIComponent(id)}`)
+      if (!isSession(full)) throw new Error('not a session')
       setSession(full)
       setRound(4) // saved sessions open on the verdict
     } catch {
@@ -206,7 +240,11 @@ export function Council() {
     setRunning(true)
     setRunError(null)
     try {
-      const result = await api.post<CouncilSession>('/api/council/run', { question: q })
+      const result = await api.post<unknown>('/api/council/run', { question: q })
+      if (!isSession(result)) {
+        setRunError('This deployment serves the UI only — the council API is not running here. Run the GTM-OS server to convene live.')
+        return
+      }
       setSession(result)
       setRound(4)
       setQuestion('')
