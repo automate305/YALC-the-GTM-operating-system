@@ -1,0 +1,61 @@
+{
+  "input": {
+    "question": "Land 5 paying AI-automation clients in 14 days: solo founder, pure outbound (Connect & Sell + HubSpot), $0 ad spend, large cold list.",
+    "context": "## company_context.yaml\ncompany: Automate305\nfocus: AI automation for South Florida SMBs\npipeline: $6.75k, 3 active deals",
+    "roster": "- id: suntzu\n  name: Sun Tzu — Strategy · Terrain [SEATED (votes)]\n  method: Win before fighting; concentrate force on decisive ground.\n  blind spot: Can over-plan; may delay action hunting for perfect terrain.\n- id: mach\n  name: Machiavelli — Power · Persuasion [SEATED (votes)]\n  method: Read incentives; manufacture authority and urgency.\n  blind spot: Optimizes the close over the relationship.\n- id: munger\n  name: Charlie Munger — Inversion · Judgment [SEATED (votes)]\n  method: Invert, always invert.\n  blind spot: Caution can suppress needed aggression.\n- id: taleb\n  name: Nassim Taleb — Risk · Asymmetry [SEATED (votes)]\n  method: Seek convexity; survive first.\n  blind spot: Tail-risk focus can freeze safe action.\n- id: meadows\n  name: Donella Meadows — Systems · Leverage [SEATED (votes)]\n  method: Find the leverage point.\n  blind spot: Abstraction can postpone the concrete next act.\n- id: karpathy\n  name: Andrej Karpathy — Execution · Instrumentation [SEATED (votes)]\n  method: Define the loss, find the bottleneck.\n  blind spot: Can over-build tooling.\n- id: marcus\n  name: Marcus Aurelius — Discipline · Temperament [SEATED (votes)]\n  method: Control what is yours.\n  blind spot: Detachment can dull urgency.\n- id: rams\n  name: Dieter Rams — Design · Less, but better [CONSULTING (advises, does not vote)]\n  method: As little design as possible.\n  blind spot: Reduction can strip a rare signal."
+  },
+  "expected_output": {
+    "restatement": "Solo founder with $0 ad spend, a dialer, HubSpot, and a large cold list must land 5 paying AI-automation clients ASAP via outbound calls — tracked daily, without burning out.",
+    "leading_question": "Is 5 clients in 14 days, pure cold and solo, a target or a fantasy? [UNKNOWN until day 5 data]",
+    "positions": [
+      { "member": "suntzu", "analysis": "Pick one vertical and one repeatable pain before dialing; a niche call converts 3-5x a generic one. [INFERENCE]" },
+      { "member": "mach", "analysis": "No warm intros exist, so engineer authority: pattern-interrupt opener, small commitment ask, never a demo." },
+      { "member": "munger", "analysis": "Invert: guarantee zero by dialing inconsistently, pitching instead of diagnosing, and burning out. Make each impossible." },
+      { "member": "taleb", "analysis": "Calls are convex bets — bounded 2-minute downside, unbounded upside. Burnout is ruin; cap intensity to what repeats 10 days." },
+      { "member": "meadows", "analysis": "The leverage point is the feedback loop between conversation quality and the script, not raw dial volume." },
+      { "member": "karpathy", "analysis": "Loss = booked revenue. Find the daily bottleneck stage (connect, convo-to-meeting, proposal-to-close) and pour effort there." },
+      { "member": "marcus", "analysis": "Own the dials, not the yeses. Two protected blocks a day, hit regardless of mood; rest is part of the plan." }
+    ],
+    "tensions": [
+      {
+        "title": "Volume vs. Targeting",
+        "a_who": "Machiavelli",
+        "a_text": "Niche-picking is procrastination. Dial 60 today.",
+        "b_who": "Sun Tzu / Karpathy",
+        "b_text": "Dialing the wrong 60 teaches nothing and demoralizes you.",
+        "resolution": "Days 3-4 become a live A/B across two segments; the connect and conversation data picks the beachhead."
+      },
+      {
+        "title": "Speed vs. Burnout",
+        "a_who": "The deadline pressure",
+        "a_text": "Go maximal — a 6-hour marathon on day 1.",
+        "b_who": "Taleb / Marcus",
+        "b_text": "That guarantees quitting by day 6, and quitting is ruin.",
+        "resolution": "Cap at ~3 hours of live talk-time per day in two blocks — repeatable for 10 straight days beats two heroic days."
+      }
+    ],
+    "stances": [
+      { "member": "mach", "stance": "Achievable in 14 days if deals are small enough for a fast yes.", "camp": "a" },
+      { "member": "karpathy", "stance": "Achievable if the bottleneck stage is fixed daily.", "camp": "a" },
+      { "member": "suntzu", "stance": "Achievable only from a chosen beachhead.", "camp": "a" },
+      { "member": "munger", "stance": "Realistic outcome is 2-4 closed plus pipeline.", "camp": "b" },
+      { "member": "taleb", "stance": "5-in-14 is a fragile point estimate.", "camp": "b" },
+      { "member": "meadows", "stance": "Compounds only if the loop is instrumented.", "camp": "b" },
+      { "member": "marcus", "stance": "Judge on inputs held with discipline, not the date.", "camp": "b" }
+    ],
+    "split": {
+      "a_label": "Achievable inside 14 days",
+      "b_label": "2-4 closed + full pipeline"
+    },
+    "verdict": {
+      "recommendation": "Plan and act for 5; forecast 2-4 closed by day 14 with pipeline behind them [INFERENCE]. Judge the sprint on leading inputs — dial-time and quality conversations — not the 5th check by an arbitrary date.",
+      "kill_criteria": [
+        { "when": "Day 5", "condition": "Quality-conversation rate under 8% in both niches means the list or offer is wrong — stop and fix targeting, not effort." },
+        { "when": "Day 8", "condition": "Zero proposals out means the choke is conversation-to-meeting — rework the ask, do not add volume." },
+        { "when": "Any day", "condition": "Two consecutive dial blocks skipped from dread — cut to one block and protect the streak over the peak." }
+      ],
+      "next_action": "Build the 6-stage HubSpot pipeline with one-tap call dispositions and segment the cold list into two Active Lists."
+    },
+    "summary": "Act for 5, forecast 2-4 by day 14 — judged on controllable inputs, kill criteria armed."
+  }
+}
