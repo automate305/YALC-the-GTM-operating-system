@@ -99,7 +99,7 @@ export function loadBrandTokens(): Record<string, unknown> {
 /**
  * Build the design directives that the LLM treats as authoritative.
  * The string mirrors what `ui-ux-pro-max` would emit for the resolved
- * brand palette + intent. We hard-code yalc rose + Outfit/Inter pairing
+ * brand palette + intent. We use the INTI orange + Outfit/Inter pairing
  * because those are the brand non-negotiables.
  */
 export function buildUiUxDirectives(
@@ -108,17 +108,17 @@ export function buildUiUxDirectives(
 ): string {
   const colors = (brandTokens.colors ?? {}) as Record<string, string>
   const fonts = (brandTokens.fonts ?? {}) as Record<string, string>
-  const primary = colors.primary ?? '#C9506E'
-  const accent = colors.accent ?? '#E07A95'
-  const paper = colors.background ?? '#F8EDE8'
+  const primary = colors.primary ?? '#FF6B35'
+  const accent = colors.accent ?? '#FF6B35'
+  const paper = colors.background ?? '#0A0A0A'
   const heading = fonts.heading ?? "'Outfit', system-ui, sans-serif"
   const body = fonts.body ?? "'Inter', system-ui, sans-serif"
   const intentLower = intent.toLowerCase()
-  let lift = '4px lift on hover with soft shadow (rgba(201,80,110,0.08)).'
-  if (intentLower.includes('table')) lift = 'row hover background tint (rgba(201,80,110,0.04)).'
+  let lift = '4px lift on hover with soft shadow (rgba(255,107,53,0.14)).'
+  if (intentLower.includes('table')) lift = 'row hover background tint (rgba(255,107,53,0.08)).'
   if (intentLower.includes('chart')) lift = 'data-point dot expansion + tooltip on hover.'
   return [
-    `palette: yalc rose — primary ${primary}, accent ${accent}, paper ${paper}.`,
+    `palette: INTI orange — primary ${primary}, accent ${accent}, paper ${paper} (dark surface).`,
     `pairing: ${heading} for headings, ${body} for body, JetBrains Mono for code.`,
     `spacing: 24px between columns, 16px between cards, 100px section padding.`,
     `radius: 14px md, 16px lg, 9999px pill.`,

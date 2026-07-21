@@ -146,9 +146,9 @@ describe('visualize skill — error + idempotency', () => {
     })
     expect(capturedPrompts.length).toBeGreaterThan(0)
     const prompt = capturedPrompts[0]
-    // The brand tokens block always carries the canonical Yalc rose hex.
-    expect(prompt).toContain('#C9506E')
-    expect(prompt).toContain('#E07A95')
+    // The brand tokens block always carries the canonical INTI orange hex.
+    expect(prompt).toContain('#FF6B35')
+    expect(prompt).toContain('#FF8A5C')
     expect(prompt.toLowerCase()).toContain('outfit')
     expect(prompt.toLowerCase()).toContain('inter')
   })
@@ -162,7 +162,7 @@ describe('visualize skill — error + idempotency', () => {
     })
     const prompt = capturedPrompts[0]
     expect(prompt).toContain('UI/UX Pro Max design directives')
-    expect(prompt.toLowerCase()).toContain('palette: yalc rose')
+    expect(prompt.toLowerCase()).toContain('palette: inti orange')
     expect(prompt.toLowerCase()).toContain('forbidden:')
     expect(prompt.toLowerCase()).toContain('bg-blue-')
   })
