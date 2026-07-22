@@ -1,7 +1,7 @@
 import { sqliteTable, text, integer, real, uniqueIndex, index } from 'drizzle-orm/sqlite-core'
 import { relations, sql } from 'drizzle-orm'
 
-// ─── Conversations ──────────────────────────────────────────────────────────
+// ─── Conversations ────────────────────────────────────────────────────────────
 // Primary entity — every chat thread is a conversation
 export const conversations = sqliteTable('conversations', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -28,7 +28,7 @@ export const messages = sqliteTable('messages', {
     .$defaultFn(() => new Date()),
 })
 
-// ─── Workflows ──────────────────────────────────────────────────────────────
+// ─── Workflows ─────────────────────────────────────────────────────────────
 // Linked to the message that proposed/approved it
 export const workflows = sqliteTable('workflows', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -50,7 +50,7 @@ export const workflows = sqliteTable('workflows', {
   completedAt: integer('completed_at', { mode: 'timestamp' }),
 })
 
-// ─── Workflow Steps ──────────────────────────────────────────────────────────
+// ─── Workflow Steps ────────────────────────────────────────────────────────────
 // Individual steps within a workflow execution
 export const workflowSteps = sqliteTable('workflow_steps', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -74,7 +74,7 @@ export const workflowSteps = sqliteTable('workflow_steps', {
   completedAt: integer('completed_at', { mode: 'timestamp' }),
 })
 
-// ─── Result Sets ─────────────────────────────────────────────────────────────
+// ─── Result Sets ───────────────────────────────────────────────────────────
 // Output tables — one per workflow (can have multiple per workflow eventually)
 export const resultSets = sqliteTable('result_sets', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -89,7 +89,7 @@ export const resultSets = sqliteTable('result_sets', {
     .$defaultFn(() => new Date()),
 })
 
-// ─── Result Rows ─────────────────────────────────────────────────────────────
+// ─── Result Rows ───────────────────────────────────────────────────────────
 // Each row in a result table — feedback schema included from Day 1
 export const resultRows = sqliteTable('result_rows', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -110,7 +110,7 @@ export const resultRows = sqliteTable('result_rows', {
     .$defaultFn(() => new Date()),
 })
 
-// ─── Knowledge Items ─────────────────────────────────────────────────────────
+// ─── Knowledge Items ────────────────────────────────────────────────────────
 // Documents uploaded by the user — ICP, templates, competitive intel
 export const knowledgeItems = sqliteTable('knowledge_items', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -128,7 +128,7 @@ export const knowledgeItems = sqliteTable('knowledge_items', {
     .$defaultFn(() => new Date()),
 })
 
-// ─── API Connections ─────────────────────────────────────────────────────────
+// ─── API Connections ────────────────────────────────────────────────────────
 // Securely stored API keys — encrypted with AES-256-GCM
 export const apiConnections = sqliteTable('api_connections', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -143,7 +143,7 @@ export const apiConnections = sqliteTable('api_connections', {
     .$defaultFn(() => new Date()),
 })
 
-// ─── Frameworks ─────────────────────────────────────────────────────────────
+// ─── Frameworks ────────────────────────────────────────────────────────────
 // GTM Framework — the living intelligence layer. One per user.
 export const frameworks = sqliteTable('frameworks', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -194,7 +194,7 @@ export const mcpServers = sqliteTable('mcp_servers', {
   createdAt: text('created_at').default(sql`(datetime('now'))`),
 })
 
-// ─── Review Queue ──────────────────────────────────────────────────────────
+// ─── Review Queue ───────────────────────────────────────────────────────────
 // Unified human-in-the-loop review queue
 export const reviewQueue = sqliteTable('review_queue', {
   id: text('id').primaryKey(),
@@ -215,7 +215,7 @@ export const reviewQueue = sqliteTable('review_queue', {
   createdAt: text('created_at').default(sql`(datetime('now'))`),
 })
 
-// ─── Notification Preferences ──────────────────────────────────────────────
+// ─── Notification Preferences ───────────────────────────────────────────────
 export const notificationPreferences = sqliteTable('notification_preferences', {
   id: text('id').primaryKey(),
   channel: text('channel').notNull(),
@@ -224,7 +224,7 @@ export const notificationPreferences = sqliteTable('notification_preferences', {
   enabled: integer('enabled').notNull().default(1),
 })
 
-// ─── Web Cache ────────────────────────────────────────────────────────────
+// ─── Web Cache ──────────────────────────────────────────────────────────────
 // Cached web pages with TTL per content type
 export const webCache = sqliteTable('web_cache', {
   id: text('id').primaryKey(),
@@ -236,7 +236,7 @@ export const webCache = sqliteTable('web_cache', {
   expiresAt: text('expires_at').notNull(),
 })
 
-// ─── Web Research Tasks ──────────────────────────────────────────────────
+// ─── Web Research Tasks ─────────────────────────────────────────────────────
 export const webResearchTasks = sqliteTable('web_research_tasks', {
   id: text('id').primaryKey(),
   tenantId: text('tenant_id').notNull().default('default'),
@@ -312,7 +312,7 @@ export const campaignContent = sqliteTable('campaign_content', {
   bouncedAt: text('bounced_at'),
 })
 
-// ─── Campaign Variants ─────────────────────────────────────────────────────
+// ─── Campaign Variants ──────────────────────────────────────────────────────
 // One row per messaging angle/variant for A/B testing
 export const campaignVariants = sqliteTable('campaign_variants', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -333,7 +333,7 @@ export const campaignVariants = sqliteTable('campaign_variants', {
   createdAt: text('created_at').default(sql`(datetime('now'))`),
 })
 
-// ─── Campaign Leads ────────────────────────────────────────────────────────
+// ─── Campaign Leads ─────────────────────────────────────────────────────────
 // One row per lead assigned to a campaign
 export const campaignLeads = sqliteTable('campaign_leads', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -375,7 +375,7 @@ export const campaignLeads = sqliteTable('campaign_leads', {
   updatedAt: text('updated_at').default(sql`(datetime('now'))`),
 })
 
-// ─── Provider Stats ────────────────────────────────────────────────────────
+// ─── Provider Stats ─────────────────────────────────────────────────────────
 // Provider performance tracking per execution
 export const providerStats = sqliteTable('provider_stats', {
   id: text('id').primaryKey(),
@@ -388,7 +388,7 @@ export const providerStats = sqliteTable('provider_stats', {
   measuredAt: text('measured_at').default(sql`(datetime('now'))`),
 })
 
-// ─── Provider Preferences ──────────────────────────────────────────────────
+// ─── Provider Preferences ───────────────────────────────────────────────────
 // User or auto-derived provider preferences per skill+segment
 export const providerPreferences = sqliteTable('provider_preferences', {
   id: text('id').primaryKey(),
@@ -429,7 +429,7 @@ export const companySignals = sqliteTable('company_signals', {
     .on(t.provider, t.domain, t.signalType, t.signalId),
 }))
 
-// ─── Company Signal Fetches ────────────────────────────────────────────────
+// ─── Company Signal Fetches ─────────────────────────────────────────────────
 // TTL cache: tracks the last time a (domain, signalType) pair was pulled,
 // so bulk enrichment can skip recently-refreshed companies.
 export const companySignalFetches = sqliteTable('company_signal_fetches', {
@@ -445,7 +445,7 @@ export const companySignalFetches = sqliteTable('company_signal_fetches', {
   rowsReturned: integer('rows_returned').notNull().default(0),
 })
 
-// ─── Signal Watches ──────────────────────────────────────────────────────────
+// ─── Signal Watches ────────────────────────────────────────────────────────
 // Active monitoring targets — companies/people to watch for intent signals
 export const signalWatches = sqliteTable('signal_watches', {
   id: text('id').primaryKey(),
@@ -459,7 +459,7 @@ export const signalWatches = sqliteTable('signal_watches', {
   lastCheckedAt: text('last_checked_at').default(sql`(datetime('now'))`),
 })
 
-// ─── Signals Log ──────────────────────────────────────────────────────────────
+// ─── Signals Log ───────────────────────────────────────────────────────────
 // Passive signal collection from user interactions
 export const signalsLog = sqliteTable('signals_log', {
   id: text('id').primaryKey(),
@@ -473,7 +473,7 @@ export const signalsLog = sqliteTable('signals_log', {
   createdAt: text('created_at').default(sql`(datetime('now'))`),
 })
 
-// ─── Data Quality Log ──────────────────────────────────────────────────────
+// ─── Data Quality Log ───────────────────────────────────────────────────────
 // Data quality issues detected by the monitor
 export const dataQualityLog = sqliteTable('data_quality_log', {
   id: text('id').primaryKey(),
@@ -489,7 +489,60 @@ export const dataQualityLog = sqliteTable('data_quality_log', {
   createdAt: text('created_at').default(sql`(datetime('now'))`),
 })
 
-// ─── Relations ───────────────────────────────────────────────────────────────
+// ─── DBPR Leads ─────────────────────────────────────────────────────────────
+// Florida DBPR (Department of Business and Professional Regulation)
+// licensed HVAC contractors. Sourced via daily/weekly imports.
+// Records enriched with Google Maps ratings, operator names, and lead scoring.
+export const dbprLeads = sqliteTable('dbpr_leads', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  tenantId: text('tenant_id').notNull().default('default'),
+
+  // ─── DBPR Source Data ───
+  externalId: text('external_id').notNull().unique(), // DBPR License ID
+  businessName: text('business_name').notNull(),
+  city: text('city').notNull(),
+  county: text('county').notNull(), // MIAMI-DADE | BROWARD | PALM-BEACH
+  address: text('address'),
+  phone: text('phone'),
+  licenseStatus: text('license_status'), // ACTIVE | INACTIVE | EXPIRED
+  licenseExpiresAt: integer('license_expires_at', { mode: 'timestamp' }),
+
+  // ─── Enrichment Data ───
+  googleMapsRating: real('google_maps_rating'), // 3.5-5.0
+  reviewCount: integer('review_count'), // 0, 1, 100+
+  reviewsJson: text('reviews_json', { mode: 'json' }), // Array of ReviewSample objects
+  operatorNames: text('operator_names', { mode: 'json' }), // ["John", "Maria"]
+  teamSize: text('team_size', { enum: ['solo', 'micro', 'small', 'medium', 'large'] }),
+
+  // ─── Lead Scoring ───
+  priority: text('priority', { enum: ['hot', 'warm', 'cold'] }).notNull().default('warm'),
+  angle: text('angle'), // Outbound messaging angle
+
+  // ─── Campaign Tracking ───
+  status: text('status', {
+    enum: ['new', 'contacted', 'meeting_set', 'closed_won', 'closed_lost', 'skip'],
+  }).notNull().default('new'),
+  campaignId: text('campaign_id').references(() => campaigns.id, { onDelete: 'set null' }),
+  campaignLeadId: text('campaign_lead_id').references(() => campaignLeads.id, { onDelete: 'set null' }),
+
+  // ─── Metadata ───
+  sourceData: text('source_data', { mode: 'json' }), // Full enriched lead JSON backup
+  importedAt: integer('imported_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  lastContactedAt: integer('last_contacted_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+}, (t) => ({
+  // Indexes for fast lookups
+  byExtId: uniqueIndex('dbpr_leads_ext_id_idx').on(t.externalId),
+  byTenantStatus: index('dbpr_leads_tenant_status_idx').on(t.tenantId, t.status),
+  byTenantPriority: index('dbpr_leads_tenant_priority_idx').on(t.tenantId, t.priority),
+  byCounty: index('dbpr_leads_county_idx').on(t.county),
+  byCity: index('dbpr_leads_city_idx').on(t.city),
+  byCampaign: index('dbpr_leads_campaign_idx').on(t.campaignId),
+  byImportedAt: index('dbpr_leads_imported_at_idx').on(t.importedAt),
+}))
+
+// ─── Relations ──────────────────────────────────────────────────────────────
 export const conversationsRelations = relations(conversations, ({ many }) => ({
   messages: many(messages),
   workflows: many(workflows),
@@ -555,6 +608,7 @@ export const campaignsRelations = relations(campaigns, ({ one, many }) => ({
   content: many(campaignContent),
   variants: many(campaignVariants),
   leads: many(campaignLeads),
+  dbprLeads: many(dbprLeads),
 }))
 
 export const campaignStepsRelations = relations(campaignSteps, ({ one }) => ({
@@ -614,7 +668,7 @@ export const leadBlocklist = sqliteTable('lead_blocklist', {
   createdAt: text('created_at').default(sql`(datetime('now'))`),
 })
 
-// ─── Rate Limit Buckets ──────────────────────────────────────────────────────
+// ─── Rate Limit Buckets ─────────────────────────────────────────────────────
 // Token bucket rate limiter — DB-backed for persistence across runs
 export const rateLimitBuckets = sqliteTable('rate_limit_buckets', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -629,7 +683,7 @@ export const rateLimitBuckets = sqliteTable('rate_limit_buckets', {
 
 export const rateLimitBucketsRelations = relations(rateLimitBuckets, () => ({}))
 
-// ─── Webhooks ──────────────────────────────────────────────────────────────
+// ─── Webhooks ───────────────────────────────────────────────────────────────
 // Registered webhook URLs that fire on status changes
 export const webhooks = sqliteTable('webhooks', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -653,7 +707,18 @@ export const companySignalFetchesRelations = relations(companySignalFetches, () 
 export const dataQualityLogRelations = relations(dataQualityLog, () => ({}))
 export const leadBlocklistRelations = relations(leadBlocklist, () => ({}))
 
-// ─── Call Recordings ───────────────────────────────────────────────────────
+export const dbprLeadsRelations = relations(dbprLeads, ({ one }) => ({
+  campaign: one(campaigns, {
+    fields: [dbprLeads.campaignId],
+    references: [campaigns.id],
+  }),
+  campaignLead: one(campaignLeads, {
+    fields: [dbprLeads.campaignLeadId],
+    references: [campaignLeads.id],
+  }),
+}))
+
+// ─── Call Recordings ────────────────────────────────────────────────────────
 // Source-of-truth row per recorded sales call ingested from a call intelligence
 // provider (Claap today; pluggable). Orchestrator skills join against this
 // table when they need a prospect's actual words on the last call.
@@ -676,7 +741,7 @@ export const callRecordings = sqliteTable('call_recordings', {
   byCallTime: index('call_recordings_call_time_idx').on(t.callTime),
 }))
 
-// ─── Call Transcripts ──────────────────────────────────────────────────────
+// ─── Call Transcripts ───────────────────────────────────────────────────────
 // Full transcript + Claap-detected moments (objections, competitor mentions,
 // feature requests, action items, next-step promises). One row per recording.
 export const callTranscripts = sqliteTable('call_transcripts', {
