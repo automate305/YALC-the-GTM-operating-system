@@ -1,4 +1,4 @@
-# YALC — The Open-Source GTM Operating System
+# A305 — The Open-Source GTM Operating System
 
 ![CI](https://github.com/Othmane-Khadri/YALC-the-GTM-operating-system/actions/workflows/ci.yml/badge.svg)
 [![npm version](https://img.shields.io/npm/v/yalc-gtm-os.svg)](https://www.npmjs.com/package/yalc-gtm-os)
