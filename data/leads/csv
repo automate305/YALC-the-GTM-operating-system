@@ -1,0 +1,679 @@
+#!/usr/bin/env tsx
+/**
+ * DBPR HVAC Import Script
+ * Filters Florida DBPR Construction Industry Licensing Board exports
+ * for HVAC-related license classes in South Florida counties.
+ */
+
+import fs from "node:fs";
+import path from "node:path";
+import Papa from "papaparse";
+
+const DEFAULT_INPUT = "data/leads/dbpr-raw.csv";
+const OUTPUT_CSV = "data/leads/dbpr-hvac-filtered.csv";
+const OUTPUT_JSON = "data/leads/dbpr-hvac-summary.json";
+
+const HVAC_LICENSE_CLASSES = new Set(["CAC", "CMC", "CFC", "RAC", "RAB"]);
+const OPTIONAL_CBC = "CBC";
+
+const ACTIVE_STATUSES = new Set([
+  "current active",
+  "active",
+  "current",
+]);
+
+type CountyKey = "miami-dade" | "broward" | "palm-beach";
+
+interface CountyDefinition {
+  key: CountyKey;
+  label: string;
+  codes: Set<string>;
+  names: Set<string>;
+}
+
+const COUNTY_DEFINITIONS: CountyDefinition[] = [
+  {
+    key: "miami-dade",
+    label: "Miami-Dade",
+    codes: new Set(["13"]),
+    names: new Set(["DADE", "MIAMI-DADE", "MIAMI DADE", "MIAMI-DADE COUNTY"]),
+  },
+  {
+    key: "broward",
+    label: "Broward",
+    codes: new Set(["6"]),
+    names: new Set(["BROWARD", "BROWARD COUNTY"]),
+  },
+  {
+    key: "palm-beach",
+    label: "Palm Beach",
+    codes: new Set(["50"]),
+    names: new Set(["PALM BEACH", "PALM BEACH COUNTY"]),
+  },
+];
+
+const COUNTY_BY_KEY = new Map(
+  COUNTY_DEFINITIONS.map((county) => [county.key, county]),
+);
+
+interface OutputRecord {
+  company_name: string;
+  owner_name: string;
+  license_number: string;
+  license_class: string;
+  license_status: string;
+  county: string;
+  city: string;
+  zip_code: string;
+  phone: string;
+  email: string;
+  address: string;
+}
+
+interface FilterStats {
+  totalRawRows: number;
+  afterLicenseClassFilter: number;
+  afterCountyFilter: number;
+  afterStatusFilter: number;
+  afterRequiredFieldsFilter: number;
+  afterLicenseDedupe: number;
+  afterFuzzyNameDedupe: number;
+  finalRecordCount: number;
+  byCounty: Record<string, number>;
+  byLicenseClass: Record<string, number>;
+}
+
+interface CliOptions {
+  inputPath: string;
+  dryRun: boolean;
+  includeCbc: boolean;
+  county?: CountyKey;
+}
+
+function parseArgs(argv: string[]): CliOptions {
+  let inputPath = DEFAULT_INPUT;
+  let dryRun = false;
+  let includeCbc = false;
+  let county: CountyKey | undefined;
+
+  for (let i = 0; i < argv.length; i += 1) {
+    const arg = argv[i];
+
+    if (arg === "--dry-run") {
+      dryRun = true;
+      continue;
+    }
+
+    if (arg === "--include-cbc") {
+      includeCbc = true;
+      continue;
+    }
+
+    if (arg === "--input") {
+      const value = argv[i + 1];
+      if (!value) {
+        throw new Error("--input requires a file path");
+      }
+      inputPath = value;
+      i += 1;
+      continue;
+    }
+
+    if (arg === "--county") {
+      const value = argv[i + 1]?.toLowerCase();
+      if (!value) {
+        throw new Error("--county requires a value: miami-dade, broward, or palm-beach");
+      }
+      if (!COUNTY_BY_KEY.has(value as CountyKey)) {
+        throw new Error(
+          `Unknown county "${value}". Use: miami-dade, broward, or palm-beach`,
+        );
+      }
+      county = value as CountyKey;
+      i += 1;
+      continue;
+    }
+
+    if (arg === "--help" || arg === "-h") {
+      printHelp();
+      process.exit(0);
+    }
+  }
+
+  return { inputPath, dryRun, includeCbc, county };
+}
+
+function printHelp(): void {
+  console.log(`Usage: pnpm tsx scripts/dbpr-import.ts [options]
+
+Options:
+  --input <path>       Input CSV path (default: ${DEFAULT_INPUT})
+  --dry-run            Log stats without writing output files
+  --county <name>      Filter to one county: miami-dade, broward, palm-beach
+  --include-cbc        Include Certified Building Contractor (CBC) licenses
+  -h, --help           Show this help message
+`);
+}
+
+function normalizeHeader(header: string): string {
+  return header.replace(/^\uFEFF/, "").trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+function normalizeValue(value: unknown): string {
+  if (value === null || value === undefined) {
+    return "";
+  }
+  return String(value).trim();
+}
+
+function normalizeKey(value: string): string {
+  return value.trim().toUpperCase();
+}
+
+function getField(row: Record<string, string>, candidates: string[]): string {
+  const normalizedRow = new Map<string, string>();
+
+  for (const [key, value] of Object.entries(row)) {
+    normalizedRow.set(normalizeHeader(key), normalizeValue(value));
+  }
+
+  for (const candidate of candidates) {
+    const match = normalizedRow.get(normalizeHeader(candidate));
+    if (match) {
+      return match;
+    }
+  }
+
+  return "";
+}
+
+function stripBom(content: string): string {
+  return content.replace(/^\uFEFF/, "");
+}
+
+function parseCsv(content: string): Record<string, string>[] {
+  const parsed = Papa.parse<Record<string, string>>(stripBom(content), {
+    header: true,
+    skipEmptyLines: true,
+    transformHeader: (header) => header.replace(/^\uFEFF/, "").trim(),
+  });
+
+  if (parsed.errors.length > 0) {
+    const firstError = parsed.errors[0];
+    throw new Error(
+      `CSV parse error on row ${firstError.row ?? "unknown"}: ${firstError.message}`,
+    );
+  }
+
+  return parsed.data;
+}
+
+function allowedLicenseClasses(includeCbc: boolean): Set<string> {
+  const classes = new Set(HVAC_LICENSE_CLASSES);
+  if (includeCbc) {
+    classes.add(OPTIONAL_CBC);
+  }
+  return classes;
+}
+
+function normalizeCountyValue(value: string): string {
+  return value.trim().toUpperCase().replace(/\s+/g, " ");
+}
+
+function matchesCounty(
+  rawCountyValue: string,
+  selectedCounties: CountyDefinition[],
+): boolean {
+  const normalized = normalizeCountyValue(rawCountyValue);
+  if (!normalized) {
+    return false;
+  }
+
+  const numeric = normalized.replace(/^0+/, "") || "0";
+
+  return selectedCounties.some((county) => {
+    if (county.codes.has(numeric) || county.codes.has(normalized)) {
+      return true;
+    }
+    return county.names.has(normalized);
+  });
+}
+
+function resolveCountyLabel(rawCountyValue: string): string {
+  const normalized = normalizeCountyValue(rawCountyValue);
+  const numeric = normalized.replace(/^0+/, "") || "0";
+
+  for (const county of COUNTY_DEFINITIONS) {
+    if (county.codes.has(numeric) || county.codes.has(normalized) || county.names.has(normalized)) {
+      return county.label;
+    }
+  }
+
+  return normalized;
+}
+
+function isActiveStatus(status: string): boolean {
+  return ACTIVE_STATUSES.has(status.trim().toLowerCase());
+}
+
+function normalizePhone(rawPhone: string): string {
+  const digits = rawPhone.replace(/\D/g, "");
+
+  let normalized = digits;
+  if (normalized.length === 11 && normalized.startsWith("1")) {
+    normalized = normalized.slice(1);
+  }
+
+  if (normalized.length !== 10) {
+    return rawPhone.trim();
+  }
+
+  const area = normalized.slice(0, 3);
+  const prefix = normalized.slice(3, 6);
+  const line = normalized.slice(6);
+  return `(${area}) ${prefix}-${line}`;
+}
+
+function buildAddress(row: Record<string, string>): string {
+  const parts = [
+    getField(row, ["Address Line 1", "Address", "Street Address", "Address1"]),
+    getField(row, ["Address Line 2", "Address2"]),
+    getField(row, ["Address Line 3", "Address3"]),
+  ].filter(Boolean);
+
+  return parts.join(", ");
+}
+
+function extractCompanyName(row: Record<string, string>): string {
+  const dba = getField(row, [
+    "Doing Business as Name",
+    "DBA",
+    "Doing Business As",
+    "Business DBA",
+  ]);
+  if (dba) {
+    return dba;
+  }
+
+  return getField(row, [
+    "Licensee Name",
+    "Business Name",
+    "Company Name",
+    "Organization Name",
+  ]);
+}
+
+function csvHasColumn(rows: Record<string, string>[], candidate: string): boolean {
+  if (rows.length === 0) {
+    return false;
+  }
+
+  const target = normalizeHeader(candidate);
+  return Object.keys(rows[0] ?? {}).some((key) => normalizeHeader(key) === target);
+}
+
+function extractOwnerName(
+  row: Record<string, string>,
+  hasQualifierColumn: boolean,
+): string {
+  const qualifierName = getField(row, ["Qualifier Name"]);
+  if (qualifierName) {
+    return qualifierName;
+  }
+
+  const explicitOwner = getField(row, ["Owner Name", "Individual Name"]);
+  if (explicitOwner) {
+    return explicitOwner;
+  }
+
+  // Official DBPR exports use Licensee Name for the qualifying individual.
+  if (!hasQualifierColumn) {
+    return getField(row, ["Licensee Name"]);
+  }
+
+  return "";
+}
+
+function extractLicenseClass(row: Record<string, string>): string {
+  return normalizeKey(
+    getField(row, [
+      "Class Code",
+      "License Class",
+      "License Type",
+      "Class",
+    ]),
+  );
+}
+
+function extractLicenseNumber(row: Record<string, string>): string {
+  return getField(row, [
+    "License Number",
+    "Lic #",
+    "License #",
+    "Lic Number",
+  ]);
+}
+
+function extractLicenseStatus(row: Record<string, string>): string {
+  return getField(row, [
+    "Primary Status",
+    "License Status",
+    "Status",
+    "Secondary Status",
+  ]);
+}
+
+function extractPhone(row: Record<string, string>): string {
+  const raw = getField(row, [
+    "Phone",
+    "Phone Number",
+    "Business Phone",
+    "Telephone",
+  ]);
+  if (!raw) {
+    return "";
+  }
+  return normalizePhone(raw);
+}
+
+function mapRowToOutput(
+  row: Record<string, string>,
+  hasQualifierColumn: boolean,
+): OutputRecord {
+  const rawCounty = getField(row, ["County Code", "County", "County Name"]);
+
+  return {
+    company_name: extractCompanyName(row),
+    owner_name: extractOwnerName(row, hasQualifierColumn),
+    license_number: extractLicenseNumber(row),
+    license_class: extractLicenseClass(row),
+    license_status: extractLicenseStatus(row),
+    county: resolveCountyLabel(rawCounty),
+    city: getField(row, ["City"]),
+    zip_code: getField(row, ["Zip", "Zip Code", "Postal Code"]),
+    phone: extractPhone(row),
+    email: "",
+    address: buildAddress(row),
+  };
+}
+
+function levenshteinDistance(a: string, b: string): number {
+  if (a === b) {
+    return 0;
+  }
+  if (a.length === 0) {
+    return b.length;
+  }
+  if (b.length === 0) {
+    return a.length;
+  }
+
+  const matrix: number[][] = Array.from({ length: a.length + 1 }, () =>
+    Array<number>(b.length + 1).fill(0),
+  );
+
+  for (let i = 0; i <= a.length; i += 1) {
+    matrix[i]![0] = i;
+  }
+  for (let j = 0; j <= b.length; j += 1) {
+    matrix[0]![j] = j;
+  }
+
+  for (let i = 1; i <= a.length; i += 1) {
+    for (let j = 1; j <= b.length; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[i]![j] = Math.min(
+        matrix[i - 1]![j]! + 1,
+        matrix[i]![j - 1]! + 1,
+        matrix[i - 1]![j - 1]! + cost,
+      );
+    }
+  }
+
+  return matrix[a.length]![b.length]!;
+}
+
+function normalizeBusinessName(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^\w\s]/g, " ")
+    .replace(/\b(inc|llc|ltd|corp|corporation|company|co)\b/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function nameSimilarity(a: string, b: string): number {
+  const normalizedA = normalizeBusinessName(a);
+  const normalizedB = normalizeBusinessName(b);
+
+  if (!normalizedA || !normalizedB) {
+    return 0;
+  }
+  if (normalizedA === normalizedB) {
+    return 1;
+  }
+
+  const distance = levenshteinDistance(normalizedA, normalizedB);
+  const maxLength = Math.max(normalizedA.length, normalizedB.length);
+  return 1 - distance / maxLength;
+}
+
+function dedupeByLicenseNumber(records: OutputRecord[]): OutputRecord[] {
+  const seen = new Set<string>();
+  const deduped: OutputRecord[] = [];
+
+  for (const record of records) {
+    const key = record.license_number.trim().toUpperCase();
+    if (!key) {
+      deduped.push(record);
+      continue;
+    }
+    if (seen.has(key)) {
+      continue;
+    }
+    seen.add(key);
+    deduped.push(record);
+  }
+
+  return deduped;
+}
+
+function dedupeByFuzzyBusinessName(
+  records: OutputRecord[],
+  threshold = 0.85,
+): OutputRecord[] {
+  const kept: OutputRecord[] = [];
+
+  for (const record of records) {
+    const duplicate = kept.some(
+      (existing) => nameSimilarity(existing.company_name, record.company_name) >= threshold,
+    );
+    if (!duplicate) {
+      kept.push(record);
+    }
+  }
+
+  return kept;
+}
+
+function incrementCount(map: Record<string, number>, key: string): void {
+  map[key] = (map[key] ?? 0) + 1;
+}
+
+function buildSummary(stats: FilterStats): Record<string, unknown> {
+  return {
+    generatedAt: new Date().toISOString(),
+    totalRawRows: stats.totalRawRows,
+    rowsAfterFilter: stats.finalRecordCount,
+    pipeline: {
+      afterLicenseClassFilter: stats.afterLicenseClassFilter,
+      afterCountyFilter: stats.afterCountyFilter,
+      afterStatusFilter: stats.afterStatusFilter,
+      afterRequiredFieldsFilter: stats.afterRequiredFieldsFilter,
+      afterLicenseDedupe: stats.afterLicenseDedupe,
+      afterFuzzyNameDedupe: stats.afterFuzzyNameDedupe,
+      finalRecordCount: stats.finalRecordCount,
+    },
+    byCounty: stats.byCounty,
+    byLicenseClass: stats.byLicenseClass,
+  };
+}
+
+function writeOutputs(
+  records: OutputRecord[],
+  summary: Record<string, unknown>,
+): void {
+  const outputDir = path.dirname(OUTPUT_CSV);
+  fs.mkdirSync(outputDir, { recursive: true });
+
+  const csv = Papa.unparse(records, {
+    columns: [
+      "company_name",
+      "owner_name",
+      "license_number",
+      "license_class",
+      "license_status",
+      "county",
+      "city",
+      "zip_code",
+      "phone",
+      "email",
+      "address",
+    ],
+  });
+
+  fs.writeFileSync(OUTPUT_CSV, csv, "utf8");
+  fs.writeFileSync(OUTPUT_JSON, `${JSON.stringify(summary, null, 2)}\n`, "utf8");
+}
+
+function logPipelineStats(stats: FilterStats, dryRun: boolean): void {
+  console.log("DBPR HVAC Import");
+  console.log("================");
+  console.log(`Total records read: ${stats.totalRawRows}`);
+  console.log(`Records after license class filter: ${stats.afterLicenseClassFilter}`);
+  console.log(`Records after county filter: ${stats.afterCountyFilter}`);
+  console.log(`Records after status filter: ${stats.afterStatusFilter}`);
+  console.log(`Records after required-fields filter: ${stats.afterRequiredFieldsFilter}`);
+  console.log(`Records after license-number dedupe: ${stats.afterLicenseDedupe}`);
+  console.log(`Records after fuzzy business-name dedupe: ${stats.afterFuzzyNameDedupe}`);
+  console.log(`Final record count: ${stats.finalRecordCount}`);
+
+  console.log("\nBy county:");
+  for (const [county, count] of Object.entries(stats.byCounty).sort((a, b) => a[0].localeCompare(b[0]))) {
+    console.log(`  ${county}: ${count}`);
+  }
+
+  console.log("\nBy license class:");
+  for (const [licenseClass, count] of Object.entries(stats.byLicenseClass).sort((a, b) => a[0].localeCompare(b[0]))) {
+    console.log(`  ${licenseClass}: ${count}`);
+  }
+
+  if (dryRun) {
+    console.log("\nDry run enabled — no output files written.");
+  } else {
+    console.log("\nOutput files:");
+    console.log(`  ${path.resolve(OUTPUT_CSV)}`);
+    console.log(`  ${path.resolve(OUTPUT_JSON)}`);
+  }
+}
+
+function logDetectedColumns(rows: Record<string, string>[]): void {
+  if (rows.length === 0) {
+    console.log("Warning: CSV contains no data rows.");
+    return;
+  }
+
+  const columns = Object.keys(rows[0] ?? {});
+  console.log("Detected CSV columns:");
+  console.log(`  ${columns.join(" | ")}`);
+  console.log("\nFirst 5 rows (county + class preview):");
+  for (const row of rows.slice(0, 5)) {
+    const county = getField(row, ["County Code", "County", "County Name"]);
+    const licenseClass = extractLicenseClass(row);
+    const status = extractLicenseStatus(row);
+    const company = extractCompanyName(row);
+    console.log(
+      `  county=${county || "(blank)"} class=${licenseClass || "(blank)"} status=${status || "(blank)"} company=${company || "(blank)"}`,
+    );
+  }
+  console.log("");
+}
+
+function main(): void {
+  const options = parseArgs(process.argv.slice(2));
+  const inputPath = path.resolve(options.inputPath);
+
+  if (!fs.existsSync(inputPath)) {
+    throw new Error(`Input file not found: ${inputPath}`);
+  }
+
+  const rawContent = fs.readFileSync(inputPath, "utf8");
+  const rows = parseCsv(rawContent);
+  const hasQualifierColumn = csvHasColumn(rows, "Qualifier Name");
+
+  logDetectedColumns(rows);
+
+  const allowedClasses = allowedLicenseClasses(options.includeCbc);
+  const selectedCounties = options.county
+    ? [COUNTY_BY_KEY.get(options.county)!]
+    : COUNTY_DEFINITIONS;
+
+  const stats: FilterStats = {
+    totalRawRows: rows.length,
+    afterLicenseClassFilter: 0,
+    afterCountyFilter: 0,
+    afterStatusFilter: 0,
+    afterRequiredFieldsFilter: 0,
+    afterLicenseDedupe: 0,
+    afterFuzzyNameDedupe: 0,
+    finalRecordCount: 0,
+    byCounty: {},
+    byLicenseClass: {},
+  };
+
+  const afterClass = rows.filter((row) => allowedClasses.has(extractLicenseClass(row)));
+  stats.afterLicenseClassFilter = afterClass.length;
+
+  const afterCounty = afterClass.filter((row) => {
+    const countyValue = getField(row, ["County Code", "County", "County Name"]);
+    return matchesCounty(countyValue, selectedCounties);
+  });
+  stats.afterCountyFilter = afterCounty.length;
+
+  const afterStatus = afterCounty.filter((row) =>
+    isActiveStatus(extractLicenseStatus(row)),
+  );
+  stats.afterStatusFilter = afterStatus.length;
+
+  const afterRequired = afterStatus
+    .map((row) => mapRowToOutput(row, hasQualifierColumn))
+    .filter((record) => record.company_name && record.owner_name);
+  stats.afterRequiredFieldsFilter = afterRequired.length;
+
+  const afterLicenseDedupe = dedupeByLicenseNumber(afterRequired);
+  stats.afterLicenseDedupe = afterLicenseDedupe.length;
+
+  const finalRecords = dedupeByFuzzyBusinessName(afterLicenseDedupe);
+  stats.afterFuzzyNameDedupe = finalRecords.length;
+  stats.finalRecordCount = finalRecords.length;
+
+  for (const record of finalRecords) {
+    incrementCount(stats.byCounty, record.county);
+    incrementCount(stats.byLicenseClass, record.license_class);
+  }
+
+  const summary = buildSummary(stats);
+  logPipelineStats(stats, options.dryRun);
+
+  if (!options.dryRun) {
+    writeOutputs(finalRecords, summary);
+  }
+}
+
+try {
+  main();
+} catch (error) {
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(`Error: ${message}`);
+  process.exit(1);
+}
