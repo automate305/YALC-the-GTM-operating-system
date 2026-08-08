@@ -3,6 +3,7 @@ const PRIMARY = [
   { href: '/brain', title: 'Brain', emoji: '🧠', subtitle: 'Live company context, voice, and ICP' },
   { href: '/keys', title: 'Keys', emoji: '🔑', subtitle: 'Provider status and health probes' },
   { href: '/skills', title: 'Skills', emoji: '🛠️', subtitle: 'Skill catalog and inline runner' },
+  { href: '/council', title: 'Council', emoji: '⚖️', subtitle: 'Seven minds deliberate a decision' },
 ]
 const LEGACY = [
   { href: '/campaigns', title: 'Campaigns', subtitle: 'LinkedIn outreach dashboard' },

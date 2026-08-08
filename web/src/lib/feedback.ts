@@ -15,7 +15,7 @@ export function bucketForConfidence(score: number): 'high' | 'medium' | 'low' {
 }
 
 /**
- * Status-tinted badge classes — green / amber / rose. Backed by the
+ * Status-tinted badge classes — green / amber / red. Backed by the
  * `confidence.high|medium|low` triplet in `web/brand/tokens.json`,
  * surfaced as Tailwind classes via the `confidence` color extension in
  * `tailwind.config.ts`. Brand-fidelity tests pin the tokens.

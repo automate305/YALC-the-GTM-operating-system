@@ -22,6 +22,7 @@ import { skillsRoutes } from './routes/skills'
 import { gatesRoutes } from './routes/gates'
 import { visualizeApiRoutes, visualizePageRoutes } from './routes/visualize'
 import { dashboardRoutes } from './routes/dashboard'
+import { councilRoutes } from './routes/council'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -94,6 +95,7 @@ export function createApp() {
   app.route('/api/gates', gatesRoutes)
   app.route('/api/visualize', visualizeApiRoutes)
   app.route('/api/dashboard', dashboardRoutes)
+  app.route('/api/council', councilRoutes)
 
   // Generated visualization page — serves saved HTML from
   // `~/.gtm-os/visualizations/<view_id>.html` with the right Content-Type.
@@ -208,10 +210,10 @@ export function createApp() {
     app.get('/', (c) => {
       return c.html(`<!DOCTYPE html>
 <html><head><title>GTM-OS</title>
-<style>body{font-family:system-ui;background:#F8EDE8;color:#1a1a1a;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
-.container{text-align:center;max-width:420px}h1{font-size:2.4rem;margin-bottom:.5rem;font-weight:700}
-p{color:rgba(26,26,26,0.65);margin-bottom:2rem}a{display:block;padding:1rem;margin:.5rem 0;background:#fff;border:1px solid rgba(26,26,26,0.12);border-radius:14px;color:#C9506E;text-decoration:none;font-weight:600}
-a:hover{box-shadow:0 8px 24px rgba(201,80,110,0.08)}</style></head>
+<style>body{font-family:system-ui;background:#0A0A0A;color:#F5F5F5;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
+.container{text-align:center;max-width:420px}h1{font-size:2.4rem;margin-bottom:.5rem;font-weight:700;color:#FF6B35}
+p{color:rgba(245,245,245,0.55);margin-bottom:2rem}a{display:block;padding:1rem;margin:.5rem 0;background:#15151C;border:1px solid rgba(245,245,245,0.10);border-radius:14px;color:#FF6B35;text-decoration:none;font-weight:600}
+a:hover{box-shadow:0 8px 24px rgba(255,107,53,0.14)}</style></head>
 <body><div class="container"><h1>YALC</h1><p>Run <code>pnpm build:web</code> to load the full SPA.</p>
 <a href="/campaigns">Campaign Dashboard</a>
 <a href="/review">Lead Review Dashboard</a>

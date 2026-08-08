@@ -28,8 +28,8 @@ import { assertBrandFidelity } from './helpers/brand-check'
 import { loadAllFrameworks } from '../lib/frameworks/loader'
 
 const BRAND = {
-  primaryHex: '#C9506E',
-  accentHex: '#E07A95',
+  primaryHex: '#FF6B35',
+  accentHex: '#FF8A5C',
   fontHeading: 'Outfit',
   fontBody: 'Inter',
   webfontUrl:
@@ -51,15 +51,15 @@ function brandFaithfulHtml(idiom: string, viewId: string): string {
 :root{
   --primary:${BRAND.primaryHex};
   --accent:${BRAND.accentHex};
-  --background:#F8EDE8;
-  --foreground:#1a1a1a;
-  --card:#FFFFFF;
+  --background:#0A0A0A;
+  --foreground:#F5F5F5;
+  --card:#15151C;
   --ring:${BRAND.primaryHex};
 }
 body{font-family:'${BRAND.fontBody}', system-ui, sans-serif; background:var(--background); color:var(--foreground);}
 h1,h2,h3,.font-heading{font-family:'${BRAND.fontHeading}', system-ui, sans-serif;}
-.card{background:var(--card); border:1px solid rgba(26,26,26,0.12); transition:transform 150ms ease-out;}
-.card:hover{transform:translateY(-4px); box-shadow:0 8px 24px rgba(201,80,110,0.08);}
+.card{background:var(--card); border:1px solid rgba(245,245,245,0.10); transition:transform 150ms ease-out;}
+.card:hover{transform:translateY(-4px); box-shadow:0 8px 24px rgba(255,107,53,0.14);}
 </style>
 </head>
 <body class="min-h-screen p-8">

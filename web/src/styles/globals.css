@@ -9,17 +9,18 @@
  * Tailwind classes.
  */
 :root {
-  --brand-bg: #f8ede8;
-  --brand-fg: #1a1a1a;
-  --brand-primary: #c9506e;
-  --brand-primary-light: #e07a95;
-  --brand-card: #ffffff;
-  --brand-border: rgba(26, 26, 26, 0.12);
-  --brand-ring: #c9506e;
+  color-scheme: dark;
+  --brand-bg: #0a0a0a;
+  --brand-fg: #f5f5f5;
+  --brand-primary: #ff6b35;
+  --brand-primary-light: #ff8a5c;
+  --brand-card: #15151c;
+  --brand-border: rgba(245, 245, 245, 0.1);
+  --brand-ring: #ff6b35;
   --brand-radius-md: 14px;
   --brand-radius-lg: 16px;
   --brand-radius-xl: 20px;
-  --brand-gradient: linear-gradient(135deg, #e07a95, #c9506e);
+  --brand-gradient: linear-gradient(135deg, #ff8a5c, #ff6b35);
 }
 
 @layer base {
